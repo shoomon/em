@@ -1,5 +1,9 @@
+import { RouterProvider } from "react-router-dom"
+
+import router from "@/routes/router"
+
 const App = () => {
-  return <div className="text-2xl  text-em-anger text-center">안녕하세요. 이음입니다.</div>
+  return <RouterProvider router={router} />
 }
 
 export default App
