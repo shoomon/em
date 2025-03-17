@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
-    "@types/node": "^22.13.10",
     "axios": "^1.8.3",
+    "lucide-react": "^0.482.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
@@ -20,6 +20,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/navermaps": "^3.7.9",
+    "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

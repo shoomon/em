@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
+import HomePage from "@/pages/HomePage"
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
       // 개발의 편의를 위해 온보딩 페이지 구현전까지 홈 페이지의 path를 /로 사용
       {
         path: "/",
-        element: <div>/home</div>,
+        element: <HomePage />,
         children: [
           {
             path: "posts",

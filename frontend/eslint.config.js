@@ -9,10 +9,7 @@ import importPlugin from "eslint-plugin-import"
 export default tseslint.config(
   { ignores: ["dist"] },
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
@@ -22,7 +19,10 @@ export default tseslint.config(
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       "jsx-a11y": jsxA11y,
-      "import": importPlugin
+      import: importPlugin,
+    },
+    globals: {
+      naver: "readonly",
     },
     rules: {
       // ------------ Prettier 통합 설정 ------------
@@ -60,7 +60,7 @@ export default tseslint.config(
       // 정의되지 않은 변수 사용을 허용하지 않음
       "no-undef": "error",
       // 느슨한 동등 연산자(==, !=) 대신 엄격한 동등 연산자(===, !==) 사용을 강제
-      "eqeqeq": ["error", "always"],
+      eqeqeq: ["error", "always"],
       // 조건문에서 할당 연산자 사용을 금지
       "no-cond-assign": ["error", "always"],
       // 항상 true/false로 평가되는 조건문을 허용하지 않음
@@ -76,17 +76,17 @@ export default tseslint.config(
 
       // ------------ 코드 스타일 규칙 ------------
       // 문자열은 큰따옴표(")만 사용하도록 강제 (Prettier와 일치)
-      "quotes": ["error", "double"],
+      quotes: ["error", "double"],
       // 파일 끝에 항상 빈 줄을 추가하도록 강제
       "eol-last": ["error", "always"],
       // 줄 끝에 불필요한 공백을 허용하지 않음
       "no-trailing-spaces": "error",
       // 중괄호 사용을 모든 제어문에 강제
-      "curly": "error",
+      curly: "error",
       // else 블록 내에서 단일 if 문을 사용할 때 중첩 대신 else if를 사용하도록 강제
       "no-lonely-if": "error",
       // Yoda 조건(예: if (42 === age))을 허용하지 않음
-      "yoda": "error",
+      yoda: "error",
       // 함수를 함수 표현식으로만 정의하도록 강제 (함수 선언문 대신)
       "func-style": ["error", "expression"],
       // 최대 연속 빈 줄 제한
@@ -96,7 +96,7 @@ export default tseslint.config(
       // 배열 괄호 내부 공백 금지
       "array-bracket-spacing": ["error", "never"],
       // 카멜케이스 강제 (속성 제외)
-      "camelcase": ["error", { properties: "never" }],
+      camelcase: ["error", { properties: "never" }],
 
       // ------------ ES6+ 관련 규칙 ------------
       // 재할당되지 않는 변수는 const 사용을 강제
