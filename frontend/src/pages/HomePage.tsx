@@ -1,7 +1,11 @@
+import EmDrawer from "@/components/drawer/EmDrawer"
 import MapViewer from "@/components/map/MapViewer"
 import { MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from "lucide-react"
+import { Outlet, useNavigate } from "react-router-dom"
 
 const HomePage = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="relative h-[calc(100vh-7.5rem)]">
       <div className="absolute top-0 left-0 z-10 flex items-center w-full gap-2 p-3 bg-gradient-to-b from-em-white via-em-white/80 to-em-white/10">
@@ -20,10 +24,17 @@ const HomePage = () => {
         <SendIcon />
       </button>
 
-      <button className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer bottom-8 left-1/2 border-neutral-200">
-        <MailSearch className="size-5" />
-        <p className="text-sm font-semibold">메세지 전체 보기</p>
-      </button>
+      <EmDrawer
+        trigger={
+          <div className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer bottom-8 left-1/2 border-neutral-200">
+            <MailSearch className="size-5" />
+            <p className="text-sm font-semibold">메세지 전체 보기</p>
+          </div>
+        }
+        onClick={() => navigate("posts")}
+        onClose={() => navigate("/")}>
+        <Outlet />
+      </EmDrawer>
     </div>
   )
 }
