@@ -11,13 +11,13 @@ const MainNavigationBar = () => {
     {
       id: 1,
       name: "홈",
-      icon: <HomeIcon />,
+      icon: <HomeIcon className="size-full" />,
       path: "/",
     },
     {
       id: 2,
       name: "마이페이지",
-      icon: <UserIcon />,
+      icon: <UserIcon className="size-full" />,
       path: "/mypage",
     },
   ]

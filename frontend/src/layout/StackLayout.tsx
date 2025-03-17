@@ -11,7 +11,7 @@ const StackLayout = () => {
         <StackHeader />
       </div>
       {/* main */}
-      <main className="flex-1">
+      <main className="flex-1 mt-[var(--header-height)]">
         <Outlet />
       </main>
     </BaseLayout>

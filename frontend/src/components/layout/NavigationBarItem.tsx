@@ -18,7 +18,7 @@ const NavigationBarItem = ({ data, isActive }: NavigationBarItemProps) => {
     <div className="flex-1" key={id}>
       <Link to={path} key={id}>
         <div className="flex flex-col items-center justify-center w-full gap-1">
-          <span className={`size-6 ${isActive ? "text-em-black" : "text-em-gray"} `}>{icon}</span>
+          <span className={`size-5 ${isActive ? "text-em-black" : "text-em-gray"} `}>{icon}</span>
           <span className={`text-xs ${isActive ? "text-em-black" : "text-em-gray"} `}>{name}</span>
         </div>
       </Link>
