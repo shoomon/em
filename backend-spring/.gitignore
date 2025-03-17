@@ -74,3 +74,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Custom Ignore ###
+src/main/resources/
+src/test/resources/
+
+docker/data
+docker/.env
