@@ -1,0 +1,22 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6380
+      password: dubanjjang!
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/em_test
+    username: dubanjang
+    password: dubanjjang!
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    database: postgresql
