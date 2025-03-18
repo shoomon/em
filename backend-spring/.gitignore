@@ -76,8 +76,8 @@ out/
 .vscode/
 
 ### Custom Ignore ###
-src/main/resources/
-src/test/resources/
+src/main/resources/application.yml
+src/test/resources/application-test.yml
 
 docker/data
 docker/.env
