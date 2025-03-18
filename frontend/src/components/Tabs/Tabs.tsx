@@ -8,7 +8,7 @@ interface TabsProps {
   onTabChange: (_tabValue: string) => void
 }
 
-const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
+const Tabs= ({ tabs, activeTab, onTabChange }: TabsProps) => {
   const [indicatorStyle, setIndicatorStyle] = useState<{ width: string; transform: string }>({
     width: "0px",
     transform: "translateX(0px)",
