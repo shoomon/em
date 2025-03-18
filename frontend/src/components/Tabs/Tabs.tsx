@@ -32,10 +32,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
   }, [tabs, activeTab])
 
   return (
-    <div
-      ref={containerRef}
-      className="relative flex justify-around mt-4 border-b border-em-gray"
-    >
+    <div ref={containerRef} className="relative flex justify-around mt-4 border-b border-em-gray">
       {tabs.map((tab) => (
         <button
           key={tab.value}
