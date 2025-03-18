@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
 import HomePage from "@/pages/HomePage/HomePage"
+import HomePostPage from "@/pages/HomePage/HomePostPage"
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "posts",
-            element: <div>/home/posts</div>,
+            element: <HomePostPage />,
           },
           {
             path: "posts/:clusterId",
