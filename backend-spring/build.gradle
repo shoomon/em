@@ -37,7 +37,11 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     // hibernate-spatial
-    implementation 'org.hibernate:hibernate-spatial:5.6.11.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '6.6.11.Final', ext: 'pom'
+
+    //jts-core
+    implementation group: 'org.locationtech.jts', name: 'jts-core', version: '1.20.0'
+
 
     // Flyway
     implementation 'org.flywaydb:flyway-core'
