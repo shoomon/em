@@ -1,8 +1,13 @@
 package com.ssafy.em.Posts.application;
 
+import static com.ssafy.em.Posts.exception.PostException.PostNotFoundException;
+import static com.ssafy.em.Posts.exception.PostException.PostForbiddenException;
+
+
 import com.ssafy.em.Posts.domain.entity.Post;
 import com.ssafy.em.Posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.Posts.dto.request.CreatePostRequest;
+import com.ssafy.em.Posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -24,7 +29,7 @@ public class PostService{
     private final Random random = new Random();
 
     @Transactional
-    public void createPost(CreatePostRequest request){
+    public void createPost(int userId, CreatePostRequest request){
 
         //todo: user에서 동물 프로필 레포지토리 가져오기
 //        List<animalProfiles> animalProfilesList = animalProfilesJpaRepository
@@ -42,7 +47,7 @@ public class PostService{
 
         Post post = Post.builder()
 //                .animalProfileId(0)
-                .userId(request.userId())
+                .userId(userId)
 //                .nickname("")
                 .content(request.content())
                 .location(location)
@@ -53,7 +58,12 @@ public class PostService{
     }
 
     @Transactional
-    public void deletePost(){
+    public void deletePost(int userId, int id){
+        Post post = postJpaRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
 
+        if(post.getUserId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
+
+        postJpaRepository.delete(post);
     }
 }
