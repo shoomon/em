@@ -1,4 +1,4 @@
-import useMap from "@/hooks/map/useMap"
+import useMap from "@/features/map/hooks/useMap"
 import { useEffect, useRef } from "react"
 
 interface MapFixerProps {

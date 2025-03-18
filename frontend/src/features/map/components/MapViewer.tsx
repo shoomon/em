@@ -1,15 +1,16 @@
-import useMap from "@/hooks/map/useMap"
-import { LocateFixedIcon } from "lucide-react"
-import { useRef } from "react"
+import useMap from "@/features/map/hooks/useMap"
+import { ReactNode, useRef } from "react"
 
 interface MapViewerProps {
   location?: { lat: number; lng: number }
   className?: string
+  children?: (focusOnMarker: () => void) => ReactNode
 }
 
 const MapViewer = ({
   location = { lat: 37.501286, lng: 127.0396029 },
   className,
+  children,
 }: MapViewerProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const { map } = useMap({ initLocation: location, mapRef })
@@ -20,11 +21,7 @@ const MapViewer = ({
 
   return (
     <div ref={mapRef} className={className}>
-      <button
-        className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-24 right-4 border-neutral-200"
-        onClick={focusOnMarker}>
-        <LocateFixedIcon />
-      </button>
+      {children?.(focusOnMarker)}
     </div>
   )
 }

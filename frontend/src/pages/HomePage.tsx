@@ -1,6 +1,6 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
-import MapViewer from "@/components/map/MapViewer"
-import { MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from "lucide-react"
+import MapViewer from "@/features/map/components/MapViewer"
+import { LocateFixedIcon, MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from "lucide-react"
 import { Outlet, useNavigate } from "react-router-dom"
 
 const HomePage = () => {
@@ -18,7 +18,15 @@ const HomePage = () => {
         <p className="text-sm font-semibold">메시지 재탐색</p>
       </button>
 
-      <MapViewer className="relative h-full" />
+      <MapViewer className="relative h-full">
+        {(focusOnMarker) => (
+          <button
+            className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-24 right-4 border-neutral-200"
+            onClick={focusOnMarker}>
+            <LocateFixedIcon />
+          </button>
+        )}
+      </MapViewer>
 
       <button className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-8 right-4 border-neutral-200">
         <SendIcon />
