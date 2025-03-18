@@ -48,12 +48,14 @@ public class Post {
     @Builder
     public Post(
             int animalProfileId,
+            int userId,
             String nickname,
             String content,
             Point location,
             String address
     ){
         this.animalProfileId = animalProfileId;
+        this.userId = userId;
         this.nickname = nickname;
         this.content = content;
         this.location = location;
