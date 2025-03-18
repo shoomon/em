@@ -46,6 +46,8 @@ public class PostService{
                 .location(location)
 //                .address("")
                 .build();
+
+        postJpaRepository.save(post);
     }
 
     @Transactional
