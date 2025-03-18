@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
                 request.getMethod(),
                 request.getRequestURI(),
                 exception.getClass().getSimpleName(),
-                errorCode.getCode(),
-                errorCode.getMessage()
+                errorCode.code(),
+                errorCode.message()
         );
         exception.printStackTrace();
         return ResponseEntity.status(exception.getHttpStatus()).body(ErrorResponse.from(errorCode));
