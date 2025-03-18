@@ -35,6 +35,9 @@ dependencies {
     // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
 
+    // hibernate-spatial
+    implementation 'org.hibernate:hibernate-spatial:5.6.11.Final'
+
     // Flyway
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.flywaydb:flyway-database-postgresql'
