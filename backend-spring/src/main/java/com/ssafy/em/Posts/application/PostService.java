@@ -4,6 +4,7 @@ import com.ssafy.em.Posts.domain.entity.Post;
 import com.ssafy.em.Posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.Posts.dto.request.CreatePostRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -16,6 +17,7 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class PostService{
     private final PostJpaRepository postJpaRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
