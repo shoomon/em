@@ -1,25 +1,30 @@
+import Button from "@/components/Button/Button"
+import useOAuthLoginLink from "@/features/auth/hooks/useOAuthLoginLink"
+import { LoginProvider } from "@/features/auth/types/auth.type"
+
 interface LoginButtonProps {
-  data: {
-    id: number
-    name: string
-    image: string
-    onClick: () => void
-    backgroundColor: string
-  }
+  data: LoginProvider
 }
 
 const LoginButton = ({ data }: LoginButtonProps) => {
-  const { id, name, image, onClick, backgroundColor } = data
+  const { id, name, image, backgroundColor, provider } = data
+  const loginLink = useOAuthLoginLink(provider)
+
+  const handleLogin = () => {
+    console.log("로그인 URL", loginLink)
+    window.location.href = loginLink
+  }
 
   return (
-    <button
+    <Button
       key={id}
-      onClick={onClick}
+      onClick={handleLogin}
       style={{ backgroundColor }}
-      className={`rounded-xl py-3 flex items-center justify-center bg-[${backgroundColor}]  w-full gap-2 cursor-pointer text-em-black`}>
+      className={"flex items-center justify-center w-full gap-2 text-em-black"}>
       <img src={image} alt={name} className="w-8" />
       <span className="text-base font-semibold">{name}로 시작하기</span>
-    </button>
+    </Button>
   )
 }
+
 export default LoginButton
