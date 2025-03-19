@@ -1,4 +1,5 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
+import Tabs from "@/components/Tabs/Tabs"
 import MapViewer from "@/features/map/components/MapViewer"
 import PostList from "@/features/post/components/PostList"
 import useDrawer from "@/hooks/useDrawer"
@@ -6,15 +7,20 @@ import { LocateFixedIcon, MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from 
 import { useState } from "react"
 
 const HomePage = () => {
+  const tabs = [
+    { value: "posts", label: "이곳에 남긴 글" },
+    { value: "playlist", label: "이곳의 플레이리스트" },
+  ]
+
   const { isOpen, setIsOpen } = useDrawer("home")
-  const [currentTab, setCurrentTab] = useState<"posts">("posts")
+  const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
 
   const renderTabContent = () => {
     switch (currentTab) {
       case "posts":
         return <PostList />
       default:
-        return null
+        return <div className="h-[600px]"></div>
     }
   }
 
@@ -53,7 +59,14 @@ const HomePage = () => {
             <p className="text-sm font-semibold">메세지 전체 보기</p>
           </div>
         }>
-        {renderTabContent()}
+        <div>
+          <Tabs
+            tabs={tabs}
+            activeTab={currentTab}
+            onTabChange={(tabValue: string) => setCurrentTab(tabValue as "posts" | "playlist")}
+          />
+          {renderTabContent()}
+        </div>
       </EmDrawer>
     </div>
   )
