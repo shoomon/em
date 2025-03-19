@@ -3,6 +3,7 @@ import Tabs from "@/components/Tabs/Tabs"
 import MapViewer from "@/features/map/components/MapViewer"
 import PostList from "@/features/post/components/PostList"
 import useDrawer from "@/hooks/useDrawer"
+import useGps from "@/hooks/useGps"
 import { LocateFixedIcon, MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from "lucide-react"
 import { useState } from "react"
 
@@ -12,6 +13,7 @@ const HomePage = () => {
     { value: "playlist", label: "이곳의 플레이리스트" },
   ]
 
+  const { isDenied, currentPosition } = useGps()
   const { isOpen, setIsOpen } = useDrawer("home")
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
 
@@ -36,7 +38,7 @@ const HomePage = () => {
         <p className="text-sm font-semibold">메시지 재탐색</p>
       </button>
 
-      <MapViewer className="relative h-full">
+      <MapViewer className="relative h-full" isDenied={isDenied} location={currentPosition}>
         {(focusOnMarker) => (
           <button
             className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-24 right-4 border-neutral-200"
