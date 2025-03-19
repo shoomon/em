@@ -1,10 +1,22 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
 import MapViewer from "@/features/map/components/MapViewer"
+import PostList from "@/features/post/components/PostList"
+import useDrawer from "@/hooks/useDrawer"
 import { LocateFixedIcon, MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from "lucide-react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { useState } from "react"
 
 const HomePage = () => {
-  const navigate = useNavigate()
+  const { isOpen, setIsOpen } = useDrawer("home")
+  const [currentTab, setCurrentTab] = useState<"posts">("posts")
+
+  const renderTabContent = () => {
+    switch (currentTab) {
+      case "posts":
+        return <PostList />
+      default:
+        return null
+    }
+  }
 
   return (
     <div className="relative h-[calc(100vh-7.5rem)]">
@@ -33,15 +45,15 @@ const HomePage = () => {
       </button>
 
       <EmDrawer
+        open={isOpen}
+        onOpenChange={() => setIsOpen(!isOpen)}
         trigger={
           <div className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer bottom-8 left-1/2 border-neutral-200">
             <MailSearch className="size-5" />
             <p className="text-sm font-semibold">메세지 전체 보기</p>
           </div>
-        }
-        onClick={() => navigate("posts")}
-        onClose={() => navigate("/")}>
-        <Outlet />
+        }>
+        {renderTabContent()}
       </EmDrawer>
     </div>
   )
