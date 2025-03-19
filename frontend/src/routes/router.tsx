@@ -4,6 +4,7 @@ import BlankLayout from "@/layout/BlankLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
 import LoginPage from "@/pages/LoginPage/LoginPage"
+import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/login-success",
+        element: <LoginSuccessPage />,
       },
     ],
   },
