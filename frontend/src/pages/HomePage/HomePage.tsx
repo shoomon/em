@@ -13,6 +13,40 @@ const HomePage = () => {
     { value: "playlist", label: "이곳의 플레이리스트" },
   ]
 
+  const dummyData = [
+    {
+      id: 1,
+      location: "서울 강남구 테헤란로 212",
+      lat: 37.5031847,
+      lng: 127.0392911,
+      date: "5분 전",
+      author: "걱정하는 강아지",
+      content:
+        "오늘 SSAFY 14기 면접 보러가는데 엄청 떨려요.\n잘 할 수 있겠죠ㅠㅠ?\n면접 보시는 분들 14기 돼서 꼭 만나요.",
+      emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
+    },
+    {
+      id: 2,
+      location: "서울 강남구 테헤란로 213",
+      lat: 37.5010261,
+      lng: 127.0345959,
+      date: "13분 전",
+      author: "울먹이는 바다코끼리",
+      content: "ㅠㅠ",
+      emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
+    },
+    {
+      id: 3,
+      location: "서울 강남구 테헤란로 214",
+      lat: 37.4932619,
+      lng: 127.0322652,
+      date: "1시간 전",
+      author: "기뻐하는 판다곰",
+      content: "우와아아아아아아아아아아~!",
+      emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
+    },
+  ]
+
   const { isDenied, currentPosition } = useGps()
   const { isOpen, setIsOpen } = useDrawer("home")
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
@@ -20,7 +54,7 @@ const HomePage = () => {
   const renderTabContent = () => {
     switch (currentTab) {
       case "posts":
-        return <PostList />
+        return <PostList list={dummyData} />
       default:
         return <div className="h-[600px]"></div>
     }
@@ -38,7 +72,11 @@ const HomePage = () => {
         <p className="text-sm font-semibold">메시지 재탐색</p>
       </button>
 
-      <MapViewer className="relative h-full" isDenied={isDenied} location={currentPosition}>
+      <MapViewer
+        className="relative h-full"
+        isDenied={isDenied}
+        location={currentPosition}
+        posts={dummyData}>
         {(focusOnMarker) => (
           <button
             className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-24 right-4 border-neutral-200"

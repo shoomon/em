@@ -1,17 +1,20 @@
 import useMap from "@/features/map/hooks/useMap"
+import { Post } from "@/features/post/types/post"
 import { ReactNode, useEffect, useRef } from "react"
 
 interface MapViewerProps {
   isDenied: boolean
   location: { lat: number; lng: number }
+  posts: Post[]
   className?: string
   children?: (focusOnMarker: () => void) => ReactNode
 }
 
-const MapViewer = ({ isDenied, location, className, children }: MapViewerProps) => {
+const MapViewer = ({ isDenied, location, posts, className, children }: MapViewerProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const userMarkerRef = useRef<naver.maps.Marker | null>(null)
   const searchRangeRef = useRef<naver.maps.Circle | null>(null)
+  const postMerkerRefs = useRef<naver.maps.Marker[]>([])
   const { map } = useMap({ initLocation: location, mapRef })
 
   useEffect(() => {
@@ -36,7 +39,22 @@ const MapViewer = ({ isDenied, location, className, children }: MapViewerProps) 
       strokeColor: "rgba(0, 0, 0, 0.05)",
       strokeWeight: 1,
     })
-  }, [map.current])
+
+    postMerkerRefs.current.forEach((marker) => marker.setMap(null))
+    postMerkerRefs.current = [] // 배열 초기화
+
+    for (const post of posts) {
+      const marker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(post.lat, post.lng),
+        map: map.current,
+        icon: {
+          content: `<div class="size-8 bg-blue-400 opacity-60 rounded-full" />`,
+          anchor: new window.naver.maps.Point(12, 12),
+        },
+      })
+      postMerkerRefs.current.push(marker) // 새로운 마커 추가
+    }
+  }, [map.current, posts])
 
   useEffect(() => {
     if (userMarkerRef.current) {
