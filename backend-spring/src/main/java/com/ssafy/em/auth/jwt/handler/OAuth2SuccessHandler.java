@@ -48,7 +48,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshTokenService.save(userId, refreshToken);
 
         // Access token을 QueryString에 담기 위해 URL 인코딩 처리
-        String encodedAccessToken = URLEncoder.encode("Bearer " + accessToken, StandardCharsets.UTF_8);
+        String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
 
         // 기존 redirectUrl에 accessToken을 Query String으로 추가
         String redirectWithToken = redirectUrl + "?accessToken=" + encodedAccessToken;
