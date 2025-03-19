@@ -39,7 +39,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException, ServletException {
         OAuth2CustomUser oauth2User = (OAuth2CustomUser) authentication.getPrincipal();
 
-        String userId = oauth2User.getId().toString();
+        String userId = String.valueOf(oauth2User.getId());
         String email = oauth2User.getEmail();
 
         String accessToken = jwtProvider.generateAccessToken(userId, email);

@@ -1,7 +1,11 @@
 package com.ssafy.em.auth.jwt.token;
 
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +67,7 @@ public class JwtProvider {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        Long userId = (Long) claims.get(AUTH_ID);
+        int userId = (int) claims.get(AUTH_ID);
         String email = (String) claims.get(AUTH_EMAIL);
 
         // OAuth2CustomUser 생성 (registrationId는 "kakao", attributes는 빈 맵 처리)

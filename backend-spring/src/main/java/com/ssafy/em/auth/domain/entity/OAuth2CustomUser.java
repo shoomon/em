@@ -14,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2CustomUser implements OAuth2User, Serializable {
 
-    private final Long id;
+    private final int id;
     private final String registrationId;
     private final Map<String, Object> attributes;
     private final List<GrantedAuthority> authorities;
