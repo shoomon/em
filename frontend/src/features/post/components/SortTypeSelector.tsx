@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 
 interface SortTypeSelectorProps {
   contents: { label: string; sortType: string }[]
@@ -6,7 +7,22 @@ interface SortTypeSelectorProps {
 }
 
 const SortTypeSelector = ({ contents, className }: SortTypeSelectorProps) => {
-  const [selectedType, setSelectedType] = useState(contents[0].sortType)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const selectedType = searchParams.get("sortType") || contents[0].sortType
+
+  useEffect(() => {
+    return () => {
+      // 언마운트 시에 모든 QueryParameter 삭제
+      setSearchParams(new URLSearchParams())
+    }
+  }, [])
+
+  const handleChange = (sortType: string) => {
+    setSearchParams((prev) => {
+      prev.set("sortType", sortType)
+      return prev
+    })
+  }
 
   return (
     <ul className={`flex items-center gap-6 px-5 py-3 bg-em-white ${className}`}>
@@ -18,7 +34,7 @@ const SortTypeSelector = ({ contents, className }: SortTypeSelectorProps) => {
               name={item.sortType}
               value={item.sortType}
               checked={selectedType === item.sortType}
-              onChange={() => setSelectedType(item.sortType)}
+              onChange={() => handleChange(item.sortType)}
               className="hidden"
             />
             <div
