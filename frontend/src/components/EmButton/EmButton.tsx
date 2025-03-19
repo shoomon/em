@@ -1,5 +1,5 @@
-import { ButtonHTMLAttributes, ReactNode } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { ButtonHTMLAttributes, ReactNode } from "react"
 
 import { cn } from "@/utils/cn"
 
@@ -47,11 +47,11 @@ interface ButtonProps
   children?: ReactNode
 }
 
-const Button = ({ className, variant, shape, size, weight, children, ...props }: ButtonProps) => {
+const EmButton = ({ className, variant, shape, size, weight, children, ...props }: ButtonProps) => {
   return (
     <button className={cn(buttonVariants({ variant, shape, size, weight }), className)} {...props}>
       {children}
     </button>
   )
 }
-export default Button
+export default EmButton

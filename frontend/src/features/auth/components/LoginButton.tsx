@@ -1,4 +1,4 @@
-import Button from "@/components/Button/Button"
+import EmButton from "@/components/EmButton/EmButton"
 import useOAuthLoginLink from "@/features/auth/hooks/useOAuthLoginLink"
 import { LoginProvider } from "@/features/auth/types/auth.type"
 
@@ -16,14 +16,14 @@ const LoginButton = ({ data }: LoginButtonProps) => {
   }
 
   return (
-    <Button
+    <EmButton
       key={id}
       onClick={handleLogin}
       style={{ backgroundColor }}
       className={"flex items-center justify-center w-full gap-2 text-em-black"}>
       <img src={image} alt={name} className="w-8" />
       <span className="text-base font-semibold">{name}로 시작하기</span>
-    </Button>
+    </EmButton>
   )
 }
 
