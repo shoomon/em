@@ -17,10 +17,12 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 
@@ -28,11 +30,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
 
-    @Value("")
+    // 로그인 성공 후 최종 리다이렉션 URL
+    @Value("${app.oauth2.login-success-url}")
     private String redirectUrl;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                        Authentication authentication) throws IOException, ServletException {
         OAuth2CustomUser oauth2User = (OAuth2CustomUser) authentication.getPrincipal();
 
         String userId = oauth2User.getId().toString();
@@ -43,18 +47,22 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
         refreshTokenService.save(userId, refreshToken);
 
-        // AccessToken을 QueryString으로 보내도록 수정하기
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        // Access token을 QueryString에 담기 위해 URL 인코딩 처리
+        String encodedAccessToken = URLEncoder.encode("Bearer " + accessToken, StandardCharsets.UTF_8);
 
+        // 기존 redirectUrl에 accessToken을 Query String으로 추가
+        String redirectWithToken = redirectUrl + "?accessToken=" + encodedAccessToken;
 
+        // refresh token은 HttpOnly 쿠키에 설정
         ResponseCookie refreshCookie = createCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, jwtProperties.refreshTokenExpiry());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-        response.sendRedirect(redirectUrl);
+        // 302 Redirect 응답을 통해 클라이언트를 최종 URL로 리다이렉트
+        response.sendRedirect(redirectWithToken);
     }
 
-    private ResponseCookie createCookie(String userId, String refreshToken, long maxAge) {
-        return ResponseCookie.from(userId, refreshToken)
+    private ResponseCookie createCookie(String cookieName, String cookieValue, long maxAge) {
+        return ResponseCookie.from(cookieName, cookieValue)
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
@@ -62,4 +70,5 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
                 .maxAge(maxAge)
                 .build();
     }
+
 }
