@@ -31,7 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final RefreshTokenService refreshTokenService;
 
     // 로그인 성공 후 최종 리다이렉션 URL
-    @Value("${app.oauth2.login-success-url}")
+    @Value("${spring.security.oauth2.login-success-uri}")
     private String redirectUrl;
 
     @Override
