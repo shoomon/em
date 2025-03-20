@@ -36,10 +36,14 @@ public class OAuthAttributes {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
+        String email = (String) kakaoAccount.get("email");
+        String nickname = (String) kakaoProfile.get("nickname");
+        String profileImage = (String) kakaoProfile.get("profile_image_url");
+
         return OAuthAttributes.builder()
-                .email(String.valueOf(kakaoAccount.get("email")))
-                .nickname(String.valueOf(kakaoProfile.get("name")))
-                .profileImageUrl(String.valueOf(kakaoProfile.get("picture")))
+                .email(email)
+                .nickname(nickname)
+                .profileImageUrl(profileImage)
                 .nameAttributesKey(userNameAttributeName)
                 .attributes(attributes)
                 .build();
