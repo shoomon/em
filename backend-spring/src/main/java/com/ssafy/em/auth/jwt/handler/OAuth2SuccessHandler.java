@@ -4,7 +4,6 @@ import com.ssafy.em.auth.application.RefreshTokenService;
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
 import com.ssafy.em.auth.jwt.token.JwtProperties;
 import com.ssafy.em.auth.jwt.token.JwtProvider;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private String redirectUrl;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         OAuth2CustomUser oauth2User = (OAuth2CustomUser) authentication.getPrincipal();
 
