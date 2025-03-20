@@ -30,9 +30,14 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                                // Swagger나 API Docs는 공개
+                                .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                                // OAuth2 로그인 플로우에 필요한 경로도 공개
+                                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                                // 그 외 나머지는 인증 필요
                                 .anyRequest().authenticated()
                         )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
@@ -42,4 +47,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
