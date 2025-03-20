@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router-dom"
 
+import BlankLayout from "@/layout/BlankLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
+import LoginPage from "@/pages/LoginPage/LoginPage"
+import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 
 const router = createBrowserRouter([
   {
@@ -68,6 +71,19 @@ const router = createBrowserRouter([
             element: <div>/mypage/history/:date</div>,
           },
         ],
+      },
+    ],
+  },
+  {
+    element: <BlankLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/login-success",
+        element: <LoginSuccessPage />,
       },
     ],
   },
