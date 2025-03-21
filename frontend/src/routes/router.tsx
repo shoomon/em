@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom"
 import BlankLayout from "@/layout/BlankLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
+import HomePage from "@/pages/HomePage/HomePage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 
@@ -17,17 +18,7 @@ const router = createBrowserRouter([
       // 개발의 편의를 위해 온보딩 페이지 구현전까지 홈 페이지의 path를 /로 사용
       {
         path: "/",
-        element: <div>/home</div>,
-        children: [
-          {
-            path: "posts",
-            element: <div>/home/posts</div>,
-          },
-          {
-            path: "posts/:clusterId",
-            element: <div>/home/posts/:clusterId</div>,
-          },
-        ],
+        element: <HomePage />,
       },
       {
         path: "/mypage",
