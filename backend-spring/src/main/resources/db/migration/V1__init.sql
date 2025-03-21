@@ -42,7 +42,7 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL,
     profile_image_url TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL,  -- 트리거 사용
+    updated_at TIMESTAMP NOT NULL  -- 트리거 사용
 );
 
 
