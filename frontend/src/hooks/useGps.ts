@@ -10,6 +10,10 @@ const useGps = () => {
     lat: 37.501286,
     lng: 127.0396029,
   })
+  const lastFetchedPositionRef = useRef({
+    lat: currentPositionRef.current.lat,
+    lng: currentPositionRef.current.lng,
+  }) // 존재하지 않는 위경도로 설정하여 초기에 20m이상 차이가 나도록 설정
   const watchId = useRef<number | null>(null)
   const isDenied = useRef(true)
 
@@ -21,7 +25,7 @@ const useGps = () => {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           }
-          currentPositionRef.current = newPosition
+          currentPositionRef.current = lastFetchedPositionRef.current = newPosition
           setCurrentPosition(newPosition)
           resolve()
         },
@@ -40,15 +44,30 @@ const useGps = () => {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         }
-        const distance = getDistance(
+        let distance = getDistance(
           currentPositionRef.current.lat,
           currentPositionRef.current.lng,
           newPosition.lat,
           newPosition.lng,
         )
-        if (distance >= 1) {
-          currentPositionRef.current = newPosition
-          setCurrentPosition(newPosition)
+
+        // 1m 단위로 현재 위치를 갱신 => 마커에 반영
+        if (distance < 1) {
+          return
+        }
+
+        currentPositionRef.current = newPosition
+        setCurrentPosition(newPosition)
+
+        distance = getDistance(
+          currentPositionRef.current.lat,
+          currentPositionRef.current.lng,
+          lastFetchedPositionRef.current.lat,
+          lastFetchedPositionRef.current.lng,
+        )
+        // 20m 단위로 마지막 API 호출 위치를 갱신 => 주소 및 게시글 조회에 사용
+        if (distance >= 20) {
+          lastFetchedPositionRef.current = newPosition
         }
       },
       (error) => {
@@ -91,7 +110,7 @@ const useGps = () => {
       }
     }
 
-    prepareGps() // 비동기 함수 실행
+    prepareGps()
 
     return () => {
       if (watchId.current) {
@@ -100,7 +119,11 @@ const useGps = () => {
     }
   }, [])
 
-  return { isDenied: isDenied.current, currentPosition }
+  return {
+    isDenied: isDenied.current,
+    currentPosition,
+    lastFetchedPosition: lastFetchedPositionRef.current,
+  }
 }
 
 export default useGps

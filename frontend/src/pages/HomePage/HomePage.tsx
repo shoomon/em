@@ -1,10 +1,11 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
 import Tabs from "@/components/Tabs/Tabs"
+import AddressDisplay from "@/features/map/components/AddressDisplay"
 import MapViewer from "@/features/map/components/MapViewer"
 import PostList from "@/features/post/components/PostList"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
-import { LocateFixedIcon, MailSearch, MapPinIcon, RotateCwIcon, SendIcon } from "lucide-react"
+import { LocateFixedIcon, MailSearch, RotateCwIcon, SendIcon } from "lucide-react"
 import { useState } from "react"
 
 const HomePage = () => {
@@ -47,7 +48,7 @@ const HomePage = () => {
     },
   ]
 
-  const { isDenied, currentPosition } = useGps()
+  const { isDenied, currentPosition, lastFetchedPosition } = useGps()
   const { isOpen, setIsOpen } = useDrawer("home")
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
 
@@ -62,10 +63,7 @@ const HomePage = () => {
 
   return (
     <div className="relative h-[calc(100vh-7.5rem)]">
-      <div className="absolute top-0 left-0 z-10 flex items-center w-full gap-2 p-3 bg-gradient-to-b from-em-white via-em-white/80 to-em-white/10">
-        <MapPinIcon className="stroke-red-500" />
-        <p className="font-semibold">서울 강남구 테헤란로 212</p>
-      </div>
+      <AddressDisplay lastFetchedPosition={lastFetchedPosition} />
 
       <button className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer top-12 left-1/2 border-neutral-200">
         <RotateCwIcon className="size-5" />
