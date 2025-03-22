@@ -1,13 +1,13 @@
-package com.ssafy.em.Posts.application;
+package com.ssafy.em.posts.application;
 
-import static com.ssafy.em.Posts.exception.PostException.PostNotFoundException;
-import static com.ssafy.em.Posts.exception.PostException.PostForbiddenException;
+import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
+import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 
 
-import com.ssafy.em.Posts.domain.entity.Post;
-import com.ssafy.em.Posts.domain.repository.PostJpaRepository;
-import com.ssafy.em.Posts.dto.request.CreatePostRequest;
-import com.ssafy.em.Posts.exception.PostErrorCode;
+import com.ssafy.em.posts.domain.entity.Post;
+import com.ssafy.em.posts.domain.repository.PostJpaRepository;
+import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -16,7 +16,6 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Random;
 
 @Service

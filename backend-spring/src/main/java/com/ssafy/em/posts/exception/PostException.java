@@ -1,4 +1,4 @@
-package com.ssafy.em.Posts.exception;
+package com.ssafy.em.posts.exception;
 
 import com.ssafy.em.common.exception.ErrorCode;
 import com.ssafy.em.common.exception.status.ForbiddenException;

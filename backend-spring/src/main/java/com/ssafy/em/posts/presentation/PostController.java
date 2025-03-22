@@ -1,7 +1,7 @@
-package com.ssafy.em.Posts.presentation;
+package com.ssafy.em.posts.presentation;
 
-import com.ssafy.em.Posts.application.PostService;
-import com.ssafy.em.Posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.application.PostService;
+import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.ssafy.em.Posts.dto.response;
+package com.ssafy.em.posts.dto.response;
 
-import com.ssafy.em.Posts.dto.PostDetailDto;
+import com.ssafy.em.posts.dto.PostDetailDto;
 
 import java.util.List;
 
