@@ -39,22 +39,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       strokeColor: "rgba(0, 0, 0, 0.05)",
       strokeWeight: 1,
     })
-
-    postMerkerRefs.current.forEach((marker) => marker.setMap(null))
-    postMerkerRefs.current = [] // 배열 초기화
-
-    for (const post of posts) {
-      const marker = new window.naver.maps.Marker({
-        position: new window.naver.maps.LatLng(post.lat, post.lng),
-        map: map.current,
-        icon: {
-          content: `<div class="size-8 bg-blue-400 opacity-60 rounded-full" />`,
-          anchor: new window.naver.maps.Point(12, 12),
-        },
-      })
-      postMerkerRefs.current.push(marker) // 새로운 마커 추가
-    }
-  }, [map.current, posts])
+  }, [map.current])
 
   useEffect(() => {
     if (userMarkerRef.current) {
@@ -81,6 +66,27 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
 
     focusOnMarker()
   }, [location])
+
+  useEffect(() => {
+    if (!map.current) {
+      return
+    }
+
+    postMerkerRefs.current.forEach((marker) => marker.setMap(null))
+    postMerkerRefs.current = []
+
+    for (const post of posts) {
+      const marker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(post.lat, post.lng),
+        map: map.current,
+        icon: {
+          content: `<div class="size-8 bg-blue-400 opacity-60 rounded-full" />`,
+          anchor: new window.naver.maps.Point(12, 12),
+        },
+      })
+      postMerkerRefs.current.push(marker)
+    }
+  }, [posts])
 
   const focusOnMarker = () => {
     map.current?.setCenter(new window.naver.maps.LatLng(location.lat, location.lng))
