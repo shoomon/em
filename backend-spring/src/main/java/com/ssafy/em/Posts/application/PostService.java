@@ -6,6 +6,8 @@ import static com.ssafy.em.Posts.exception.PostException.PostForbiddenException;
 
 import com.ssafy.em.Posts.domain.entity.Post;
 import com.ssafy.em.Posts.domain.repository.PostJpaRepository;
+import com.ssafy.em.Posts.dto.PostDetailDto;
+import com.ssafy.em.Posts.dto.PostPointDto;
 import com.ssafy.em.Posts.dto.request.CreatePostRequest;
 import com.ssafy.em.Posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,11 @@ import java.util.Random;
 @Transactional(readOnly = true)
 @Slf4j
 public class PostService{
+    private static final int PAGE_SIZE = 10;
+
     private final PostJpaRepository postJpaRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
+
     private final Random random = new Random();
 
     @Transactional
@@ -65,5 +70,13 @@ public class PostService{
         if(post.getUserId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
         postJpaRepository.delete(post);
+    }
+
+    public List<PostPointDto> getPointList(){
+        return null;
+    }
+
+    public List<PostDetailDto> getPostList(){
+        return null;
     }
 }
