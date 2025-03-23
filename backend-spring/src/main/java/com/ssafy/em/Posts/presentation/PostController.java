@@ -42,7 +42,7 @@ public class PostController {
             @RequestParam(name = "lon") double longitude,
             @RequestParam(name = "rad", defaultValue = RADIUS, required = false) int radius
     ){
-        List<PostPointDto> pointList =  postService.getPointList();
+        List<PostPointDto> pointList =  postService.getPointList(latitude, longitude, radius);
         GetPointListResponse response = new GetPointListResponse(pointList);
 
         return ResponseEntity.ok(response);

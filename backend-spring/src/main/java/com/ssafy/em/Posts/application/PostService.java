@@ -72,7 +72,7 @@ public class PostService{
         postJpaRepository.delete(post);
     }
 
-    public List<PostPointDto> getPointList(){
+    public List<PostPointDto> getPointList(double latitude, double longitude, int radius){
         return null;
     }
 
