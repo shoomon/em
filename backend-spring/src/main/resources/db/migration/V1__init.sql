@@ -40,9 +40,9 @@ CREATE TABLE users (
     provider provider_type NOT NULL,
     social_id VARCHAR(100) NULL,
     username VARCHAR(50) NOT NULL,
+    profile_image_url TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL,  -- 기본값 제거 (트리거 사용)
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
+    updated_at TIMESTAMP NOT NULL  -- 트리거 사용
 );
 
 
