@@ -1,11 +1,13 @@
 package com.ssafy.em.common.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 
+@Configuration
 public class CorsConfig implements CorsConfigurationSource {
 
     @Override
