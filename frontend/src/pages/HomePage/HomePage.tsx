@@ -72,7 +72,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="relative h-[calc(100vh-7.5rem)]">
+    <div className="relative h-[calc(100vh-var(--header-height)-var(--navigation-bar-height))]">
       <AddressDisplay lastFetchedPosition={lastFetchedPosition} />
 
       <button className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer top-12 left-1/2 border-neutral-200">
