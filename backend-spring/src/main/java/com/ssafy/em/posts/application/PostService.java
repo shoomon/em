@@ -4,6 +4,7 @@ import static com.ssafy.em.posts.application.PostRedisService.POST_GEO_KEY;
 import static com.ssafy.em.posts.application.PostRedisService.POST_KEY;
 import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
+import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 
 
 import com.ssafy.em.posts.domain.entity.Post;
@@ -122,8 +123,6 @@ public class PostService{
         }
         return result;
     }
-
-    private static final int PAGE_SIZE = 10;
 
     public List<PostDetailDto> getPostList(
             double longitude,
