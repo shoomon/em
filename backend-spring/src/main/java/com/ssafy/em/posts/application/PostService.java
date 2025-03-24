@@ -28,7 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -99,18 +101,21 @@ public class PostService{
                 .opsForGeo().radius(POST_GEO_KEY, area);
 
         for(GeoResult<RedisGeoCommands.GeoLocation<Object>> geoResult : geoResults){
-            String postId = geoResult.getContent().getName().toString();
+            Integer postId = Integer.parseInt(
+                    geoResult.getContent().getName().toString()
+            );
             String redisKey = POST_KEY + postId;
 
             if(redisTemplate.hasKey(redisKey)){
                 org.springframework.data.geo.Point point = geoResult.getContent().getPoint();
                 result.add(
                         new PostPointDto(
-                                Integer.parseInt(postId),
+                                postId,
                                 point.getX(),
                                 point.getY()
                         )
                 );
+
             }else{
                 redisTemplate.opsForGeo().remove(POST_GEO_KEY, postId);
             }
@@ -118,7 +123,97 @@ public class PostService{
         return result;
     }
 
-    public List<PostDetailDto> getPostList(){
-        return null;
+    private static final int PAGE_SIZE = 10;
+
+    public List<PostDetailDto> getPostList(
+            double longitude,
+            double latitude,
+            int radius,
+            int lastRead,
+            String sortBy
+    ) {
+        List<Post> posts = new ArrayList<>();
+
+        Circle area = new Circle(
+                new org.springframework.data.geo.Point(longitude, latitude),
+                new Distance(radius, Metrics.METERS)
+        );
+        GeoResults<RedisGeoCommands.GeoLocation<Object>> geoResults = redisTemplate
+                .opsForGeo().radius(POST_GEO_KEY, area);
+
+        for (GeoResult<RedisGeoCommands.GeoLocation<Object>> geoResult : geoResults) {
+            int postId = Integer.parseInt(geoResult.getContent().getName().toString());
+            String redisKey = POST_KEY + postId;
+
+            if (!redisTemplate.hasKey(redisKey)) {
+                redisTemplate.opsForGeo().remove(POST_GEO_KEY, postId);
+                continue;
+            }
+
+            Post post = (Post) redisTemplate.opsForValue().get(redisKey);
+            posts.add(post);
+        }
+
+        posts = sortPosts(posts, sortBy, longitude, latitude);
+
+        if (lastRead != 0) {
+            posts = posts.stream()
+                    .filter(p -> p.getId() < lastRead)
+                    .toList();
+        }
+
+        List<Post> page = posts.stream()
+                .limit(PAGE_SIZE)
+                .toList();
+
+        return page.stream()
+                .map(post -> new PostDetailDto(
+                        post.getId(),
+                        post.getUserId(),
+                        post.getNickname(),
+                        null, // imageUrl 추후 추가
+                        post.getContent(),
+                        post.getLocation(),
+                        getEmotionCount(post.getId()),
+                        post.getCreatedAt()
+                ))
+                .toList();
+    }
+
+
+    //todo: MyPage -> getMyPostList
+
+    private List<Post> sortPosts(List<Post> posts, String sortBy, double lon, double lat) {
+
+        List<Post> sorted;
+
+        switch (sortBy.toLowerCase()) {
+            case "popular":
+                sorted = posts.stream()
+                        .sorted(Comparator.comparing(Post::getReactionCount).reversed())
+                        .toList();
+                break;
+
+            case "distance":
+                Point center = geometryFactory.createPoint(new Coordinate(lon, lat));
+                sorted = posts.stream()
+                        .sorted(Comparator.comparingDouble(p -> p.getLocation().distance(center)))
+                        .toList();
+                break;
+
+            case "latest":
+            default:
+                sorted = posts.stream()
+                        .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                        .toList();
+                break;
+        }
+
+        return sorted;
+    }
+
+
+    private Map<String, Integer> getEmotionCount(int postId){
+
     }
 }

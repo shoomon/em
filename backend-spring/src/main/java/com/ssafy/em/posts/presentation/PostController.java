@@ -58,7 +58,8 @@ public class PostController {
             @RequestParam(name = "lon") double longitude,
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) int radius,
-            @RequestParam(name = "last", required = false) int lastRead
+            @RequestParam(name = "last", required = false) int lastRead,
+            @RequestParam(name = "sort", required = false) String sortBy
     ){
         List<PostDetailDto> postList = postService.getPostList();
         GetPostListResponse response = new GetPostListResponse(postList);
