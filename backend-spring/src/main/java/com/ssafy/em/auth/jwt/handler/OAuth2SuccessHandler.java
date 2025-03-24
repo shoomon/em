@@ -4,6 +4,7 @@ import com.ssafy.em.auth.application.RefreshTokenService;
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
 import com.ssafy.em.auth.jwt.token.JwtProperties;
 import com.ssafy.em.auth.jwt.token.JwtProvider;
+import com.ssafy.em.auth.util.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,22 +53,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 기존 redirectUrl에 accessToken을 Query String으로 추가
         String redirectWithToken = redirectUrl + "?accessToken=" + encodedAccessToken;
 
-        // refresh token은 HttpOnly 쿠키에 설정
-        ResponseCookie refreshCookie = createCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, jwtProperties.refreshTokenExpiry());
+        // refresh token은 CookieUtils를 사용해 HttpOnly 쿠키에 설정
+        ResponseCookie refreshCookie = CookieUtils.createCookie(refreshToken, jwtProperties.refreshTokenExpiry());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
         // 302 Redirect 응답을 통해 클라이언트를 최종 URL로 리다이렉트
         response.sendRedirect(redirectWithToken);
-    }
-
-    private ResponseCookie createCookie(String cookieName, String cookieValue, long maxAge) {
-        return ResponseCookie.from(cookieName, cookieValue)
-                .secure(true)
-                .sameSite("None")
-                .httpOnly(true)
-                .path("/")
-                .maxAge(maxAge)
-                .build();
     }
 
 }
