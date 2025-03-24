@@ -7,22 +7,24 @@ import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetPointListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
+import com.ssafy.em.posts.util.PostConstant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 public class PostController {
-    private static final String RADIUS = "500";
-
     private final PostService postService;
 
     //todo: 토큰에서 유저id 받기
@@ -41,11 +43,11 @@ public class PostController {
 
     @GetMapping("/points")
     public ResponseEntity<GetPointListResponse> getPointList(
-            @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "lon") double longitude,
-            @RequestParam(name = "rad", defaultValue = RADIUS, required = false) int radius
+            @RequestParam(name = "lat") double latitude,
+            @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) int radius
     ){
-        List<PostPointDto> pointList =  postService.getPointList(latitude, longitude, radius);
+        List<PostPointDto> pointList =  postService.getPointList(longitude, latitude, radius);
         GetPointListResponse response = new GetPointListResponse(pointList);
 
         return ResponseEntity.ok(response);
@@ -53,9 +55,9 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<GetPostListResponse> getPostList(
-            @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "lon") double longitude,
-            @RequestParam(name = "rad", defaultValue = RADIUS, required = false) int radius,
+            @RequestParam(name = "lat") double latitude,
+            @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) int radius,
             @RequestParam(name = "last", required = false) int lastRead
     ){
         List<PostDetailDto> postList = postService.getPostList();
