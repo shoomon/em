@@ -40,7 +40,7 @@ public class SecurityConfig {
                         // Swagger나 API Docs는 공개
                         .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         // OAuth2 로그인 플로우에 필요한 경로도 공개
-                        .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/**", "/auth/reissue", "/error").permitAll()
                         // 그 외 나머지는 인증 필요
                         .anyRequest().authenticated()
                 )
