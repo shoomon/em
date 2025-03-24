@@ -2,6 +2,10 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+# pnpm 설치 (corepack 사용)
+RUN corepack enable
+RUN corepack prepare pnpm@latest --activate
+
 # package.json과 lock 파일 복사 후 종속성 설치
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
