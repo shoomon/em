@@ -1,4 +1,4 @@
-package com.ssafy.em.user.domain;
+package com.ssafy.em.user.domain.entity;
 
 import com.ssafy.em.auth.domain.entity.Provider;
 import jakarta.persistence.Column;

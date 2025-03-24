@@ -1,6 +1,6 @@
 package com.ssafy.em.auth.domain.entity;
 
-import com.ssafy.em.user.domain.User;
+import com.ssafy.em.user.domain.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 

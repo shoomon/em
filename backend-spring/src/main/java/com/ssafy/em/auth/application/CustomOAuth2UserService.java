@@ -2,8 +2,8 @@ package com.ssafy.em.auth.application;
 
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
 import com.ssafy.em.auth.domain.entity.OAuthAttributes;
-import com.ssafy.em.user.domain.User;
 import com.ssafy.em.user.domain.UserRepository;
+import com.ssafy.em.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
