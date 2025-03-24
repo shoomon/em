@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
+import static com.ssafy.em.posts.domain.entity.QEmotion.emotion;
+import static com.ssafy.em.posts.domain.entity.QPostReaction.postReaction;
+
 @Repository
 @RequiredArgsConstructor
 public class PostReactionQueryDslRepository {
@@ -15,6 +18,8 @@ public class PostReactionQueryDslRepository {
         queryFactory.select()
                 .from(emotion)
                 .join(postReaction)
+                .on()
                 .where()
+        return null;
     }
 }

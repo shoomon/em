@@ -213,6 +213,6 @@ public class PostService{
 
 
     private Map<String, Integer> getEmotionCount(int postId){
-
+        return null;
     }
 }

@@ -70,5 +70,23 @@ tasks.named('test') {
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+tasks.named('compileJava') {
+    options.compilerArgs += [
+            "-Aquerydsl.generatedAnnotationClass=javax.annotation.Generated"
+    ]
+}
 
 
+sourceSets {
+    main {
+        java {
+            srcDir querydslDir
+        }
+    }
+}
+
+clean {
+    delete querydslDir
+}

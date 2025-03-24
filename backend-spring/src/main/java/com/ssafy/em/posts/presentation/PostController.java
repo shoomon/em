@@ -61,7 +61,13 @@ public class PostController {
             @RequestParam(name = "last", required = false) int lastRead,
             @RequestParam(name = "sort", required = false) String sortBy
     ){
-        List<PostDetailDto> postList = postService.getPostList();
+        List<PostDetailDto> postList = postService.getPostList(
+                longitude,
+                latitude,
+                radius,
+                lastRead,
+                sortBy
+        );
         GetPostListResponse response = new GetPostListResponse(postList);
 
         return ResponseEntity.ok(response);
