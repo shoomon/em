@@ -69,7 +69,7 @@ public class PostController {
                 lastRead,
                 sortBy
         );
-        GetPostListResponse response = new GetPostListResponse(postList);
+        GetPostListResponse response = new GetPostListResponse(postList, !postList.isEmpty());
 
         return ResponseEntity.ok(response);
     }
