@@ -16,7 +16,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
   const userMarkerRef = useRef<naver.maps.Marker | null>(null)
   const searchRangeRef = useRef<naver.maps.Circle | null>(null)
   const clusterRef = useRef<any>(null)
-  const postMerkerRefs = useRef<naver.maps.Marker[]>([])
+  const postMarkerRefs = useRef<naver.maps.Marker[]>([])
   const { map } = useMap({ initLocation: location, mapRef })
 
   useEffect(() => {
@@ -74,8 +74,8 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       return
     }
 
-    postMerkerRefs.current.forEach((marker) => marker.setMap(null))
-    postMerkerRefs.current = []
+    postMarkerRefs.current.forEach((marker) => marker.setMap(null))
+    postMarkerRefs.current = []
 
     for (const post of posts) {
       const marker = new window.naver.maps.Marker({
@@ -86,7 +86,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
           anchor: new window.naver.maps.Point(12, 12),
         },
       })
-      postMerkerRefs.current.push(marker)
+      postMarkerRefs.current.push(marker)
     }
 
     // @ts-ignore
@@ -94,7 +94,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       minClusterSize: 2,
       maxZoom: 18,
       map: map.current,
-      markers: postMerkerRefs.current,
+      markers: postMarkerRefs.current,
       gridSize: 100,
       icons: htmlClusterMarkers,
       indexGenerator: [30, 100, 200, 500, 1000],
