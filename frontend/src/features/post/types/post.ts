@@ -1,3 +1,11 @@
+export interface PostRequest {
+  userId: number
+  content: string
+  latitude: number
+  longitude: number
+  emotion: string
+}
+
 export interface Post {
   id: number
   location: string
