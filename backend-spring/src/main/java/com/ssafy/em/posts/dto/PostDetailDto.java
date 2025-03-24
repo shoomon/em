@@ -1,4 +1,4 @@
-package com.ssafy.em.Posts.dto;
+package com.ssafy.em.posts.dto;
 
 import org.locationtech.jts.geom.Point;
 

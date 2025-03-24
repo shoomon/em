@@ -1,18 +1,21 @@
-package com.ssafy.em.Posts.presentation;
+package com.ssafy.em.posts.presentation;
 
-import com.ssafy.em.Posts.application.PostService;
-import com.ssafy.em.Posts.domain.entity.Post;
-import com.ssafy.em.Posts.dto.PostDetailDto;
-import com.ssafy.em.Posts.dto.PostPointDto;
-import com.ssafy.em.Posts.dto.request.CreatePostRequest;
-import com.ssafy.em.Posts.dto.response.GetPointListResponse;
-import com.ssafy.em.Posts.dto.response.GetPostListResponse;
+import com.ssafy.em.posts.application.PostService;
+import com.ssafy.em.posts.domain.entity.Post;
+import com.ssafy.em.posts.dto.PostDetailDto;
+import com.ssafy.em.posts.dto.PostPointDto;
+import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.response.GetPointListResponse;
+import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor

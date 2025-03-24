@@ -1,15 +1,13 @@
-package com.ssafy.em.Posts.application;
+package com.ssafy.em.posts.application;
 
-import static com.ssafy.em.Posts.exception.PostException.PostNotFoundException;
-import static com.ssafy.em.Posts.exception.PostException.PostForbiddenException;
+import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
+import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 
 
-import com.ssafy.em.Posts.domain.entity.Post;
-import com.ssafy.em.Posts.domain.repository.PostJpaRepository;
-import com.ssafy.em.Posts.dto.PostDetailDto;
-import com.ssafy.em.Posts.dto.PostPointDto;
-import com.ssafy.em.Posts.dto.request.CreatePostRequest;
-import com.ssafy.em.Posts.exception.PostErrorCode;
+import com.ssafy.em.posts.domain.entity.Post;
+import com.ssafy.em.posts.domain.repository.PostJpaRepository;
+import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -29,6 +27,7 @@ public class PostService{
     private static final int PAGE_SIZE = 10;
 
     private final PostJpaRepository postJpaRepository;
+    private final PostRedisService postRedisService;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     private final Random random = new Random();
@@ -60,16 +59,18 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
+        postRedisService.savePostToRedis(post);
     }
 
     @Transactional
-    public void deletePost(int userId, int id){
-        Post post = postJpaRepository.findById(id)
+    public void deletePost(int userId, int postId){
+        Post post = postJpaRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
 
         if(post.getUserId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
         postJpaRepository.delete(post);
+        postRedisService.deletePostFromRedis(postId);
     }
 
     public List<PostPointDto> getPointList(double latitude, double longitude, int radius){

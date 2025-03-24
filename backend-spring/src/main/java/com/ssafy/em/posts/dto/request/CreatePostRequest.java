@@ -1,4 +1,4 @@
-package com.ssafy.em.Posts.dto.request;
+package com.ssafy.em.posts.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
