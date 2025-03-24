@@ -12,7 +12,7 @@ public record PostDetailDto(
         String imageUrl,
         String content,
         Point location,
-        Map<String, Integer> emotionCountList,
+        Map<String, Long> emotionCountList,
         LocalDateTime createdAt
 ) {
 }

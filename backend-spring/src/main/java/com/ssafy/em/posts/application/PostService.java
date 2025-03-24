@@ -9,6 +9,8 @@ import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
+import com.ssafy.em.posts.domain.repository.PostQueryDslRepository;
+import com.ssafy.em.posts.domain.repository.PostReactionQueryDslRepository;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +43,13 @@ import java.util.Random;
 @Slf4j
 public class PostService{
     private final PostJpaRepository postJpaRepository;
+    private final PostReactionQueryDslRepository postReactionQueryDslRepository;
     private final PostRedisService postRedisService;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     private final Random random = new Random();
     private final RedisTemplate<Object, Object> redisTemplate;
+    private final PostQueryDslRepository postQueryDslRepository;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
@@ -155,12 +160,16 @@ public class PostService{
 
         posts = sortPosts(posts, sortBy, longitude, latitude);
 
+        //fixme: 레디스에서 페이지네이션 하려면
+        // 조회 시마다 반경 내 모든 게시글 가져오고
+        // 정렬 후 다시 필터링해야함
         if (lastRead != 0) {
             posts = posts.stream()
-                    .filter(p -> p.getId() < lastRead)
+                    .filter(p -> compareWithCursor(p,longitude, latitude, lastRead,sortBy))
                     .toList();
         }
 
+        //fixme: 공감 수나 거리가 같은 게시글은 누락됨.
         List<Post> page = posts.stream()
                 .limit(PAGE_SIZE)
                 .toList();
@@ -181,12 +190,16 @@ public class PostService{
 
 
     //todo: MyPage -> getMyPostList
+    public List<PostDetailDto> getMyPostList(){
+//        List<Post> postList = postQueryDslRepository.getMyPostList();
+        return null;
+    }
 
     private List<Post> sortPosts(List<Post> posts, String sortBy, double lon, double lat) {
 
         List<Post> sorted;
 
-        switch (sortBy.toLowerCase()) {
+        switch (sortBy) {
             case "popular":
                 sorted = posts.stream()
                         .sorted(Comparator.comparing(Post::getReactionCount).reversed())
@@ -211,8 +224,24 @@ public class PostService{
         return sorted;
     }
 
+    private boolean compareWithCursor(Post post, double lon, double lat, int lastRead, String sortBy) {
+        switch (sortBy.toLowerCase()) {
+            case "latest":
+                return post.getId() < lastRead; // Id를 기준으로
 
-    private Map<String, Integer> getEmotionCount(int postId){
-        return null;
+            case "popular":
+                return post.getReactionCount() < lastRead; //Count를 기준으로
+
+            case "distance":
+                Point center = geometryFactory.createPoint(new Coordinate(lon, lat));
+                return post.getLocation().distance(center) > lastRead; //마지막 조회 거리를 기준으로
+
+            default:
+                return post.getId() < lastRead;
+        }
+    }
+
+    private Map<String, Long> getEmotionCount(int postId){
+        return postReactionQueryDslRepository.getEmotionCount(postId);
     }
 }
