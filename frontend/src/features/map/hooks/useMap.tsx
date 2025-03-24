@@ -15,7 +15,7 @@ const useMap = ({ initLocation, mapRef }: useMapProps) => {
 
     map.current = new window.naver.maps.Map(mapRef.current, {
       center: new window.naver.maps.LatLng(initLocation.lat, initLocation.lng),
-      zoom: 15,
+      zoom: 16,
     })
   }, [mapRef.current])
 
