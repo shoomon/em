@@ -46,6 +46,16 @@ const HomePage = () => {
       content: "우와아아아아아아아아아아~!",
       emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
     },
+    {
+      id: 4,
+      location: "서울 강남구 테헤란로 214",
+      lat: 37.5162873,
+      lng: 127.0200228,
+      date: "3시간 전",
+      author: "기뻐하는 판다곰",
+      content: "인생 쓰다...",
+      emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
+    },
   ]
 
   const { isDenied, currentPosition, lastFetchedPosition } = useGps()

@@ -1,6 +1,7 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Post } from "@/features/post/types/post"
 import { ReactNode, useEffect, useRef } from "react"
+import { htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5 } from "../constants"
 
 interface MapViewerProps {
   isDenied: boolean
@@ -14,11 +15,12 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
   const mapRef = useRef<HTMLDivElement>(null)
   const userMarkerRef = useRef<naver.maps.Marker | null>(null)
   const searchRangeRef = useRef<naver.maps.Circle | null>(null)
+  const clusterRef = useRef<any>(null)
   const postMerkerRefs = useRef<naver.maps.Marker[]>([])
   const { map } = useMap({ initLocation: location, mapRef })
 
   useEffect(() => {
-    if (!map.current) {
+    if (!map.current || userMarkerRef.current || searchRangeRef.current) {
       return
     }
 
@@ -35,8 +37,8 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       map: map.current,
       center: new naver.maps.LatLng(location.lat, location.lng),
       radius: 250,
-      fillColor: "rgba(0, 0, 0, 0.05)",
-      strokeColor: "rgba(0, 0, 0, 0.05)",
+      fillColor: "rgba(0, 0, 0, 0.08)",
+      strokeColor: "rgba(0, 0, 0, 0.08)",
       strokeWeight: 1,
     })
   }, [map.current])
@@ -80,12 +82,32 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
         position: new window.naver.maps.LatLng(post.lat, post.lng),
         map: map.current,
         icon: {
-          content: `<div class="size-8 bg-blue-400 opacity-60 rounded-full" />`,
+          content: `<div class="size-8 bg-blue-400/20 rounded-full" />`,
           anchor: new window.naver.maps.Point(12, 12),
         },
       })
       postMerkerRefs.current.push(marker)
     }
+
+    // @ts-ignore
+    clusterRef.current = new window.MarkerClustering({
+      minClusterSize: 2,
+      maxZoom: 18,
+      map: map.current,
+      markers: postMerkerRefs.current,
+      gridSize: 100,
+      icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+      indexGenerator: [30, 100, 200, 500, 1000],
+      stylingFunction: (clusterMarker: any, count: number) => {
+        if (clusterMarker) {
+          const firstChild = clusterMarker.getElement().querySelector("div:first-child")
+          if (firstChild) {
+            firstChild.innerHTML = count
+            firstChild.classList.add("flex", "items-center", "justify-center", "text-lg")
+          }
+        }
+      },
+    })
   }, [posts])
 
   const focusOnMarker = () => {
