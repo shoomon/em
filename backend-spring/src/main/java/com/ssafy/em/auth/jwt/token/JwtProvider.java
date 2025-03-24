@@ -1,6 +1,8 @@
 package com.ssafy.em.auth.jwt.token;
 
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
+import com.ssafy.em.auth.exception.AuthErrorCode;
+import com.ssafy.em.common.exception.status.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -67,7 +69,7 @@ public class JwtProvider {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        int userId = (int) claims.get(AUTH_ID);
+        int userId = Integer.parseInt(claims.get(AUTH_ID, String.class));
         String email = (String) claims.get(AUTH_EMAIL);
 
         // OAuth2CustomUser 생성 (registrationId는 "kakao", attributes는 빈 맵 처리)
@@ -84,17 +86,27 @@ public class JwtProvider {
                     .parseSignedClaims(token);
 
             return true;
-        } catch(SecurityException | MalformedJwtException e) {
+
+        } catch (SecurityException | MalformedJwtException e) {
             log.warn("잘못된 JWT 서명 또는 토큰입니다: {}", e.getMessage());
-        } catch(ExpiredJwtException e) {
+            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+
+        } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다: {}", e.getMessage());
-        } catch (IllegalArgumentException | UnsupportedJwtException e) {
-            log.info("JWT 토큰이 비어있거나 지원되지 않는 형식입니다: {}", e.getMessage());
+            throw new UnauthorizedException(AuthErrorCode.EXPIRED_JWT_TOKEN.toErrorCode());
+
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다: {}", e.getMessage());
+            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 비어있습니다: {}", e.getMessage());
+            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+
         } catch (Exception e) {
             log.error("JWT 검증 중 알 수 없는 에러가 발생했습니다: {}", e.getMessage());
+            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
         }
-
-        return false;
     }
 
 }

@@ -27,4 +27,8 @@ public class RefreshTokenService {
         refreshTokenRepository.delete(userId);
     }
 
+    public boolean exists(String userId) {
+        return refreshTokenRepository.findByKey(userId) != null;
+    }
+
 }
