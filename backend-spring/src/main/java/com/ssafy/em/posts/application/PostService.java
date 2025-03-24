@@ -24,6 +24,7 @@ import java.util.Random;
 @Slf4j
 public class PostService{
     private final PostJpaRepository postJpaRepository;
+    private final PostRedisService postRedisService;
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final Random random = new Random();
 
@@ -54,15 +55,17 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
+        postRedisService.savePostToRedis(post);
     }
 
     @Transactional
-    public void deletePost(int userId, int id){
-        Post post = postJpaRepository.findById(id)
+    public void deletePost(int userId, int postId){
+        Post post = postJpaRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
 
         if(post.getUserId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
         postJpaRepository.delete(post);
+        postRedisService.deletePostFromRedis(postId);
     }
 }

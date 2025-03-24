@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class PostRedisService {
@@ -14,10 +16,12 @@ public class PostRedisService {
 
 
     public void savePostToRedis(Post post){
-
+        String key = POST_KEY + post.getId();
+        redisTemplate.opsForValue().set(key, post, TTL_SECONDS, TimeUnit.SECONDS);
     }
 
-    public void deletePostFromRedis(Post post){
-
+    public void deletePostFromRedis(int postId){
+        String key = POST_KEY + postId;
+        redisTemplate.delete(key);
     }
 }
