@@ -1,7 +1,7 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Post } from "@/features/post/types/post"
 import { ReactNode, useEffect, useRef } from "react"
-import { htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5 } from "../constants"
+import htmlClusterMarkers from "../constants"
 
 interface MapViewerProps {
   isDenied: boolean
@@ -96,7 +96,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       map: map.current,
       markers: postMerkerRefs.current,
       gridSize: 100,
-      icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+      icons: htmlClusterMarkers,
       indexGenerator: [30, 100, 200, 500, 1000],
       stylingFunction: (clusterMarker: any, count: number) => {
         if (clusterMarker) {
