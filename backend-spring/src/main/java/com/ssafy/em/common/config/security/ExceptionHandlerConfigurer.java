@@ -1,7 +1,10 @@
 package com.ssafy.em.common.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.em.auth.exception.AuthErrorCode;
 import com.ssafy.em.common.exception.ErrorCode;
 import com.ssafy.em.common.exception.dto.ErrorResponse;
+import com.ssafy.em.common.exception.status.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +34,21 @@ public class ExceptionHandlerConfigurer implements Customizer<ExceptionHandlingC
 
     private void handleAuthenticationException(HttpServletRequest request, HttpServletResponse response,
                                                AuthenticationException authException) throws IOException {
+
         log.warn("Unauthorized Access: {} - {}", request.getRequestURI(), authException.getMessage());
 
         response.setContentType(CONTENT_TYPE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        // TODO: 커스텀 에러 코드 적용
-        ErrorResponse errorResponse = ErrorResponse.from(new ErrorCode("B4011", "인증이 필요합니다."));
+        ErrorCode errorCode = AuthErrorCode.UNAUTHORIZED.toErrorCode();  // 기본값
 
-        response.getWriter().write(errorResponse.toString());
+        Throwable cause = authException.getCause();
+        if (cause instanceof UnauthorizedException) {
+            errorCode = ((UnauthorizedException) cause).getErrorCode();
+        }
+
+        ErrorResponse errorResponse = ErrorResponse.from(errorCode);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
     }
 
     private void handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response,
@@ -49,10 +58,10 @@ public class ExceptionHandlerConfigurer implements Customizer<ExceptionHandlingC
         response.setContentType(CONTENT_TYPE);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        // TODO: 커스텀 에러 코드 적용
-        ErrorResponse errorResponse = ErrorResponse.from(new ErrorCode("B4031", "접근 권한이 없습니다."));
+        // Enum을 통해 직접 커스텀 에러 코드 반환
+        ErrorResponse errorResponse = ErrorResponse.from(AuthErrorCode.FORBIDDEN.toErrorCode());
 
-        response.getWriter().write(errorResponse.toString());
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
     }
 
 }
