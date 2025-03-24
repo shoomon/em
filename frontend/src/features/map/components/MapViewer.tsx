@@ -36,7 +36,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
     searchRangeRef.current = new naver.maps.Circle({
       map: map.current,
       center: new naver.maps.LatLng(location.lat, location.lng),
-      radius: 250,
+      radius: 500,
       fillColor: "rgba(0, 0, 0, 0.08)",
       strokeColor: "rgba(0, 0, 0, 0.08)",
       strokeWeight: 1,
