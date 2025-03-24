@@ -6,19 +6,18 @@ interface EmTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string
   placeholder?: string
   maxLength?: number
-  text?: string // 텍스트 상태 전달
-  onTextChange?: (_text: string) => void // 텍스트 상태 변경
+  textState: string // 텍스트 상태 전달
+  onTextChange: (_text: string) => void // 텍스트 상태 변경
 }
 
 const EmTextArea = ({
   className,
   placeholder = "이곳에 텍스트를 입력해 주세요.",
   maxLength = 500,
-  text,
+  textState,
   onTextChange,
   ...props
 }: EmTextAreaProps) => {
-  const textRef = useRef<HTMLTextAreaElement>(null)
   const countRef = useRef<HTMLSpanElement>(null)
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,13 +35,12 @@ const EmTextArea = ({
     }
 
     // 텍스트 상태 변경
-    onTextChange?.(value)
+    onTextChange(value)
   }
   return (
     <div className="w-full h-full bg-em-white flex flex-col gap-2 p-4 border border-em-gray-md rounded-xl">
       <textarea
-        ref={textRef}
-        value={text}
+        value={textState}
         onChange={handleChange}
         maxLength={maxLength}
         className={cn("outline-none resize-none w-full h-full min-h-60", className)}
@@ -56,4 +54,5 @@ const EmTextArea = ({
     </div>
   )
 }
+
 export default EmTextArea
