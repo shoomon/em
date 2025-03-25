@@ -8,6 +8,7 @@ public record PostDetailDto(
         int userId,
         String nickname,
         String imageUrl,
+        String address,
         String content,
         double longitude,
         double latitude,

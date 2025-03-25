@@ -83,6 +83,7 @@ public class Post {
                 post.getUserId(),
                 post.getNickname(),
                 null,
+                post.getAddress(),
                 post.getContent(),
                 post.getLocation().getY(),
                 post.getLocation().getX(),
