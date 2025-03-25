@@ -1,5 +1,6 @@
 package com.ssafy.em.posts.presentation;
 
+import com.ssafy.em.common.annotation.LoginRequired;
 import com.ssafy.em.posts.application.PostService;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.dto.PostCursorDto;
@@ -32,19 +33,15 @@ public class PostController {
 
     //todo: 토큰에서 유저id 받기
     @PostMapping
-//    public ResponseEntity<String> createPost(int userId, @RequestBody @Valid CreatePostRequest request){
-    public ResponseEntity<String> createPost(@RequestBody @Valid CreatePostRequest request){
-//        postService.createPost(userId, request);
-        postService.createPost(1, request);
+    public ResponseEntity<String> createPost(@LoginRequired int userId, @RequestBody @Valid CreatePostRequest request){
+        postService.createPost(userId, request);
         return ResponseEntity.ok().build();
     }
 
     //todo: 토큰에서 유저id 받기
     @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deletePost(int userId, @PathVariable int id){
-    public ResponseEntity<Void> deletePost(@PathVariable int id){
-//        postService.deletePost(userId, id);
-        postService.deletePost(1, id);
+    public ResponseEntity<Void> deletePost(@LoginRequired int userId, @PathVariable int id){
+        postService.deletePost(userId, id);
         return ResponseEntity.ok().build();
     }
 
