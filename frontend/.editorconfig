@@ -9,7 +9,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
-max_line_length = 100
+max_line_length = 80
 
 # Markdown 파일은 trailing whitespace가 의미를 가질 수 있음
 [*.md]
