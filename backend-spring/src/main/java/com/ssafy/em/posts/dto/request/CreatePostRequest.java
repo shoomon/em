@@ -9,9 +9,9 @@ public record CreatePostRequest(
         @NotBlank(message = "게시글 내용이 없습니다.")
         String content,
         @NotNull(message = "위도가 없습니다.")
-        double latitude,
+        double lat,
         @NotNull(message = "경도가 없습니다.")
-        double longitude,
+        double lng,
         String emotion
 ) {
 }
