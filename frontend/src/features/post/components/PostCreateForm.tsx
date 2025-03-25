@@ -1,4 +1,5 @@
 import StepAnimateLayout from "@/layout/StepAnimateLayout"
+import { useEffect, useState } from "react"
 import usePostForm from "../hooks/usePostForm"
 import { PostCreateStep } from "../types/post"
 import EmotionSelector from "./EmotionSelector"
@@ -19,6 +20,16 @@ const PostCreateForm = () => {
     updateStep,
     isFormDataValid,
   } = usePostForm()
+
+  const [animatedStep, setAnimatedStep] = useState(currentStep)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAnimatedStep(currentStep) // 애니메이션 끝난 후 스텝 변경
+    }, 200)
+
+    return () => clearTimeout(timeout)
+  }, [currentStep])
 
   // 현재 스탭 컴포넌트
   const STEP_COMPONENTS = {
@@ -44,10 +55,10 @@ const PostCreateForm = () => {
 
   return (
     <form className="h-full" onSubmit={handleSubmit}>
-      <div className="flex w-full flex-col h-full justify-between">
+      <div className="flex w-full flex-col justify-between h-[calc(100dvh-var(--header-height))]">
         {/* 현재 스탭 컴포넌트 */}
         <div className="flex flex-1">
-          <StepAnimateLayout>{STEP_COMPONENTS[currentStep]}</StepAnimateLayout>
+          <StepAnimateLayout>{STEP_COMPONENTS[animatedStep]}</StepAnimateLayout>
         </div>
         {/* 버튼 컴포넌트 */}
         <NextStepButtonSection

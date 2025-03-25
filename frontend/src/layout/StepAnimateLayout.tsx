@@ -8,19 +8,21 @@ type StepAnimateLayoutProps = {
 
 const StepAnimateLayout = ({ children }: StepAnimateLayoutProps) => {
   const [searchParams] = useSearchParams()
+  const step = searchParams.get("step")
+
+  // 현재 step을 상태로 관리하여, 이전 컴포넌트가 사라진 후 새로운 컴포넌트를 보여줌
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={searchParams.get("step")}
+        key={step}
         className="w-full h-full"
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -30 }}
         transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 30,
+          duration: 0.2,
+          ease: "easeInOut",
         }}>
         {children}
       </motion.div>
