@@ -111,7 +111,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 WHERE post.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
                 """;
 
-        em.createNativeQuery(sql)
+//        em.createNativeQuery(sql)
         return List.of();
     }
 

@@ -55,7 +55,7 @@ public class PostService{
         //todo: 역geo api로 좌표정보로 주소 가져오기
 
         Point location = geometryFactory
-                .createPoint(new Coordinate(request.longitude(), request.latitude()));
+                .createPoint(new Coordinate(request.lng(), request.lat()));
         location.setSRID(4326);
 
         Post post = Post.builder()
