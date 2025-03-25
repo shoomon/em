@@ -17,5 +17,11 @@ export default defineConfig({
   server: {
     // 포트 번호 설정
     port: 3000,
+    proxy: {
+      "/api": {
+        target: "https://j12a407.p.ssafy.io:3443",
+        changeOrigin: true,
+      },
+    },
   },
 })
