@@ -30,15 +30,19 @@ public class PostController {
 
     //todo: 토큰에서 유저id 받기
     @PostMapping
-    public ResponseEntity<Void> createPost(int userId, @RequestBody @Valid CreatePostRequest request){
-        postService.createPost(userId, request);
+//    public ResponseEntity<String> createPost(int userId, @RequestBody @Valid CreatePostRequest request){
+    public ResponseEntity<String> createPost(@RequestBody @Valid CreatePostRequest request){
+//        postService.createPost(userId, request);
+        postService.createPost(1, request);
         return ResponseEntity.ok().build();
     }
 
     //todo: 토큰에서 유저id 받기
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(int userId, @PathVariable int id){
-        postService.deletePost(userId, id);
+//    public ResponseEntity<Void> deletePost(int userId, @PathVariable int id){
+    public ResponseEntity<Void> deletePost(@PathVariable int id){
+//        postService.deletePost(userId, id);
+        postService.deletePost(1, id);
         return ResponseEntity.ok().build();
     }
 
@@ -59,7 +63,7 @@ public class PostController {
             @RequestParam(name = "lon") double longitude,
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) Integer radius,
-            @RequestParam(name = "last", defaultValue = "-1", required = false) Integer lastRead,
+            @RequestParam(name = "last", defaultValue = "0", required = false) Integer lastRead,
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
         GetPostListResponse response = postService.getPostList(

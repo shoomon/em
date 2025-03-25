@@ -1,0 +1,27 @@
+services:
+  # PostgreSQL 로컬용 컨테이너
+  postgresql_local:
+    image: postgres:latest
+    container_name: em-postgresql-local
+    ports:
+      - "${POSTGRES_PORT_LOCAL}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_LOCAL}
+      POSTGRES_USER: ${POSTGRES_USER_DEV}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_DEV}
+    volumes:
+      - postgres_local_data:/var/lib/postgresql/data
+
+  # Redis 로컬용 컨테이너
+  redis_local:
+    image: redis:latest
+    container_name: em-redis-local
+    ports:
+      - "${REDIS_PORT_LOCAL}:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD_DEV}
+    volumes:
+      - redis_local_data:/data
+
+volumes:
+  postgres_local_data:
+  redis_local_data:

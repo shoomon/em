@@ -11,7 +11,8 @@ public record PostDetailDto(
         String nickname,
         String imageUrl,
         String content,
-        Point location,
+        double longitude,
+        double latitude,
         Map<String, Long> emotionCountList,
         LocalDateTime createdAt
 ) {

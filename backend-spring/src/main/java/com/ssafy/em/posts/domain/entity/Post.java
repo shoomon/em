@@ -1,5 +1,7 @@
 package com.ssafy.em.posts.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.ssafy.em.posts.dto.PostDetailDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,9 +12,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.CLASS,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "@class"
+)
 
 @Entity
 @Table(name = "posts")
@@ -35,6 +46,7 @@ public class Post {
     @Column(length = 1500, nullable = false)
     private String content;
 
+    @JdbcTypeCode(SqlTypes.GEOMETRY)
     @Column(columnDefinition = "geometry(Point, 4326)")
     private Point location;
 
@@ -62,5 +74,20 @@ public class Post {
         this.content = content;
         this.location = location;
         this.address = address;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public static PostDetailDto from(Post post, Map<String, Long> emotionCounts) {
+        return new PostDetailDto(
+                post.getId(),
+                post.getUserId(),
+                post.getNickname(),
+                null,
+                post.getContent(),
+                post.getLocation().getY(),
+                post.getLocation().getX(),
+                emotionCounts,
+                post.getCreatedAt()
+        );
     }
 }
