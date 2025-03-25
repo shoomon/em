@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -29,10 +31,27 @@ public class EmotionService {
         return emotion.getId();
     }
 
+    public List<GetEmotionResponse> getList() {
+        List<Emotion> emotions = emotionRepository.findAll();
+
+        return emotions.stream()
+                .map(GetEmotionResponse::from)
+                .toList();
+    }
+
     public GetEmotionResponse get(int emotionId) {
         Emotion emotion = emotionRepository.findById(emotionId)
                 .orElseThrow(() -> new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
 
         return GetEmotionResponse.from(emotion);
+    }
+
+    @Transactional
+    public void delete(int emotionId) {
+        if(!emotionRepository.existsById(emotionId)) {
+            throw new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND);
+        }
+
+        emotionRepository.deleteById(emotionId);
     }
 }
