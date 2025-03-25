@@ -20,7 +20,7 @@ export interface PostListRequest {
   lng: number
   lat: number
   rad?: number
-  postId: number
+  postId?: number
   dist?: number
   emoCnt?: number
   sort?: string
@@ -42,6 +42,7 @@ export interface Post {
     trust: number
   }
   address: string
+  createdAt: string
 }
 
 export interface PostInfiniteData {

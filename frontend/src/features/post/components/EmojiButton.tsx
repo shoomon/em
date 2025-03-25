@@ -4,17 +4,17 @@ import loveImage from "@/assets/love.svg"
 import angryImage from "@/assets/angry.svg"
 import confidentImage from "@/assets/confident.svg"
 
-interface EmojiButtonProps {
-  emotionName: "happy" | "sad" | "love" | "angry" | "confident"
-  count: number
+const emotionMapper = {
+  joy: happyImage,
+  sadness: sadImage,
+  anger: angryImage,
+  surprise: loveImage,
+  trust: confidentImage,
 }
 
-const emotionMapper = {
-  happy: happyImage,
-  sad: sadImage,
-  love: loveImage,
-  angry: angryImage,
-  confident: confidentImage,
+interface EmojiButtonProps {
+  emotionName: "joy" | "sadness" | "anger" | "surprise" | "trust"
+  count: number
 }
 
 const EmojiButton = ({ emotionName, count }: EmojiButtonProps) => {

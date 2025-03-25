@@ -1,17 +1,17 @@
 import useMap from "@/features/map/hooks/useMap"
-import { Post } from "@/features/post/types/post"
+import { Point } from "@/features/post/types/post"
 import { ReactNode, useEffect, useRef } from "react"
 import htmlClusterMarkers from "../constants"
 
 interface MapViewerProps {
   isDenied: boolean
   location: { lat: number; lng: number }
-  posts: Post[]
+  points: Point[]
   className?: string
   children?: (focusOnMarker: () => void) => ReactNode
 }
 
-const MapViewer = ({ isDenied, location, posts, className, children }: MapViewerProps) => {
+const MapViewer = ({ isDenied, location, points, className, children }: MapViewerProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const userMarkerRef = useRef<naver.maps.Marker | null>(null)
   const searchRangeRef = useRef<naver.maps.Circle | null>(null)
@@ -79,7 +79,6 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       const zoomLevel = map.current.getZoom()
       clusterRef.current.setMarkers(zoomLevel < 14 ? [] : postMarkerRefs.current)
     }
-
     const handleDragend = () => {
       if (!map.current) {
         return
@@ -139,9 +138,9 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
     postMarkerRefs.current.forEach((marker) => marker.setMap(null))
     postMarkerRefs.current = []
 
-    for (const post of posts) {
+    for (const point of points) {
       const marker = new window.naver.maps.Marker({
-        position: new window.naver.maps.LatLng(post.lat, post.lng),
+        position: new window.naver.maps.LatLng(point.lat, point.lng),
         map: map.current,
         icon: {
           content: `<div class="size-8 bg-blue-400/40 rounded-full" />`,
@@ -152,12 +151,11 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       naver.maps.Event.addListener(marker, "click", () => {
         console.log("마커 클릭! 위치: " + marker.getPosition())
       })
-
       postMarkerRefs.current.push(marker)
     }
 
     clusterRef.current.setMarkers(postMarkerRefs.current)
-  }, [posts])
+  }, [points])
 
   const focusOnMarker = () => {
     map.current?.setCenter(new window.naver.maps.LatLng(location.lat, location.lng))
