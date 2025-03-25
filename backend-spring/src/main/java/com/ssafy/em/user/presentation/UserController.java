@@ -1,6 +1,6 @@
 package com.ssafy.em.user.presentation;
 
-import com.ssafy.em.common.annotation.Login;
+import com.ssafy.em.common.annotation.LoginRequired;
 import com.ssafy.em.user.application.UserService;
 import com.ssafy.em.user.dto.response.GetUserResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class UserController implements UserControllerDocs {
 
     @GetMapping
     @Override
-    public ResponseEntity<GetUserResponse> getUser(@Login int loginId) {
+    public ResponseEntity<GetUserResponse> getUser(@LoginRequired int loginId) {
         GetUserResponse response = userService.get(loginId);
         return ResponseEntity.ok().body(response);
     }
