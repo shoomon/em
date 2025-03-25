@@ -1,5 +1,5 @@
-import { ButtonHTMLAttributes, ReactNode } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { ButtonHTMLAttributes, ReactNode } from "react"
 
 import { cn } from "@/utils/cn"
 
@@ -18,7 +18,7 @@ const buttonVariants = cva(
       shape: {
         default: "rounded-xl",
         square: "rounded-none",
-        circle: "rounded-full size-10",
+        circle: "rounded-full",
       },
       size: {
         default: "px-5 py-3",

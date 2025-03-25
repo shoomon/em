@@ -13,8 +13,8 @@ const EmDrawer = ({ open, onOpenChange, trigger, children }: EmDrawerProps) => {
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Trigger>{trigger}</Drawer.Trigger>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-em-black/30 max-w-[600px] mx-auto" />
-        <Drawer.Content className="fixed bottom-0 z-[110] left-0 right-0 outline-none h-fit max-w-[600px] mx-auto">
+        <Drawer.Overlay className="fixed inset-0 z-[110] bg-em-black/30 max-w-[600px] mx-auto" />
+        <Drawer.Content className="fixed bottom-0 z-[120] left-0 right-0 outline-none h-fit max-w-[600px] mx-auto">
           <Drawer.Title />
           <Drawer.Description />
           <div className="relative pt-6 rounded-t-2xl bg-em-white">

@@ -1,11 +1,14 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
 import Tabs from "@/components/Tabs/Tabs"
 import AddressDisplay from "@/features/map/components/AddressDisplay"
+import LocationFixButton from "@/features/map/components/LocatonFixButton"
 import MapViewer from "@/features/map/components/MapViewer"
+import PostCreateButton from "@/features/post/components/PostCreateButton"
 import PostList from "@/features/post/components/PostList"
+import PostRefetchButton from "@/features/post/components/PostRefetchButton"
+import PostSearchButton from "@/features/post/components/PostSearchButton"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
-import { LocateFixedIcon, MailSearch, RotateCwIcon, SendIcon } from "lucide-react"
 import { useState } from "react"
 
 const dummyData = [
@@ -71,41 +74,22 @@ const HomePage = () => {
   }
 
   return (
-    <div className="relative h-[calc(100vh-var(--header-height)-var(--navigation-bar-height))]">
+    <div className="relative h-[calc(100dvh-var(--header-height)-var(--navigation-bar-height))]">
       <AddressDisplay lastFetchedPosition={lastFetchedPosition} />
-
-      <button className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer top-12 left-1/2 border-neutral-200">
-        <RotateCwIcon className="size-5" />
-        <p className="text-sm font-semibold">메시지 재탐색</p>
-      </button>
-
+      <PostRefetchButton onClick={() => {}} />
       <MapViewer
-        className="relative h-full"
+        className="h-full"
         isDenied={isDenied}
         location={currentPosition}
         posts={dummyData}>
-        {(focusOnMarker) => (
-          <button
-            className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-24 right-4 border-neutral-200"
-            onClick={focusOnMarker}>
-            <LocateFixedIcon />
-          </button>
-        )}
+        {(focusOnMarker) => <LocationFixButton onClick={focusOnMarker} />}
       </MapViewer>
-
-      <button className="absolute z-10 p-2 bg-white border rounded-full shadow-md cursor-pointer bottom-8 right-4 border-neutral-200">
-        <SendIcon />
-      </button>
+      <PostCreateButton onClick={() => {}} />
 
       <EmDrawer
         open={isOpen}
         onOpenChange={() => setIsOpen(!isOpen)}
-        trigger={
-          <div className="absolute z-10 flex items-center gap-2 px-3 py-2 -translate-x-1/2 bg-white border rounded-lg shadow-md cursor-pointer bottom-8 left-1/2 border-neutral-200">
-            <MailSearch className="size-5" />
-            <p className="text-sm font-semibold">메세지 전체 보기</p>
-          </div>
-        }>
+        trigger={<PostSearchButton />}>
         <div>
           <Tabs
             tabs={tabs}
