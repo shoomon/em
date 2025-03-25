@@ -7,9 +7,7 @@ import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
-import com.ssafy.em.posts.domain.repository.PostQueryDslRepository;
 import com.ssafy.em.posts.domain.repository.PostReactionQueryDslRepository;
-import com.ssafy.em.posts.domain.repository.PostCustomRepository;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
@@ -36,12 +34,10 @@ import java.util.Random;
 public class PostService{
     private final PostJpaRepository postJpaRepository;
     private final PostReactionQueryDslRepository postReactionQueryDslRepository;
-    private final PostRedisService postRedisService;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     private final Random random = new Random();
     private final RedisTemplate<String, Object> redisTemplate;
-    private final PostQueryDslRepository postQueryDslRepository;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
@@ -97,7 +93,7 @@ public class PostService{
             double latitude,
             int radius
     ){
-        return postQueryDslRepository.getPointList(longitude, latitude, radius);
+        return postJpaRepository.getPointList(longitude, latitude, radius);
     }
 
     public GetPostListResponse getPostList(
