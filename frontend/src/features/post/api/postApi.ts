@@ -1,15 +1,17 @@
 import apiClient from "@/utils/http-common"
-import { PostRequest } from "../types/post"
+import toQueryString from "@/utils/toQueryString"
+import { PostCreateRequest, PostListRequest } from "../types/post"
 
-export const fetchPostCreate = (postRequest: PostRequest) => {
-  return apiClient.post("/posts/", postRequest)
+export const fetchPostCreate = (postCreateRequest: PostCreateRequest) => {
+  return apiClient.post("/posts/", postCreateRequest)
 }
 
 export const fetchPostDelete = (id: number) => {
   return apiClient.delete(`/posts/${id}`)
 }
 
-export const fetchPostList = async () => {
-  const response = await apiClient.get("/posts/")
+export const fetchPostList = async (postListRequest: PostListRequest) => {
+  const queryString = toQueryString({ ...postListRequest })
+  const response = await apiClient.get(`/posts?${queryString}`)
   return response.data
 }
