@@ -4,24 +4,30 @@ import { PostCreateStep } from "../types/post"
 import EmotionSelector from "./EmotionSelector"
 import MapSelector from "./MapSelector"
 import NextStepButtonSection from "./NextStepButtonSection"
+import PostConfirm from "./PostConfirm"
 import PostContentInput from "./PostContentInput"
 
 const PostCreateForm = () => {
   const {
     //
+    isSubmitPending,
     currentStep,
     formData,
     updateFormData,
     handleSubmit,
     handleMapChange,
     updateStep,
+    isFormDataValid,
   } = usePostForm()
 
   // 현재 스탭 컴포넌트
   const STEP_COMPONENTS = {
     [PostCreateStep.Map]: <MapSelector onMapChange={handleMapChange} />,
     [PostCreateStep.Emotion]: (
-      <EmotionSelector onEmotionChange={(emotion) => updateFormData("emotion", emotion)} />
+      <EmotionSelector
+        emotionState={formData.emotion}
+        onEmotionChange={(emotion) => updateFormData("emotion", emotion)}
+      />
     ),
     [PostCreateStep.Content]: (
       <PostContentInput
@@ -29,6 +35,11 @@ const PostCreateForm = () => {
         textState={formData.content}
       />
     ),
+    [PostCreateStep.Confirm]: <PostConfirm formData={formData} />,
+  }
+
+  if (isSubmitPending) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -39,7 +50,11 @@ const PostCreateForm = () => {
           <StepAnimateLayout>{STEP_COMPONENTS[currentStep]}</StepAnimateLayout>
         </div>
         {/* 버튼 컴포넌트 */}
-        <NextStepButtonSection currentStep={currentStep} updateStep={updateStep} />
+        <NextStepButtonSection
+          isFormDataValid={isFormDataValid}
+          currentStep={currentStep}
+          updateStep={updateStep}
+        />
       </div>
     </form>
   )
