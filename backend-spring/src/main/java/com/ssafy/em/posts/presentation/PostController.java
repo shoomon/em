@@ -66,7 +66,7 @@ public class PostController {
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
         PostCursorDto cursor = null;
-        if (cursorId != null) {
+        if (cursorId != 0) {
             cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
         }
 

@@ -3,7 +3,6 @@ package com.ssafy.em.posts.domain.repository;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostPointDto;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -21,5 +20,12 @@ public interface PostCustomRepository {
             double longitude,
             double latitude,
             int radius
+    );
+
+    List<Post> getClusteredPostList(
+            double lng1,
+            double lat1,
+            double lng2,
+            double lat2
     );
 }

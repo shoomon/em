@@ -103,6 +103,19 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .toList();
     }
 
+    @Override
+    public List<Post> getClusteredPostList(double lng1, double lat1, double lng2, double lat2) {
+        String sql = """
+                SELECT *
+                FROM posts
+                WHERE post.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
+                """;
+
+        em.createNativeQuery(sql)
+        return List.of();
+    }
+
+
     private String resolveSortColumn(String sortBy) {
         return switch (sortBy) {
             case "createdAt" -> "created_at DESC";
