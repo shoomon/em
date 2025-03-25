@@ -1,35 +1,27 @@
 import { LOGIN_PROVIDERS } from "@/features/auth/constants"
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { fetchProfile } from "../api/profileApi"
 import { ProfileWithImage } from "../types/ProfileWithImage"
 
 export const useProfileData = () => {
-  const [profile, setProfile] = useState<ProfileWithImage | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+  return useQuery<ProfileWithImage>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const data = await fetchProfile()
 
-  useEffect(() => {
-    const getProfile = async () => {
-      setIsLoading(true)
-      try {
-        const data = await fetchProfile()
-
-        const provider = LOGIN_PROVIDERS.find((provider) => provider.provider === data.provider)
-
-        const updateProfile: ProfileWithImage = { ...data, providerImage: provider?.image }
-
-        setProfile(updateProfile)
-      } catch (err) {
-        setError("프로필을 불러오는 데 실패했습니다.")
-      } finally {
-        setIsLoading(false)
+      if (!data) {
+        throw new Error("Profile data is undefined")
       }
-    }
 
-    getProfile()
-  }, [])
+      const provider = LOGIN_PROVIDERS.find((p) => p.provider === data.provider)
 
-  return { profile, isLoading, error }
+      return {
+        ...data,
+        providerImage: provider?.image ?? "", // `undefined`를 방지하기 위해 기본값 설정
+      } as ProfileWithImage
+    },
+    staleTime: 1000 * 60 * 5, // 5분간 캐시 유지
+  })
 }
 
 export default useProfileData
