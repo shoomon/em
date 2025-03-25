@@ -45,7 +45,7 @@ public class PostController {
 
     @GetMapping("/points")
     public ResponseEntity<GetPointListResponse> getPointList(
-            @RequestParam(name = "lon") double longitude,
+            @RequestParam(name = "lng") double longitude,
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) int radius
     ){
