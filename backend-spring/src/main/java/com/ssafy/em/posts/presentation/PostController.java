@@ -2,6 +2,7 @@ package com.ssafy.em.posts.presentation;
 
 import com.ssafy.em.posts.application.PostService;
 import com.ssafy.em.posts.domain.entity.Post;
+import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -63,14 +65,21 @@ public class PostController {
             @RequestParam(name = "lon") double longitude,
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) Integer radius,
-            @RequestParam(name = "last", defaultValue = "0", required = false) Integer lastRead,
+            @RequestParam(name = "postId", required = false) Integer cursorId,
+            @RequestParam(name = "dist", required = false) Double cursorDist,
+            @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
+        PostCursorDto cursor = null;
+        if (cursorId != null) {
+            cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+        }
+
         GetPostListResponse response = postService.getPostList(
                 longitude,
                 latitude,
                 radius,
-                lastRead,
+                cursor,
                 sortBy
         );
 

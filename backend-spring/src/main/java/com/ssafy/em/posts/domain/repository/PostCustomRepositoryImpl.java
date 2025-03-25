@@ -1,6 +1,7 @@
 package com.ssafy.em.posts.domain.repository;
 
 import com.ssafy.em.posts.domain.entity.Post;
+import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,32 +21,58 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             double longitude,
             double latitude,
             int radius,
-            Integer lastReadId,
+            PostCursorDto cursor,
             String sortBy,
             int pageSize
     ) {
-        String baseQuery = """
+        StringBuilder baseQuery = new StringBuilder("""
         SELECT *
         FROM posts
         WHERE created_at >= NOW() - INTERVAL '24 HOURS'
           AND ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
-    """;
+    """);
 
-//        if (lastReadId != null) {
-//            baseQuery += " AND id < :lastReadId\n";
-//        }
+        if (sortBy == null || sortBy.isBlank()) {
+            sortBy = "latest";
+        }
+        switch (sortBy) {
+            case "popular" -> baseQuery.append("""
+                AND (
+                    emotion_count < :cursorEmotionCount
+                    OR (emotion_count = :cursorEmotionCount AND id < :cursorId)
+                )
+                """);
+            case "distance" -> baseQuery.append("""
+                AND (
+                    ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) > :cursorDistance
+                    OR (
+                        ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) = :cursorDistance
+                        AND id < :cursorId
+                    )
+                )
+                """);
+            case "latest" -> baseQuery.append("""
+                 AND id < :cursorId
+                """);
+            }
 
-        baseQuery += " ORDER BY " + resolveSortColumn(sortBy) + " LIMIT :limit";
 
-        Query query = em.createNativeQuery(baseQuery, Post.class)
+        baseQuery.append(" ORDER BY ").append(resolveSortColumn(sortBy)).append(", id DESC LIMIT :limit");
+
+        Query query = em.createNativeQuery(baseQuery.toString(), Post.class)
                 .setParameter("longitude", longitude)
                 .setParameter("latitude", latitude)
                 .setParameter("radius", radius)
                 .setParameter("limit", pageSize + 1);
 
-//        if (lastReadId != null) {
-//            query.setParameter("lastReadId", lastReadId);
-//        }
+        if (cursor != null) {
+            query.setParameter("cursorId", cursor.id());
+            switch (sortBy) {
+                case "popular" -> query.setParameter("cursorEmotionCount", cursor.emotionCount());
+                case "distance" -> query.setParameter("cursorDistance", cursor.distance());
+            }
+        }
+
         List temp = query.getResultList();
         return temp;
     }

@@ -8,6 +8,7 @@ import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.posts.domain.repository.PostReactionQueryDslRepository;
+import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
@@ -100,14 +101,14 @@ public class PostService{
             double longitude,
             double latitude,
             Integer radius,
-            Integer lastRead,
+            PostCursorDto cursor,
             String sortBy
     ) {
         List<Post> postList = postJpaRepository.getPostList(
                 longitude,
                 latitude,
                 radius,
-                lastRead,
+                cursor,
                 sortBy,
                 PAGE_SIZE
         );
