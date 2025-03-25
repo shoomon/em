@@ -2,6 +2,7 @@ package com.ssafy.em.post_reaction.application;
 
 import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
+import com.ssafy.em.post_reaction.dto.request.PostReactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,9 @@ public class PostReactionService {
     private final PostReactionRepository postReactionRepository;
 
     @Transactional
-    public void toggleReaction(int userId, int postId, int emotionId) {
+    public void toggleReaction(int userId, int postId, PostReactionRequest postReactionRequest) {
         Optional<PostReaction> optionalPostReaction = postReactionRepository.findByUserIdAndPostId(userId, postId);
+        int emotionId = postReactionRequest.emotionId();
         if (optionalPostReaction.isPresent()) {
             PostReaction postReaction = optionalPostReaction.get();
             if (postReaction.isSameEmotion(emotionId)) {
