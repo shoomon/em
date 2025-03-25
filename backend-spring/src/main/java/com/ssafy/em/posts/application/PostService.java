@@ -14,6 +14,7 @@ import com.ssafy.em.posts.domain.repository.PostReactionQueryDslRepository;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +49,7 @@ public class PostService{
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     private final Random random = new Random();
-    private final RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final PostQueryDslRepository postQueryDslRepository;
 
     @Transactional
@@ -129,11 +130,11 @@ public class PostService{
         return result;
     }
 
-    public List<PostDetailDto> getPostList(
+    public GetPostListResponse getPostList(
             double longitude,
             double latitude,
-            int radius,
-            int lastRead,
+            Integer radius,
+            Integer lastRead,
             String sortBy
     ) {
         List<Post> posts = new ArrayList<>();
@@ -163,29 +164,36 @@ public class PostService{
         //fixme: 레디스에서 페이지네이션 하려면
         // 조회 시마다 반경 내 모든 게시글 가져오고
         // 정렬 후 다시 필터링해야함
-        if (lastRead != 0) {
-            posts = posts.stream()
-                    .filter(p -> compareWithCursor(p,longitude, latitude, lastRead,sortBy))
+        List<Post> page;
+
+        int index = lastRead*PAGE_SIZE;
+
+        if (index < posts.size()) {
+            List<Post> pageSlice = posts.stream()
+                    .skip(index)
+                    .limit(PAGE_SIZE + 1)
                     .toList();
+
+            boolean hasNext = pageSlice.size() > PAGE_SIZE;
+            page = hasNext ? pageSlice.subList(0, PAGE_SIZE) : pageSlice;
+
+            List<PostDetailDto> dtoList = page.stream()
+                    .map(post -> new PostDetailDto(
+                            post.getId(),
+                            post.getUserId(),
+                            post.getNickname(),
+                            null, // imageUrl
+                            post.getContent(),
+                            post.getLocation(),
+                            getEmotionCount(post.getId()),
+                            post.getCreatedAt()
+                    ))
+                    .toList();
+
+            return new GetPostListResponse(dtoList, hasNext);
+        } else {
+            return new GetPostListResponse(Collections.emptyList(), false);
         }
-
-        //fixme: 공감 수나 거리가 같은 게시글은 누락됨.
-        List<Post> page = posts.stream()
-                .limit(PAGE_SIZE)
-                .toList();
-
-        return page.stream()
-                .map(post -> new PostDetailDto(
-                        post.getId(),
-                        post.getUserId(),
-                        post.getNickname(),
-                        null, // imageUrl 추후 추가
-                        post.getContent(),
-                        post.getLocation(),
-                        getEmotionCount(post.getId()),
-                        post.getCreatedAt()
-                ))
-                .toList();
     }
 
 
@@ -222,23 +230,6 @@ public class PostService{
         }
 
         return sorted;
-    }
-
-    private boolean compareWithCursor(Post post, double lon, double lat, int lastRead, String sortBy) {
-        switch (sortBy.toLowerCase()) {
-            case "latest":
-                return post.getId() < lastRead; // Id를 기준으로
-
-            case "popular":
-                return post.getReactionCount() < lastRead; //Count를 기준으로
-
-            case "distance":
-                Point center = geometryFactory.createPoint(new Coordinate(lon, lat));
-                return post.getLocation().distance(center) > lastRead; //마지막 조회 거리를 기준으로
-
-            default:
-                return post.getId() < lastRead;
-        }
     }
 
     private Map<String, Long> getEmotionCount(int postId){

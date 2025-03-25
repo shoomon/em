@@ -58,18 +58,17 @@ public class PostController {
     public ResponseEntity<GetPostListResponse> getPostList(
             @RequestParam(name = "lon") double longitude,
             @RequestParam(name = "lat") double latitude,
-            @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) int radius,
-            @RequestParam(name = "last", required = false) int lastRead,
-            @RequestParam(name = "sort", required = false) String sortBy
+            @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) Integer radius,
+            @RequestParam(name = "last", defaultValue = "-1", required = false) Integer lastRead,
+            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
-        List<PostDetailDto> postList = postService.getPostList(
+        GetPostListResponse response = postService.getPostList(
                 longitude,
                 latitude,
                 radius,
                 lastRead,
                 sortBy
         );
-        GetPostListResponse response = new GetPostListResponse(postList, !postList.isEmpty());
 
         return ResponseEntity.ok(response);
     }
