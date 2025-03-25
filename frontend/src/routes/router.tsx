@@ -6,6 +6,7 @@ import StackLayout from "@/layout/StackLayout"
 import HomePage from "@/pages/HomePage/HomePage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
+import MyPage from "@/pages/MyPage/MyPage"
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <div>/mypage</div>,
+        element: <MyPage />,
         children: [
           {
             path: "history",
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <div>/mypage</div>,
+        element: <MyPage />,
         children: [
           {
             path: "history/:date",
