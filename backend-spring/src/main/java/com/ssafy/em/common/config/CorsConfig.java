@@ -16,7 +16,9 @@ public class CorsConfig implements CorsConfigurationSource {
     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "http://localhost:8080", "https://j12a407.p.ssafy.io"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "http://localhost:8080",
+                "https://j12a407.p.ssafy.io", "https://j12a407.p.ssafy.io:3443"
+        ));
 
         // 허용할 HTTP 메서드 설정
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

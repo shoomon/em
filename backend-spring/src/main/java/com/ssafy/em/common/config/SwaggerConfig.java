@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(info)
                 .components(new Components().addSecuritySchemes(SECURITY_SCHEME_NAME, bearerAuth))
-                .addSecurityItem(securityRequirement);
+                .addSecurityItem(securityRequirement)
+                .addServersItem(new Server().url("http://localhost:8080").description("Local Server"))
+                .addServersItem(new Server().url("https://j12a407.p.ssafy.io:3443").description("Dev Server"));
     }
 }
