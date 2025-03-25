@@ -14,7 +14,7 @@ const PostList = ({ list }: PostListProp) => {
   ]
 
   return (
-    <div className="h-[600px] overflow-y-auto">
+    <div className="overflow-y-auto h-[75dvh]">
       <SortTypeSelector contents={sortTypeData} />
       <div className="flex flex-col gap-4 bg-em-gray-sm">
         {list.map((item) => (

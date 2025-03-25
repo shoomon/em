@@ -69,7 +69,7 @@ const HomePage = () => {
       case "posts":
         return <PostList list={dummyData} />
       default:
-        return <div className="h-[600px]"></div>
+        return <div className="h-[75dvh]"></div>
     }
   }
 
