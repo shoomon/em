@@ -71,6 +71,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 case "popular" -> query.setParameter("cursorEmotionCount", cursor.emotionCount());
                 case "distance" -> query.setParameter("cursorDistance", cursor.distance());
             }
+        }else{
+            query.setParameter("cursorId", Integer.MAX_VALUE);
         }
 
         List temp = query.getResultList();

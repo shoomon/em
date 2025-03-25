@@ -31,14 +31,12 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    //todo: 토큰에서 유저id 받기
     @PostMapping
     public ResponseEntity<String> createPost(@LoginRequired int userId, @RequestBody @Valid CreatePostRequest request){
         postService.createPost(userId, request);
         return ResponseEntity.ok().build();
     }
 
-    //todo: 토큰에서 유저id 받기
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@LoginRequired int userId, @PathVariable int id){
         postService.deletePost(userId, id);

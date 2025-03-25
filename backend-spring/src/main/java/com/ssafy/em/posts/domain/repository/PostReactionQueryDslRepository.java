@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.ssafy.em.posts.domain.entity.QEmotion.emotion;
+import static com.ssafy.em.emotion.domain.entity.QEmotion.emotion;
 import static com.ssafy.em.posts.domain.entity.QPostReaction.postReaction;
 
 

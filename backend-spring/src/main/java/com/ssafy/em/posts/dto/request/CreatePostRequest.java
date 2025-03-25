@@ -11,6 +11,7 @@ public record CreatePostRequest(
         @NotNull(message = "위도가 없습니다.")
         double latitude,
         @NotNull(message = "경도가 없습니다.")
-        double longitude
+        double longitude,
+        String emotion
 ) {
 }
