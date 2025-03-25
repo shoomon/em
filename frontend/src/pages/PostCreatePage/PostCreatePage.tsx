@@ -2,7 +2,7 @@ import PostCreateForm from "@/features/post/components/PostCreateForm"
 
 const PostCreatePage = () => {
   return (
-    <div className="h-[calc(100dvh-var(--header-height))]">
+    <div className="h-full">
       <PostCreateForm />
     </div>
   )

@@ -1,5 +1,5 @@
 import EmSection from "@/components/EmSection/EmSection"
-import MapFixer from "@/features/map/components/MapFixer"
+import MapFixer from "@/features/map/components/MapFixerCopy"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import { LatLng } from "@/features/map/types/map"
 import { useEffect, useState } from "react"
@@ -9,12 +9,34 @@ type MapSelectorProps = {
 }
 
 const MapSelector = ({ onMapChange }: MapSelectorProps) => {
-  // const { currentPosition } = useGps() // 현재 위치 조회
-  const [mapCenter, setMapCenter] = useState<LatLng>({ lat: 37.501286, lng: 127.0396029 }) // 지도 중앙 위치
+  const [currentPosition, setCurrentPosition] = useState<LatLng | null>(null)
+  const [mapCenter, setMapCenter] = useState<LatLng | null>(null) // 지도 중앙 위치
   const [address, setAddress] = useState("") // 주소
+  // 현재 위치 가져오기
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      // 현재 위치 설정
+      const { latitude: lat, longitude: lng } = coords
+      setCurrentPosition({ lat, lng })
+      setMapCenter({ lat, lng })
 
+      // 주소 조회
+      naver.maps.Service.reverseGeocode(
+        {
+          coords: new naver.maps.LatLng(lat, lng),
+        },
+        (_, response: naver.maps.Service.ReverseGeocodeResponse) => {
+          setAddress(response.v2.address.jibunAddress)
+        },
+      )
+    })
+  }, [])
   // 주소 조회
   useEffect(() => {
+    if (!mapCenter) {
+      return
+    }
+
     naver.maps.Service.reverseGeocode(
       {
         coords: new naver.maps.LatLng(mapCenter.lat, mapCenter.lng),
@@ -37,8 +59,12 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
         <span className="text-sm font-semibold">현재 나의 위치</span>
         <span className="text-sm">{address}</span>
       </div>
-      <div className="relative flex flex-col max-h-1/2 h-full w-full">
-        <MapFixer className="h-full w-full" onDragEnd={handleDragEnd} />
+      <div className="relative flex flex-col flex-1 w-full h-60">
+        <MapFixer
+          className="h-full w-full"
+          onDragEnd={handleDragEnd}
+          initLocation={currentPosition}
+        />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 cursor-pointer border-neutral-200">
           <MapPinMarker />
         </div>
