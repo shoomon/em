@@ -57,7 +57,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<GetPostListResponse> getPostList(
-            @RequestParam(name = "lon") double longitude,
+            @RequestParam(name = "lng") double longitude,
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) Integer radius,
             @RequestParam(name = "postId", required = false) Integer cursorId,
