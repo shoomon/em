@@ -1,7 +1,7 @@
 package com.ssafy.em.common.resolver;
 
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
-import com.ssafy.em.common.annotation.Login;
+import com.ssafy.em.common.annotation.LoginRequired;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +15,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         // @Login 어노테이션이 붙어 있고, 파라미터 타입이 OAuth2CustomUser, int 또는 Integer 인 경우 지원
-        return parameter.hasParameterAnnotation(Login.class)
+        return parameter.hasParameterAnnotation(LoginRequired.class)
                 && (OAuth2CustomUser.class.isAssignableFrom(parameter.getParameterType())
                 || parameter.getParameterType().equals(int.class)
                 || parameter.getParameterType().equals(Integer.class));
