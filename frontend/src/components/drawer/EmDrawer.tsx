@@ -4,14 +4,12 @@ import { Drawer } from "vaul"
 interface EmDrawerProps {
   open: boolean
   onOpenChange: () => void
-  trigger: ReactNode
   children: ReactNode
 }
 
-const EmDrawer = ({ open, onOpenChange, trigger, children }: EmDrawerProps) => {
+const EmDrawer = ({ open, onOpenChange, children }: EmDrawerProps) => {
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
-      <Drawer.Trigger>{trigger}</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-[110] bg-em-black/30 max-w-[600px] mx-auto" />
         <Drawer.Content className="fixed bottom-0 z-[120] left-0 right-0 outline-none h-fit max-w-[600px] mx-auto">

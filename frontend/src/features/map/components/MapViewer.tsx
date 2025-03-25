@@ -53,7 +53,7 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
       // @ts-ignore
       clusterRef.current = new window.MarkerClustering({
         minClusterSize: 2,
-        maxZoom: 18,
+        maxZoom: 21,
         map: map.current,
         markers: postMarkerRefs.current,
         gridSize: 500,
@@ -76,20 +76,32 @@ const MapViewer = ({ isDenied, location, posts, className, children }: MapViewer
         return
       }
 
-      // 지도 레벨이 10보다 작아지면, 클러스터가 보이지 않도록 설정
       const zoomLevel = map.current.getZoom()
-      clusterRef.current.setMap(zoomLevel < 10 ? null : map.current)
+      clusterRef.current.setMarkers(zoomLevel < 14 ? [] : postMarkerRefs.current)
     }
 
-    // 줌 레벨이 특정 레벨 이상이 되면 마커가 보이지 않도록 이벤트 추가
+    const handleDragend = () => {
+      if (!map.current) {
+        return
+      }
+
+      clusterRef.current._clusters.forEach((cluster: any) => {
+        cluster._clusterMarker.eventTarget.onclick = () => console.log(cluster._clusterBounds)
+        // cluster._clusterMarker.eventTarget.addEventListener("click", () =>
+        //   console.log(cluster._clusterBounds),
+      })
+    }
+
     const zoomChangeListener = naver.maps.Event.addListener(
       map.current,
       "zoom_changed",
       handleZoomChange,
     )
+    const dragendListener = naver.maps.Event.addListener(map.current, "idle", handleDragend)
 
     return () => {
       naver.maps.Event.removeListener(zoomChangeListener)
+      naver.maps.Event.removeListener(dragendListener)
     }
   }, [map.current])
 

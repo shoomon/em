@@ -15,8 +15,8 @@ const dummyData = [
   {
     id: 1,
     location: "서울 강남구 테헤란로 212",
-    lat: 37.5031847,
-    lng: 127.0392911,
+    lat: 37.501286,
+    lng: 127.0396029,
     date: "5분 전",
     author: "걱정하는 강아지",
     content:
@@ -26,8 +26,8 @@ const dummyData = [
   {
     id: 2,
     location: "서울 강남구 테헤란로 213",
-    lat: 37.5010261,
-    lng: 127.0345959,
+    lat: 37.5013068,
+    lng: 127.0371728,
     date: "13분 전",
     author: "울먹이는 바다코끼리",
     content: "ㅠㅠ",
@@ -36,21 +36,21 @@ const dummyData = [
   {
     id: 3,
     location: "서울 강남구 테헤란로 214",
-    lat: 37.4932619,
-    lng: 127.0322652,
+    lat: 37.5033214,
+    lng: 127.0384099,
     date: "1시간 전",
     author: "기뻐하는 판다곰",
-    content: "우와아아아아아아아아아아~!",
+    content: "노브랜드 버거 먹는 중 꿀맛~!",
     emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
   },
   {
     id: 4,
     location: "서울 강남구 테헤란로 214",
-    lat: 37.5162873,
-    lng: 127.0200228,
+    lat: 37.5031847,
+    lng: 127.0392911,
     date: "3시간 전",
     author: "기뻐하는 판다곰",
-    content: "인생 쓰다...",
+    content: "인생 쓰다...내가 지금 마시는 바나프레소 에스프레소처럼",
     emoji: { happy: 1, sad: 20, love: 213, angry: 2, confident: 234 },
   },
 ]
@@ -85,11 +85,9 @@ const HomePage = () => {
         {(focusOnMarker) => <LocationFixButton onClick={focusOnMarker} />}
       </MapViewer>
       <PostCreateButton onClick={() => {}} />
+      <PostSearchButton onClick={() => setIsOpen(true)} />
 
-      <EmDrawer
-        open={isOpen}
-        onOpenChange={() => setIsOpen(!isOpen)}
-        trigger={<PostSearchButton />}>
+      <EmDrawer open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
         <div>
           <Tabs
             tabs={tabs}
