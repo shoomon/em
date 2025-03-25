@@ -8,6 +8,7 @@ import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.posts.domain.repository.PostReactionQueryDslRepository;
+import com.ssafy.em.posts.dto.LastReadDto;
 import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
@@ -113,7 +114,7 @@ public class PostService{
         );
 
         if (postList.isEmpty()) {
-            return new GetPostListResponse(Collections.emptyList(),0, false);
+            return new GetPostListResponse(Collections.emptyList(),new LastReadDto(0, false));
         }
 
         List<PostDetailDto> dtoList = postList.stream()
@@ -129,7 +130,7 @@ public class PostService{
             dtoList = dtoList.subList(0, PAGE_SIZE);
         }
 
-        return new GetPostListResponse(dtoList, dtoList.get(dtoList.size()-1).id(), hasNext);
+        return new GetPostListResponse(dtoList,new LastReadDto(dtoList.get(dtoList.size()-1).id(), hasNext));
     }
 
 //    public List<PostPointDto> getPointList(
