@@ -1,7 +1,5 @@
 package com.ssafy.em.posts.dto;
 
-import org.locationtech.jts.geom.Point;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 

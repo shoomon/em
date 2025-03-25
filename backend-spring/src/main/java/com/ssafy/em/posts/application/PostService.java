@@ -113,7 +113,7 @@ public class PostService{
         );
 
         if (postList.isEmpty()) {
-            return new GetPostListResponse(Collections.emptyList(), false);
+            return new GetPostListResponse(Collections.emptyList(),0, false);
         }
 
         List<PostDetailDto> dtoList = postList.stream()
@@ -129,7 +129,7 @@ public class PostService{
             dtoList = dtoList.subList(0, PAGE_SIZE);
         }
 
-        return new GetPostListResponse(dtoList, hasNext);
+        return new GetPostListResponse(dtoList, dtoList.get(dtoList.size()-1).id(), hasNext);
     }
 
 //    public List<PostPointDto> getPointList(

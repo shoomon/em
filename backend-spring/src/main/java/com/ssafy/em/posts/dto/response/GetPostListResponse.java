@@ -6,6 +6,7 @@ import java.util.List;
 
 public record GetPostListResponse(
         List<PostDetailDto> postList,
+        Integer lastId,
         boolean hasNext
 ) {
 }
