@@ -45,6 +45,6 @@ public class SwaggerConfig {
                 .components(new Components().addSecuritySchemes(SECURITY_SCHEME_NAME, bearerAuth))
                 .addSecurityItem(securityRequirement)
                 .addServersItem(new Server().url("http://localhost:8080").description("Local Server"))
-                .addServersItem(new Server().url("https://j12a407.p.ssafy.io:3443").description("Dev Server"));
+                .addServersItem(new Server().url("https://j12a407.p.ssafy.io:3443/api").description("Dev Server"));
     }
 }
