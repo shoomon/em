@@ -21,11 +21,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/emotions")
 @RequiredArgsConstructor
-public class EmotionController {
+public class EmotionController implements EmotionControllerDocs {
 
     private final EmotionService emotionService;
 
     @PostMapping
+    @Override
     public ResponseEntity<Void> createEmotion(@Valid @RequestBody CreateEmotionRequest request) {
         int emotionId = emotionService.create(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -35,18 +36,21 @@ public class EmotionController {
     }
 
     @GetMapping
+    @Override
     public ResponseEntity<List<GetEmotionResponse>> getEmotions() {
         List<GetEmotionResponse> emotions = emotionService.getList();
         return ResponseEntity.ok(emotions);
     }
 
     @GetMapping("/{id}")
+    @Override
     public ResponseEntity<GetEmotionResponse> getEmotion(@PathVariable("id") int emotionId) {
         GetEmotionResponse response = emotionService.get(emotionId);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<Void> deleteEmotion(@PathVariable("id") int emotionId) {
         emotionService.delete(emotionId);
         return ResponseEntity.noContent().build();
