@@ -4,11 +4,16 @@ import { PostCreateStep } from "../types/post"
 type NextStepButtonProps = {
   updateStep: (step: PostCreateStep) => void
   currentStep: PostCreateStep
+  isFormDataValid: (step: PostCreateStep) => boolean | undefined
 }
 
-const NextStepButtonSection = ({ updateStep, currentStep }: NextStepButtonProps) => {
+const NextStepButtonSection = ({
+  updateStep,
+  currentStep,
+  isFormDataValid,
+}: NextStepButtonProps) => {
   const isFirstStep = currentStep === PostCreateStep.Map
-  const isLastStep = currentStep === PostCreateStep.Emotion
+  const isLastStep = currentStep === PostCreateStep.Confirm
   const isMiddleStep = !isFirstStep && !isLastStep
 
   return (
@@ -19,13 +24,18 @@ const NextStepButtonSection = ({ updateStep, currentStep }: NextStepButtonProps)
           type="button"
           className="flex-1"
           onClick={() => updateStep(currentStep - 1)}>
-          이전 스텝으로
+          이전
         </Button>
       )}
 
       {!isLastStep && (
-        <Button className="flex-1" type="button" onClick={() => updateStep(currentStep + 1)}>
-          다음 스텝으로
+        <Button
+          className="flex-1"
+          variant={isFormDataValid(currentStep) ? "default" : "disabled"}
+          disabled={!isFormDataValid(currentStep)}
+          type="button"
+          onClick={() => updateStep(currentStep + 1)}>
+          다음
         </Button>
       )}
 
@@ -36,10 +46,10 @@ const NextStepButtonSection = ({ updateStep, currentStep }: NextStepButtonProps)
             type="button"
             className="flex-1"
             onClick={() => updateStep(currentStep - 1)}>
-            이전 스텝으로
+            이전
           </Button>
           <Button className="flex-1" type="submit">
-            게시글 작성하기
+            올리기
           </Button>
         </>
       )}

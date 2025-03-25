@@ -1,10 +1,11 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Post } from "@/features/post/types/post"
 import { ReactNode, useEffect, useRef } from "react"
+import { LatLng } from "../types/map"
 
 interface MapViewerProps {
   isDenied: boolean
-  location: { lat: number; lng: number }
+  location: LatLng
   posts: Post[]
   className?: string
   children?: (focusOnMarker: () => void) => ReactNode

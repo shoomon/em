@@ -1,14 +1,15 @@
 import { ChevronLeftIcon } from "lucide-react"
+import { memo } from "react"
 import { useNavigate } from "react-router-dom"
 
-const StackHeader = () => {
+const StackHeader = memo(() => {
   // Todo: Header 타이틀을 zustand로 관리하는 것에 대하여 논의
   const title = "여기는 무엇이 좋을꼬"
 
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate(-1)
+    navigate("/", { replace: true })
   }
 
   return (
@@ -23,5 +24,5 @@ const StackHeader = () => {
       <div></div>
     </header>
   )
-}
+})
 export default StackHeader

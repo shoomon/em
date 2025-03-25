@@ -37,7 +37,7 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
         <span className="text-sm font-semibold">현재 나의 위치</span>
         <span className="text-sm">{address}</span>
       </div>
-      <div className="relative flex flex-col max-h-1/2 h-full w-full bg-em-gray">
+      <div className="relative flex flex-col max-h-1/2 h-full w-full">
         <MapFixer className="h-full w-full" onDragEnd={handleDragEnd} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 cursor-pointer border-neutral-200">
           <MapPinMarker />
