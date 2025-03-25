@@ -6,6 +6,7 @@ import StackLayout from "@/layout/StackLayout"
 import HomePage from "@/pages/HomePage/HomePage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
+import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 
 const router = createBrowserRouter([
   {
@@ -44,14 +45,8 @@ const router = createBrowserRouter([
     element: <StackLayout />,
     children: [
       {
-        path: "/",
-        element: <div>/home</div>,
-        children: [
-          {
-            path: "posts/new",
-            element: <div>/home/new</div>,
-          },
-        ],
+        path: "/posts/create",
+        element: <PostCreatePage />,
       },
       {
         path: "/mypage",
