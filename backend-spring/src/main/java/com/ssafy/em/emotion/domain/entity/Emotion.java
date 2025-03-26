@@ -29,7 +29,7 @@ public class Emotion {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, length = 30)
+    @Column(name = "kor_name", nullable = false, length = 30)
     private String korName;
 
     @CreationTimestamp
