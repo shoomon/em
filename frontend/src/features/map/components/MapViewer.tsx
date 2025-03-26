@@ -1,11 +1,13 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Point } from "@/features/post/types/post"
+import usePostStore from "@/store/usePostStore"
 import { ReactNode, useEffect, useRef } from "react"
 import htmlClusterMarkers from "../constants"
+import { LatLng } from "../types/map"
 
 interface MapViewerProps {
   isDenied: boolean
-  location: { lat: number; lng: number }
+  location: LatLng
   points: Point[]
   className?: string
   children?: (focusOnMarker: () => void) => ReactNode
@@ -18,6 +20,7 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
   const clusterRef = useRef<any>(null)
   const postMarkerRefs = useRef<naver.maps.Marker[]>([])
   const { map } = useMap({ initLocation: location, mapRef })
+  const { setGrid } = usePostStore()
 
   useEffect(() => {
     if (!map.current) {

@@ -1,6 +1,7 @@
+import usePostStore from "@/store/usePostStore"
 import { useSearchParams } from "react-router-dom"
+import useClusteredPosts from "../hooks/useClusteredPosts"
 import { Post } from "../types/post"
-import usePosts from "./../hooks/usePosts"
 import PostItem from "./PostItem"
 import SortTypeSelector from "./SortTypeSelector"
 
@@ -10,14 +11,15 @@ const sortTypeData = [
   { label: "공감순", sortType: "popular" },
 ]
 
-interface PostListProps {
-  location: { lat: number; lng: number }
-}
-
-const PostList = ({ location }: PostListProps) => {
+const ClusteredPostList = () => {
   const [searchParams] = useSearchParams()
-  const { data, isLoading, isFetchingNextPage, observerRef } = usePosts({
-    ...location,
+  const { sw, ne } = usePostStore()
+
+  const { data, isLoading, isFetchingNextPage, observerRef } = useClusteredPosts({
+    minLng: sw.lng,
+    minLat: sw.lat,
+    maxLng: ne.lng,
+    maxLat: ne.lat,
     sort: searchParams.get("sort") || "latest",
   })
 
@@ -44,4 +46,4 @@ const PostList = ({ location }: PostListProps) => {
   )
 }
 
-export default PostList
+export default ClusteredPostList

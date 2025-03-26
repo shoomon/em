@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 
@@ -9,7 +10,7 @@ interface SortTypeSelectorProps {
 const SortTypeSelector = ({ contents, className }: SortTypeSelectorProps) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const selectedType = searchParams.get("sort") || contents[0].sortType
-  // const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     console.log(searchParams)
@@ -19,6 +20,11 @@ const SortTypeSelector = ({ contents, className }: SortTypeSelectorProps) => {
       setSearchParams(new URLSearchParams())
     }
   }, [])
+
+  useEffect(() => {
+    console.log(searchParams)
+    queryClient.refetchQueries({ queryKey: ["posts"] })
+  }, [searchParams.get("sort")])
 
   const handleChange = (sortType: string) => {
     setSearchParams((prev) => {
