@@ -15,7 +15,7 @@ interface PostListProps {
 }
 
 const PostList = ({ location }: PostListProps) => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const { data, isLoading, isFetchingNextPage, observerRef } = usePosts({
     ...location,
     sort: searchParams.get("sort") || "latest",
