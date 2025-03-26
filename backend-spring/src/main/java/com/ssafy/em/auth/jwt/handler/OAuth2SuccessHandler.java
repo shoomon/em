@@ -47,6 +47,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         refreshTokenService.save(userId, refreshToken);
 
+        String forwardedHost = request.getHeader("X-Forwarded-Host");
+        String clientDomain = (forwardedHost != null) ? "https://" + forwardedHost : "https://default-client.com";
         // Access token을 QueryString에 담기 위해 URL 인코딩 처리
         String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
 

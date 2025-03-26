@@ -1,6 +1,8 @@
 package com.ssafy.em.post_reaction.domain;
 
 import com.ssafy.em.emotion.domain.entity.Emotion;
+import com.ssafy.em.posts.domain.entity.Post;
+import com.ssafy.em.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,35 +21,34 @@ public class PostReaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
 
-    @Column(name = "post_id", nullable = false)
-    private int postId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emotion_id", insertable = false, updatable = false)
     private Emotion emotion;
-
-    @Column(name = "emotion_id", nullable = false)
-    private int emotionId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public PostReaction(int userId, int postId, int emotionId) {
-        this.userId = userId;
-        this.postId = postId;
-        this.emotionId = emotionId;
+    public PostReaction(User user, Post post, Emotion emotion) {
+        this.user = user;
+        this.post = post;
+        this.emotion = emotion;
     }
 
-    public void updateEmotion(int emotionId) {
-        this.emotionId = emotionId;
+    public void updateEmotion(Emotion emotion) {
+        this.emotion = emotion;
     }
 
-    public boolean isSameEmotion(int otherEmotionId) {
-        return this.emotionId == otherEmotionId;
+    public boolean isSameEmotion(Emotion otherEmotion) {
+        return this.emotion == otherEmotion;
     }
 }
