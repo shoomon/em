@@ -8,17 +8,17 @@ import lombok.Builder;
 public record GetEmotionResponse(
         @Schema(description = "감정 ID", example = "1")
         int id,
-        @Schema(description = "감정 이름", example = "분노")
-        String name,
-        @Schema(description = "감정 16진수 색상 코드", example = "#FF7676")
-        String hexColor
+        @Schema(description = "감정 영어 이름", example = "ANGER")
+        String engName,
+        @Schema(description = "감정 한글 이름", example = "분노")
+        String korName
 ) {
 
     public static GetEmotionResponse from(Emotion emotion) {
         return GetEmotionResponse.builder()
                 .id(emotion.getId())
-                .name(emotion.getName())
-                .hexColor(emotion.getHexColor())
+                .engName(emotion.getName())
+                .korName(emotion.getKorName())
                 .build();
     }
 }

@@ -29,16 +29,16 @@ public class Emotion {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(name = "hex_color", nullable = false, length = 9)
-    private String hexColor;
+    @Column(nullable = false, length = 30)
+    private String korName;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    public Emotion(String name, String hexColor) {
+    public Emotion(String name, String korName) {
         this.name = name;
-        this.hexColor = hexColor;
+        this.korName = korName;
     }
 }
