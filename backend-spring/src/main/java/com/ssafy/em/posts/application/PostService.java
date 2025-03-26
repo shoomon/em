@@ -68,7 +68,7 @@ public class PostService{
         Post post = Post.builder()
                 .animalProfileId(0)
                 .userId(userId)
-                .nickname(request.emotion()+randomAnimal)
+                .nickname(request.emotion()+" "+randomAnimal)
                 .content(request.content())
                 .location(location)
                 .address(request.address())

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.management.QueryEval;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -165,6 +166,17 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 })
                 .toList();
 
+    }
+
+    //todo: 날짜별 게시글 감정 1개씩 조회 후 맵 변환
+    @Override
+    public Map<Integer, String> getCalendarPostList(int userId, YearMonth yearMonth) {
+        StringBuilder baseQuery = new StringBuilder("""
+                SELECT p.anonymous_nickname
+                FROM posts p
+                WHERE p.user_id = :userId
+                """);
+        return Map.of();
     }
 
     private static String getSortCondition(String sortBy) {
