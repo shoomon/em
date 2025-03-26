@@ -4,6 +4,8 @@ import com.ssafy.em.auth.domain.entity.Provider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,9 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.type.SqlTypes;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -31,8 +31,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "provider", nullable = false, columnDefinition = "provider")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", nullable = false, length = 30)
     private Provider provider;  // 예: KAKAO
 
     @Column(name = "social_id", length = 100, unique = true)
