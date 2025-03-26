@@ -2,13 +2,18 @@ package com.ssafy.em.posts.domain.repository;
 
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.dto.PostCursorDto;
+import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class PostCustomRepositoryImpl implements PostCustomRepository {
@@ -104,15 +109,48 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public List<Post> getClusteredPostList(double lng1, double lat1, double lng2, double lat2) {
+    public List<PostDetailDto> getClusteredPostList(double lng1, double lat1, double lng2, double lat2) {
         String sql = """
                 SELECT *
                 FROM posts
                 WHERE post.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
                 """;
 
-//        em.createNativeQuery(sql)
-        return List.of();
+        List<Object[]> result = em.createNativeQuery(sql)
+                .setParameter("lng1", lng1)
+                .setParameter("lat1", lat1)
+                .setParameter("lng2", lng2)
+                .setParameter("lat2", lat2)
+                .getResultList();
+
+        return result.stream()
+                .map(row -> {
+                    int id = ((Number) row[0]).intValue();
+                    int userId = ((Number) row[1]).intValue();
+                    String nickname = (String) row[3];
+                    String content = (String) row[4];
+                    Point location = (Point) row[5];
+                    String address = (String) row[6];
+                    LocalDateTime createdAt = ((Timestamp) row[8]).toLocalDateTime();
+
+                    double longitude = location.getX();
+                    double latitude = location.getY();
+
+                    return new PostDetailDto(
+                            id,
+                            userId,
+                            nickname,
+                            null,
+                            address,
+                            content,
+                            longitude,
+                            latitude,
+                            Map.of(),
+                            createdAt
+                    );
+                })
+                .toList();
+
     }
 
 
