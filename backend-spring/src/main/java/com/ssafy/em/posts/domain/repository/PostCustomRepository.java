@@ -27,6 +27,9 @@ public interface PostCustomRepository {
             double lng1,
             double lat1,
             double lng2,
-            double lat2
+            double lat2,
+            PostCursorDto cursor,
+            String sortBy,
+            int pageSize
     );
 }

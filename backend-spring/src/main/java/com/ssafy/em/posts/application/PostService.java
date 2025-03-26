@@ -3,6 +3,7 @@ package com.ssafy.em.posts.application;
 import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
+import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 
 
 import com.ssafy.em.posts.domain.entity.Post;
@@ -56,7 +57,7 @@ public class PostService{
         //todo: 역geo api로 좌표정보로 주소 가져오기
 
         Point location = geometryFactory
-                .createPoint(new Coordinate(request.lng(), request.lat()));
+                .createPoint(new Coordinate(request.longitude(), request.latitude()));
         location.setSRID(4326);
 
         Post post = Post.builder()
@@ -65,7 +66,7 @@ public class PostService{
                 .nickname(request.emotion()+"고양이")
                 .content(request.content())
                 .location(location)
-                .address("")
+                .address(request.address())
                 .build();
 
         postJpaRepository.save(post);
@@ -115,7 +116,9 @@ public class PostService{
         );
 
         if (postList.isEmpty()) {
-            return new GetPostListResponse(Collections.emptyList(),new LastReadDto(0, false));
+            return new GetPostListResponse(Collections.emptyList(),
+                    new LastReadDto(0,0,Double.parseDouble(RADIUS), false)
+            );
         }
 
         List<PostDetailDto> dtoList = postList.stream()
@@ -131,11 +134,50 @@ public class PostService{
             dtoList = dtoList.subList(0, PAGE_SIZE);
         }
 
-        return new GetPostListResponse(dtoList,new LastReadDto(dtoList.get(dtoList.size()-1).id(), hasNext));
+        PostDetailDto lastPost = dtoList.get(dtoList.size() - 1);
+
+        Integer lastCnt=null;
+        Double lastDist=null;
+
+        switch (sortBy) {
+            case "distance" -> {
+                lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
+            }
+            case "reaction" -> {
+                lastCnt = lastPost.emotionCountList().values().stream()
+                        .mapToInt(Long::intValue)
+                        .sum();
+            }
+        }
+
+        return new GetPostListResponse(dtoList,
+                new LastReadDto(dtoList.get(dtoList.size()-1).id(),lastCnt, lastDist, hasNext)
+        );
     }
 
-    public GetPostListResponse getClusteredPostList(double lng1, double lat1, double lng2, double lat2){
-        List<PostDetailDto> dtoList = postJpaRepository.getClusteredPostList(lng1, lat1, lng2, lat2);
+    public GetPostListResponse getClusteredPostList(
+            double lng1,
+            double lat1,
+            double lng2,
+            double lat2,
+            PostCursorDto cursor,
+            String sortBy
+    ){
+        List<PostDetailDto> dtoList = postJpaRepository.getClusteredPostList(
+                lng1,
+                lat1,
+                lng2,
+                lat2,
+                cursor,
+                sortBy,
+                PAGE_SIZE
+        );
+
+        boolean hasNext = dtoList.size() == PAGE_SIZE+1;
+
+        if (hasNext) {
+            dtoList = dtoList.subList(0, PAGE_SIZE);
+        }
 
         List<PostDetailDto> result =  dtoList.stream()
                 .map(dto -> {
@@ -155,7 +197,39 @@ public class PostService{
                         }
                 )
                 .toList();
+
+        PostDetailDto lastPost = result.get(result.size() - 1);
+
+        Integer lastCnt=null;
+        Double lastDist=null;
+
+//        switch (sortBy) {
+//            case "distance" -> {
+//                lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
+//            }
+//            case "reaction" -> {
+//                lastCnt = lastPost.emotionCountList().values().stream()
+//                        .mapToInt(Long::intValue)
+//                        .sum();
+//            }
+//        }
+
         return new GetPostListResponse(result, null);
+    }
+
+    private Double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+            final int R = 6371000; // 지구 반지름 (미터 단위)
+
+            double dLat = Math.toRadians(lat2 - lat1);
+            double dLon = Math.toRadians(lng2 - lng1);
+
+            double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                    + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                    * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            return R * c; // 거리 (미터 단위)
     }
 
 //    public List<PostPointDto> getPointList(

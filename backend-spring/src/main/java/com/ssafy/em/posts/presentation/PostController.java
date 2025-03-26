@@ -13,6 +13,7 @@ import com.ssafy.em.posts.util.PostConstant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +67,10 @@ public class PostController {
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
         PostCursorDto cursor = null;
+
+//        if(cursorId != null && cursorDist != null && cursorId == 0 && cursorDist == 0){
+//            cursor = new PostCursorDto(Integer.MAX_VALUE, Double.parseDouble(PostConstant.RADIUS), cursorEmoCnt);
+//        }else
         if (cursorId != null && cursorId != 0) {
             cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
         }
@@ -83,12 +88,28 @@ public class PostController {
 
     @GetMapping("/set")
     public ResponseEntity<GetPostListResponse> getClusteredPostList(
-            @RequestParam(name = "lng1") double lng1,
-            @RequestParam(name = "lat1") double lat1,
-            @RequestParam(name = "lng2") double lng2,
-            @RequestParam(name = "lat2") double lat2
+            @RequestParam(name = "lngMiin") double lng1,
+            @RequestParam(name = "latMin") double lat1,
+            @RequestParam(name = "lngMax") double lng2,
+            @RequestParam(name = "latMax") double lat2,
+            @RequestParam(name = "postId", required = false) Integer cursorId,
+            @RequestParam(name = "dist", required = false) Double cursorDist,
+            @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
+            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
-        GetPostListResponse response = postService.getClusteredPostList(lng1, lat1, lng2, lat2);
+        PostCursorDto cursor = null;
+        if (cursorId != null && cursorId != 0) {
+            cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+        }
+
+        GetPostListResponse response = postService.getClusteredPostList(
+                lng1,
+                lat1,
+                lng2,
+                lat2,
+                cursor,
+                sortBy
+        );
         return ResponseEntity.ok(response);
     }
 }

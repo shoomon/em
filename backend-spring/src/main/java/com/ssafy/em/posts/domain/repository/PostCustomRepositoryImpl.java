@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.geolatte.geom.Point;
 import org.springframework.stereotype.Repository;
 
+import javax.management.QueryEval;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -43,26 +44,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         if (sortBy == null || sortBy.isBlank()) {
             sortBy = "latest";
         }
-        switch (sortBy) {
-            case "popular" -> baseQuery.append("""
-                AND (
-                    emotion_count < :cursorEmotionCount
-                    OR (emotion_count = :cursorEmotionCount AND id < :cursorId)
-                )
-                """);
-            case "distance" -> baseQuery.append("""
-                AND (
-                    ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) > :cursorDistance
-                    OR (
-                        ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) = :cursorDistance
-                        AND id < :cursorId
-                    )
-                )
-                """);
-            case "latest" -> baseQuery.append("""
-                 AND id < :cursorId
-                """);
-            }
+
+        String sortCondition = getSortCondition(sortBy);
+        baseQuery.append(sortCondition);
 
 
         baseQuery.append(" ORDER BY ").append(resolveSortColumn(sortBy)).append(", id DESC LIMIT :limit");
@@ -112,25 +96,48 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public List<PostDetailDto> getClusteredPostList(double lng1, double lat1, double lng2, double lat2) {
-        String sql = """
+    public List<PostDetailDto> getClusteredPostList(
+            double lng1,
+            double lat1,
+            double lng2,
+            double lat2,
+            PostCursorDto cursor,
+            String sortBy,
+            int pageSize
+    ) {
+        StringBuilder baseQuery = new StringBuilder("""
                 SELECT p.id, p.user_id, p.animal_profile_id, p.anonymous_nickname,
                        p.content, p.location, p.address, p.reaction_count, p.created_at
                 FROM posts p
                 WHERE p.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
-                ORDER BY created_at DESC
-                """;
+                """);
 
-        List<Object[]> result = em.createNativeQuery(sql)
+        String sortCondition = getSortCondition(sortBy);
+        baseQuery.append(sortCondition);
+
+        baseQuery.append(" ORDER BY ").append(resolveSortColumn(sortBy)).append(", id DESC LIMIT :limit");
+
+        Query query = em.createNativeQuery(baseQuery.toString())
                 .setParameter("lng1", lng1)
                 .setParameter("lat1", lat1)
                 .setParameter("lng2", lng2)
                 .setParameter("lat2", lat2)
-                .getResultList();
+                .setParameter("limit", pageSize + 1);
+
+        if (cursor != null) {
+            query.setParameter("cursorId", cursor.id());
+            switch (sortBy) {
+                case "popular" -> query.setParameter("cursorEmotionCount", cursor.emotionCount());
+                case "distance" -> query.setParameter("cursorDistance", cursor.distance());
+            }
+        }else{
+            query.setParameter("cursorId", Integer.MAX_VALUE);
+        }
+
+        List<Object[]> result = query.getResultList();
 
         return result.stream()
                 .map(row -> {
-                    log.info(Arrays.toString(row));
                     int id = ((Number) row[0]).intValue();
                     int userId = ((Number) row[1]).intValue();
                     String nickname = (String) row[3];
@@ -159,6 +166,31 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     }
 
+    private static String getSortCondition(String sortBy) {
+        String result = "";
+
+        switch (sortBy) {
+            case "popular" -> result = """
+                AND (
+                    emotion_count < :cursorEmotionCount
+                    OR (emotion_count = :cursorEmotionCount AND id < :cursorId)
+                )
+                """;
+            case "distance" -> result = """
+                AND (
+                    ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) > :cursorDistance
+                    OR (
+                        ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) = :cursorDistance
+                        AND id < :cursorId
+                    )
+                )
+                """;
+            case "latest" -> result =  """
+                 AND id < :cursorId
+                """;
+        }
+        return result;
+    }
 
     private String resolveSortColumn(String sortBy) {
         return switch (sortBy) {
