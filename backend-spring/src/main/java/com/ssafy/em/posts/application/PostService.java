@@ -134,6 +134,7 @@ public class PostService{
                 .toList();
 
         boolean hasNext = dtoList.size() == PAGE_SIZE+1;
+        log.info("hasNext : "+ hasNext);
 
         if (hasNext) {
             dtoList = dtoList.subList(0, PAGE_SIZE);

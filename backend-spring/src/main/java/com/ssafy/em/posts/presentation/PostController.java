@@ -71,10 +71,28 @@ public class PostController {
     ){
         PostCursorDto cursor = null;
 
-        if(cursorId != null && cursorDist != null && cursorId == 0 && cursorDist == 0){
-            cursor = new PostCursorDto(Integer.MAX_VALUE, cursorDist, cursorEmoCnt);
-        }else if (cursorId != null && cursorId != 0) {
-            cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+        switch (sortBy) {
+            case "popular" -> {
+                if(cursorId == 0 && cursorEmoCnt == 0){
+                    cursor = new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
+                }else{
+                    cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+                }
+                break;
+            }
+            case "distance" -> {
+                if(cursorId == 0 && cursorDist == 0){
+                    cursor = new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
+                }else{
+                    cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+                }
+                break;
+            }
+            default -> {
+                if (cursorId != null && cursorId != 0) {
+                    cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+                }
+            }
         }
 
         GetPostListResponse response = postService.getPostList(

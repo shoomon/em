@@ -172,8 +172,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         switch (sortBy) {
             case "popular" -> result = """
                 AND (
-                    emotion_count < :cursorEmotionCount
-                    OR (emotion_count = :cursorEmotionCount AND id < :cursorId)
+                    reaction_count < :cursorEmotionCount
+                    OR (reaction_count = :cursorEmotionCount AND id < :cursorId)
                 )
                 """;
             case "distance" -> result = """
@@ -194,9 +194,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     private String resolveSortColumn(String sortBy) {
         return switch (sortBy) {
-            case "createdAt" -> "created_at DESC";
+            case "latest" -> "created_at DESC";
             case "distance" -> "ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)";
-            case "likes" -> "emotion_count DESC";
+            case "popular" -> "reaction_count DESC";
             default -> "created_at DESC";
         };
     }
