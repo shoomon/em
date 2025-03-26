@@ -1,6 +1,10 @@
-export type EmotionItem = {
-  id: string
-  name: string
+export interface Emotion {
+  id: number
+  engName: string
+  korName: string
+}
+
+export interface EmotionItem extends Emotion {
   emoji: string
   color: string
 }
