@@ -85,8 +85,8 @@ public class Post {
                 null,
                 post.getAddress(),
                 post.getContent(),
-                post.getLocation().getY(),
                 post.getLocation().getX(),
+                post.getLocation().getY(),
                 emotionCounts,
                 post.getCreatedAt()
         );

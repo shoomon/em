@@ -54,8 +54,6 @@ public class PostService{
 //        int animalProfileId = animalProfilesList.get(randomIndex).getId();
         //todo: 감정에 대한 형용사 조회해와서 닉네임 생성
 
-        //todo: 역geo api로 좌표정보로 주소 가져오기
-
         Point location = geometryFactory
                 .createPoint(new Coordinate(request.longitude(), request.latitude()));
         location.setSRID(4326);
@@ -99,7 +97,6 @@ public class PostService{
         return postJpaRepository.getPointList(longitude, latitude, radius);
     }
 
-    //fixme: 거리순 sorting
     public GetPostListResponse getPostList(
             double longitude,
             double latitude,
@@ -156,7 +153,7 @@ public class PostService{
         );
     }
 
-    //fixme: 거리순 sorting
+    //todo: 거리순 sorting
     public GetPostListResponse getClusteredPostList(
             double lng1,
             double lat1,

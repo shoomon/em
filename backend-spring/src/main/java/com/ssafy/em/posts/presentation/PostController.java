@@ -33,7 +33,10 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<String> createPost(@LoginRequired int userId, @RequestBody @Valid CreatePostRequest request){
+    public ResponseEntity<String> createPost(
+            @LoginRequired int userId,
+            @RequestBody @Valid CreatePostRequest request
+    ){
         postService.createPost(userId, request);
         return ResponseEntity.ok().build();
     }
@@ -68,10 +71,9 @@ public class PostController {
     ){
         PostCursorDto cursor = null;
 
-//        if(cursorId != null && cursorDist != null && cursorId == 0 && cursorDist == 0){
-//            cursor = new PostCursorDto(Integer.MAX_VALUE, Double.parseDouble(PostConstant.RADIUS), cursorEmoCnt);
-//        }else
-        if (cursorId != null && cursorId != 0) {
+        if(cursorId != null && cursorDist != null && cursorId == 0 && cursorDist == 0){
+            cursor = new PostCursorDto(Integer.MAX_VALUE, cursorDist, cursorEmoCnt);
+        }else if (cursorId != null && cursorId != 0) {
             cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
         }
 
@@ -86,6 +88,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    //todo: 거리순 sorting
     @GetMapping("/set")
     public ResponseEntity<GetPostListResponse> getClusteredPostList(
             @RequestParam(name = "lngMiin") double lng1,
