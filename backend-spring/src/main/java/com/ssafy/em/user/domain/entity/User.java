@@ -41,7 +41,7 @@ public class User {
     @Column(name = "username", length = 50)
     private String username;
 
-    @Column(name = "profile_image_url", length = 500)
+    @Column(name = "profile_image_url", length = 500, columnDefinition = "text")
     private String profileImageUrl;
 
     @CreationTimestamp
