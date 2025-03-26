@@ -1,16 +1,16 @@
 import { MapPinIcon } from "lucide-react"
 
 import profileImage from "@/assets/dog-face.svg"
-import EmojiButton from "./EmojiButton"
 import { Post } from "../types/post"
+import EmojiButton from "./EmojiButton"
 
 const PostItem = ({
-  userId,
+  // userId,
   nickname,
   imageUrl,
   content,
-  lng,
-  lat,
+  // lng,
+  // lat,
   emotionCountList,
   address,
   createdAt,

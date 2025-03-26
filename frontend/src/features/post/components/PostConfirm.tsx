@@ -5,16 +5,16 @@ import { EMOTION_ITEMS } from "@/features/emotion/constants"
 import { EmotionItem } from "@/features/emotion/types/emotion"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import useMap from "@/features/map/hooks/useMapCopy"
-import { PostCreateResponse } from "../types/post"
+import { PostCreateRequest } from "../types/post"
 
 type PostConfirmProps = {
-  formData: PostCreateResponse
+  formData: PostCreateRequest
 }
 
 const PostConfirm = ({ formData }: PostConfirmProps) => {
   const { latitude: lat, longitude: lng, content, emotion } = formData
 
-  useMap({ initLocation: { lat, lng } }) // 지도 컴포넌트
+  useMap({ initLocation: { lat, lng }, draggable: false, zoomable: false }) // 지도 컴포넌트
 
   return (
     <section className="flex flex-col w-full p-4">
@@ -37,7 +37,7 @@ const PostConfirm = ({ formData }: PostConfirmProps) => {
           <EmotionSelectItem
             onSelect={() => {}}
             isSelected={false}
-            emotion={EMOTION_ITEMS.find(({ id }) => id === emotion) as EmotionItem}
+            emotion={EMOTION_ITEMS.find(({ engName }) => engName === emotion) as EmotionItem}
           />
         </div>
       </EmSection>

@@ -3,17 +3,21 @@ import { LatLng } from "../types/map"
 
 interface useMapProps {
   initLocation?: LatLng | null
+  draggable?: boolean
+  zoomable?: boolean
 }
 
-const useMap = ({ initLocation }: useMapProps) => {
+const useMap = ({ initLocation, draggable = true, zoomable = true }: useMapProps) => {
   const mapRef = useRef<naver.maps.Map>(null)
-  console.log(initLocation, "initLocation")
 
   useEffect(() => {
     if (initLocation) {
       mapRef.current = new window.naver.maps.Map("map", {
         center: new window.naver.maps.LatLng(initLocation.lat, initLocation.lng),
         zoom: 17,
+        draggable,
+        disableDoubleClickZoom: !zoomable,
+        scrollWheel: zoomable,
       })
       return
     }
@@ -23,6 +27,9 @@ const useMap = ({ initLocation }: useMapProps) => {
       mapRef.current = new window.naver.maps.Map("map", {
         center: new window.naver.maps.LatLng(coords.latitude, coords.longitude),
         zoom: 17,
+        draggable,
+        disableDoubleClickZoom: !zoomable,
+        scrollWheel: zoomable,
       })
     })
   }, [])
