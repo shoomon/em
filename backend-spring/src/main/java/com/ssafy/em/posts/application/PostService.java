@@ -99,6 +99,7 @@ public class PostService{
         return postJpaRepository.getPointList(longitude, latitude, radius);
     }
 
+    //fixme: 거리순 sorting
     public GetPostListResponse getPostList(
             double longitude,
             double latitude,
@@ -155,6 +156,7 @@ public class PostService{
         );
     }
 
+    //fixme: 거리순 sorting
     public GetPostListResponse getClusteredPostList(
             double lng1,
             double lat1,
