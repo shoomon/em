@@ -68,6 +68,7 @@ const HomePage = () => {
               setCurrentTab(tabValue as "posts" | "playlist")
             }
           />
+
           {renderTabContent()}
         </div>
       </EmDrawer>

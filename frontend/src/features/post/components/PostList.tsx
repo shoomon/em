@@ -22,21 +22,23 @@ const PostList = ({ location }: PostListProps) => {
   })
 
   return (
-    <div className="overflow-y-auto h-[75dvh]">
+    <div className="flex flex-col overflow-y-auto h-[75dvh]">
       {isLoading ? (
         <div>로딩 중...</div>
       ) : (
         <>
           <SortTypeSelector contents={sortTypeData} />
-          <div className="flex flex-col gap-4 bg-em-gray-sm">
+          <div className="flex flex-col flex-1 gap-4 pb-2 bg-em-gray-sm">
             {data?.pages.map((page: any) =>
-              page.postList.map((item: Post) => <PostItem key={item.id} {...item} />),
+              page.postList.map((item: Post) => (
+                <PostItem key={item.id} {...item} />
+              )),
             )}
           </div>
           {isFetchingNextPage ? (
-            <div className="bg-em-gray-md animate-pulse h-40" />
+            <div className="h-40 bg-em-gray-md animate-pulse" />
           ) : (
-            <div ref={observerRef} className="h-1 bg-red-300" />
+            <div ref={observerRef} />
           )}
         </>
       )}

@@ -16,7 +16,7 @@ const EmDrawer = ({ open, onOpenChange, children }: EmDrawerProps) => {
           <Drawer.Title />
           <Drawer.Description />
           <div className="relative pt-6 rounded-t-2xl bg-em-white">
-            <div className="absolute h-2 -translate-x-1/2 rounded-full w-14 top-2 left-1/2 bg-em-gray" />
+            <div className="absolute h-1.5 -translate-x-1/2 rounded-full w-14 top-2 left-1/2 bg-em-gray" />
             {children}
           </div>
         </Drawer.Content>
