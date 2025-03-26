@@ -35,6 +35,7 @@ const MapViewer = ({
 
     // 유저 마커 생성
     if (!userMarkerRef.current) {
+      console.log(location)
       userMarkerRef.current = new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(location.lat, location.lng),
         map: map.current,
@@ -103,10 +104,10 @@ const MapViewer = ({
       }
 
       clusterRef.current._clusters.forEach((cluster: any) => {
-        if (cluster._clusterMarker?.eventTarget) {
-          cluster._clusterMarker.eventTarget.onclick = () =>
-            console.log(cluster._clusterBounds)
-        }
+        cluster._clusterMarker.eventTarget.onclick = () =>
+          console.log(cluster._clusterBounds)
+        // cluster._clusterMarker.eventTarget.addEventListener("click", () =>
+        //   console.log(cluster._clusterBounds),
       })
     }
 
@@ -115,7 +116,7 @@ const MapViewer = ({
       "zoom_changed",
       handleZoomChange,
     )
-    const dragendListener = window.naver.maps.Event.addListener(
+    const dragendListener = naver.maps.Event.addListener(
       map.current,
       "idle",
       handleDragend,
