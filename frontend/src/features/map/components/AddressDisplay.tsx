@@ -1,23 +1,24 @@
 import { MapPinIcon } from "lucide-react"
 import { useEffect, useState } from "react"
+import { LatLng } from "../types/map"
 
 interface AddressDisplayProps {
-  lastFetchedPosition: { lat: number; lng: number }
+  location: LatLng
 }
 
-const AddressDisplay = ({ lastFetchedPosition }: AddressDisplayProps) => {
+const AddressDisplay = ({ location }: AddressDisplayProps) => {
   const [address, setAddress] = useState("")
 
   useEffect(() => {
     naver.maps.Service.reverseGeocode(
       {
-        coords: new naver.maps.LatLng(lastFetchedPosition),
+        coords: new naver.maps.LatLng(location),
       },
       (_, response: naver.maps.Service.ReverseGeocodeResponse) => {
         setAddress(response.v2.address.jibunAddress)
       },
     )
-  }, [lastFetchedPosition])
+  }, [location])
 
   return (
     <div className="absolute top-0 left-0 z-10 flex items-center w-full gap-2 p-3 bg-gradient-to-b from-em-white via-em-white/80 to-em-white/10">

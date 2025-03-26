@@ -12,7 +12,7 @@ import usePoints from "@/features/post/hooks/usePoints"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
 import usePostStore from "@/store/usePostStore"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const tabs = [
   { value: "posts", label: "이곳에 남긴 글" },
@@ -20,18 +20,24 @@ const tabs = [
 ]
 
 const HomePage = () => {
-  const { isDenied, currentPosition, lastFetchedPosition } = useGps()
-  const { isOpen, setIsOpen } = useDrawer("home")
+  const locationPermissionRef = useRef(false)
+  const { currentLocation, lastFetchedLocation } = useGps()
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
-  const { pointData } = usePoints({ ...currentPosition })
+  const { isOpen, setIsOpen } = useDrawer("home")
+  const { pointData } = usePoints({ ...currentLocation })
   const postsType = usePostStore((state) => state.postsType)
+
+  useEffect(() => {
+    const permissionStatus = sessionStorage.getItem("location-permission")
+    locationPermissionRef.current = permissionStatus !== "denied"
+  }, [])
 
   const renderTabContent = () => {
     switch (currentTab) {
       case "posts":
         switch (postsType) {
           case "normal":
-            return <PostList location={currentPosition} />
+            return <PostList location={currentLocation} />
           case "clustered":
             setIsOpen(true)
             return <ClusteredPostList />
@@ -43,12 +49,12 @@ const HomePage = () => {
 
   return (
     <div className="relative h-[calc(100dvh-var(--header-height)-var(--navigation-bar-height))]">
-      <AddressDisplay lastFetchedPosition={lastFetchedPosition} />
+      <AddressDisplay location={lastFetchedLocation} />
       <PostRefetchButton onClick={() => {}} />
       <MapViewer
         className="h-full"
-        isDenied={isDenied}
-        location={currentPosition}
+        isDenied={!locationPermissionRef.current}
+        location={currentLocation}
         points={pointData?.pointList || []}>
         {(focusOnMarker) => <LocationFixButton onClick={focusOnMarker} />}
       </MapViewer>
