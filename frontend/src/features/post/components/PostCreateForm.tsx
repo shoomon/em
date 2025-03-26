@@ -1,3 +1,4 @@
+import EmLoading from "@/components/EmLoading/EmLoading"
 import StepAnimateLayout from "@/layout/StepAnimateLayout"
 import { useEffect, useState } from "react"
 import usePostForm from "../hooks/usePostForm"
@@ -50,11 +51,11 @@ const PostCreateForm = () => {
   }
 
   if (isSubmitPending) {
-    return <div>Loading...</div>
+    return <EmLoading />
   }
 
   return (
-    <form className="h-full" onSubmit={handleSubmit}>
+    <form className="h-full w-full" onSubmit={handleSubmit}>
       <div className="flex w-full flex-col justify-between h-[calc(100dvh-var(--header-height))]">
         {/* 현재 스탭 컴포넌트 */}
         <div className="flex flex-1">

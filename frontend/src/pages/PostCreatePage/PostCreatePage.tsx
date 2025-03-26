@@ -9,7 +9,7 @@ const PostCreatePage = () => {
     setTitle("게시글 작성")
   }, [])
   return (
-    <div className="h-full">
+    <div className="h-full w-full flex justify-center items-center">
       <PostCreateForm />
     </div>
   )

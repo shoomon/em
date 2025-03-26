@@ -11,7 +11,6 @@ const LoginButton = ({ data }: LoginButtonProps) => {
   const loginLink = useOAuthLoginLink(provider)
 
   const handleLogin = () => {
-    console.log("로그인 URL", loginLink)
     window.location.href = loginLink
   }
 
