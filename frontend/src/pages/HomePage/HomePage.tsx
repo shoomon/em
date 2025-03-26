@@ -3,6 +3,7 @@ import Tabs from "@/components/Tabs/Tabs"
 import AddressDisplay from "@/features/map/components/AddressDisplay"
 import LocationFixButton from "@/features/map/components/LocatonFixButton"
 import MapViewer from "@/features/map/components/MapViewer"
+import ClusteredPostList from "@/features/post/components/ClusteredPostList"
 import PostCreateButton from "@/features/post/components/PostCreateButton"
 import PostList from "@/features/post/components/PostList"
 import PostRefetchButton from "@/features/post/components/PostRefetchButton"
@@ -10,8 +11,8 @@ import PostSearchButton from "@/features/post/components/PostSearchButton"
 import usePoints from "@/features/post/hooks/usePoints"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
+import usePostStore from "@/store/usePostStore"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 
 const tabs = [
   { value: "posts", label: "이곳에 남긴 글" },
@@ -23,11 +24,18 @@ const HomePage = () => {
   const { isOpen, setIsOpen } = useDrawer("home")
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
   const { pointData } = usePoints({ ...currentPosition })
-  const navigate = useNavigate()
+  const postsType = usePostStore((state) => state.postsType)
+
   const renderTabContent = () => {
     switch (currentTab) {
       case "posts":
-        return <PostList location={currentPosition} />
+        switch (postsType) {
+          case "normal":
+            return <PostList location={currentPosition} />
+          case "clustered":
+            setIsOpen(true)
+            return <ClusteredPostList />
+        }
       default:
         return <div className="h-[75dvh]"></div>
     }
