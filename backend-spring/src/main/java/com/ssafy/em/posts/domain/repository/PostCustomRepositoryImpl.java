@@ -71,6 +71,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         return temp;
     }
 
+    //fixme: 거리순 조회 시 중복 조회 발생 -> 소수점 오차로 추정
     @Override
     public List<PostPointDto> getPointList(double longitude, double latitude, int radius) {
         String sql = """
@@ -180,7 +181,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 AND (
                     ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) > :cursorDistance
                     OR (
-                        ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) = :cursorDistance
+                        ABS(ST_Distance(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)-:cursorDistance) < 1e-6
                         AND id < :cursorId
                     )
                 )
