@@ -16,14 +16,6 @@ export interface PointListRequest {
   rad?: number
 }
 
-export interface PostCreateRequest {
-  userId: number
-  content: string
-  lng: number
-  lat: number
-  emotion: string
-}
-
 export interface PostListRequest {
   lng: number
   lat: number
@@ -81,4 +73,5 @@ export interface PostCreateRequest {
   latitude: LatLng["lat"]
   longitude: LatLng["lng"]
   emotion: string
+  address: string
 }

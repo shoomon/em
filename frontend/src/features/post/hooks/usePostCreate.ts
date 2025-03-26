@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { fetchPostCreate } from "../api/postApi"
-import { PostCreateResponse } from "../types/post"
-
+import { PostCreateRequest } from "../types/post"
 const usePostCreate = () => {
   const queryClient = useQueryClient()
 
@@ -11,7 +10,7 @@ const usePostCreate = () => {
     isError,
     isSuccess,
   } = useMutation({
-    mutationFn: (data: PostCreateResponse) => {
+    mutationFn: (data: PostCreateRequest) => {
       return fetchPostCreate(data)
     },
     onSuccess: () => {

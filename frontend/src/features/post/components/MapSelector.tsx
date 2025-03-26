@@ -5,7 +5,7 @@ import { LatLng } from "@/features/map/types/map"
 import { useEffect, useState } from "react"
 
 type MapSelectorProps = {
-  onMapChange: (_map: LatLng) => void
+  onMapChange: (_map: LatLng, _address: string) => void
 }
 
 const MapSelector = ({ onMapChange }: MapSelectorProps) => {
@@ -50,7 +50,7 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
   // 지도 중앙 위치 변경 시 호출
   const handleDragEnd = (newCenter: LatLng) => {
     setMapCenter(newCenter)
-    onMapChange(newCenter)
+    onMapChange(newCenter, address)
   }
   return (
     <EmSection>
@@ -65,7 +65,7 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
           onDragEnd={handleDragEnd}
           initLocation={currentPosition}
         />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 cursor-pointer border-neutral-200">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+12px)] p-2 cursor-pointer border-neutral-200">
           <MapPinMarker />
         </div>
       </div>

@@ -19,9 +19,9 @@ const EmotionSelector = ({ onEmotionChange, emotionState }: EmotionSelectorProps
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {EMOTION_ITEMS.map((emotion) => (
             <EmotionSelectItem
-              key={emotion.id}
+              key={emotion.engName}
               onSelect={handleEmotionSelect}
-              isSelected={emotionState === emotion.id}
+              isSelected={emotionState === emotion.engName.toLowerCase()}
               emotion={emotion}
             />
           ))}
