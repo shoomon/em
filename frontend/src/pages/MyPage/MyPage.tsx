@@ -2,6 +2,7 @@ import { useState } from "react"
 
 import Tabs from "@/components/Tabs/Tabs"
 import UserProfileCard from "@/features/profile/components/UserProfileCard"
+import EmotionCalendar from "@/features/history/components/EmotionCalendar"
 
 const MyPage = () => {
   const tabs = [
@@ -16,10 +17,7 @@ const MyPage = () => {
       case "history":
         return (
           <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-semibold text-em-black">나의 감정 달력력</h3>
-            <div className="bg-em-gray-sm p-4 rounded shadow text-em-black">
-              🗓️ 추후 업데이트 됩니다!
-            </div>
+            <EmotionCalendar />
           </div>
         )
       case "report":
