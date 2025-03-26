@@ -75,7 +75,6 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
-//        postRedisService.savePostToRedis(post);
     }
 
     @Transactional
@@ -86,7 +85,6 @@ public class PostService{
         if(post.getUserId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
         postJpaRepository.delete(post);
-//        postRedisService.deletePostFromRedis(postId);
     }
 
 
