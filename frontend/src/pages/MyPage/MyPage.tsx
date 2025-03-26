@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import Tabs from "@/components/Tabs/Tabs"
 import UserProfileCard from "@/features/profile/components/UserProfileCard"
@@ -10,7 +10,14 @@ const MyPage = () => {
     { value: "report", label: "나의 감정 리포트" },
   ]
 
-  const [currentTab, setCurrentTab] = useState<"history" | "report">("history")
+  const [currentTab, setCurrentTab] = useState<"history" | "report">(() => {
+    const saved = localStorage.getItem("mypage-tab")
+    return (saved === "history" || saved === "report") ? saved : "history"
+  })
+
+  useEffect(() => {
+    localStorage.setItem("mypage-tab", currentTab)
+  }, [currentTab])
 
   const renderTabContent = () => {
     switch (currentTab) {
