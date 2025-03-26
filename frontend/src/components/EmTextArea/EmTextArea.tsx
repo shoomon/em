@@ -7,7 +7,7 @@ interface EmTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   placeholder?: string
   maxLength?: number
   textState: string // 텍스트 상태 전달
-  onTextChange: (_text: string) => void // 텍스트 상태 변경
+  onTextChange?: (_text: string) => void // 텍스트 상태 변경
 }
 
 const EmTextArea = ({
@@ -35,7 +35,7 @@ const EmTextArea = ({
     }
 
     // 텍스트 상태 변경
-    onTextChange(value)
+    onTextChange?.(value)
   }
   return (
     <div className="w-full h-full bg-em-white flex flex-col gap-2 p-4 border border-em-gray-md rounded-xl">

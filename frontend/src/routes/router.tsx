@@ -8,6 +8,7 @@ import HomePage from "@/pages/HomePage/HomePage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import MyPage from "@/pages/MyPage/MyPage"
+import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,12 @@ const router = createBrowserRouter([
               {
                 path: "history",
                 element: <div>/mypage/history</div>,
+                children: [
+                  {
+                    path: ":date",
+                    element: <div>/mypage/history/:date</div>,
+                  },
+                ],
               },
               {
                 path: "report",
@@ -54,24 +61,8 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            path: "/",
-            element: <div>/home</div>,
-            children: [
-              {
-                path: "posts/new",
-                element: <div>/home/new</div>,
-              },
-            ],
-          },
-          {
-            path: "/mypage",
-            element: <MyPage />,
-            children: [
-              {
-                path: "history/:date",
-                element: <div>/mypage/history/:date</div>,
-              },
-            ],
+            path: "/posts/create",
+            element: <PostCreatePage />,
           },
         ],
       },
