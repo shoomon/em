@@ -60,8 +60,11 @@ const HomePage = () => {
           <Tabs
             tabs={tabs}
             activeTab={currentTab}
-            onTabChange={(tabValue: string) => setCurrentTab(tabValue as "posts" | "playlist")}
+            onTabChange={(tabValue: string) =>
+              setCurrentTab(tabValue as "posts" | "playlist")
+            }
           />
+
           {renderTabContent()}
         </div>
       </EmDrawer>
