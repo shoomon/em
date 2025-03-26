@@ -21,6 +21,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,6 +132,30 @@ public class PostService{
         }
 
         return new GetPostListResponse(dtoList,new LastReadDto(dtoList.get(dtoList.size()-1).id(), hasNext));
+    }
+
+    public GetPostListResponse getClusteredPostList(double lng1, double lat1, double lng2, double lat2){
+        List<PostDetailDto> dtoList = postJpaRepository.getClusteredPostList(lng1, lat1, lng2, lat2);
+
+        List<PostDetailDto> result =  dtoList.stream()
+                .map(dto -> {
+                    Map<String, Long> emotionCounts = postReactionQueryDslRepository.getEmotionCount(dto.id());
+                    return new PostDetailDto(
+                            dto.id(),
+                            dto.userId(),
+                            dto.nickname(),
+                            null,
+                            dto.address(),
+                            dto.content(),
+                            dto.longitude(),
+                            dto.latitude(),
+                            emotionCounts,
+                            dto.createdAt()
+                    );
+                        }
+                )
+                .toList();
+        return new GetPostListResponse(result, null);
     }
 
 //    public List<PostPointDto> getPointList(

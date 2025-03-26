@@ -80,4 +80,15 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/set")
+    public ResponseEntity<GetPostListResponse> getClusteredPostList(
+            @RequestParam(name = "lng1") double lng1,
+            @RequestParam(name = "lat1") double lat1,
+            @RequestParam(name = "lng2") double lng2,
+            @RequestParam(name = "lat2") double lat2
+    ){
+        GetPostListResponse response = postService.getClusteredPostList(lng1, lat1, lng2, lat2);
+        return ResponseEntity.ok(response);
+    }
 }

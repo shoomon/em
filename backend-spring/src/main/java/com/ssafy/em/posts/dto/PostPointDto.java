@@ -4,7 +4,7 @@ import org.locationtech.jts.geom.Point;
 
 public record PostPointDto(
         int id,
-        double longitude,
-        double latitude
+        double lng,
+        double lat
 ) {
 }

@@ -7,15 +7,18 @@ import com.ssafy.em.posts.dto.PostPointDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import org.locationtech.jts.geom.Point;
+import lombok.extern.slf4j.Slf4j;
+import org.geolatte.geom.Point;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Repository
+@Slf4j
 public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     @PersistenceContext
@@ -111,9 +114,11 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     @Override
     public List<PostDetailDto> getClusteredPostList(double lng1, double lat1, double lng2, double lat2) {
         String sql = """
-                SELECT *
-                FROM posts
-                WHERE post.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
+                SELECT p.id, p.user_id, p.animal_profile_id, p.anonymous_nickname,
+                       p.content, p.location, p.address, p.reaction_count, p.created_at
+                FROM posts p
+                WHERE p.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
+                ORDER BY created_at DESC
                 """;
 
         List<Object[]> result = em.createNativeQuery(sql)
@@ -125,16 +130,17 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
         return result.stream()
                 .map(row -> {
+                    log.info(Arrays.toString(row));
                     int id = ((Number) row[0]).intValue();
                     int userId = ((Number) row[1]).intValue();
                     String nickname = (String) row[3];
                     String content = (String) row[4];
-                    Point location = (Point) row[5];
+                    Point<?> location = (Point<?>) row[5];
                     String address = (String) row[6];
                     LocalDateTime createdAt = ((Timestamp) row[8]).toLocalDateTime();
 
-                    double longitude = location.getX();
-                    double latitude = location.getY();
+                    double longitude = location.getPosition().getCoordinate(0);
+                    double latitude = location.getPosition().getCoordinate(1);
 
                     return new PostDetailDto(
                             id,
