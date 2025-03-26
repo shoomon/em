@@ -27,7 +27,7 @@ public interface AnimalControllerDocs {
     @Operation(
             summary = "전체 동물 목록 조회",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공적으로 감정 목록 반환", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "200", description = "성공적으로 동물 목록 반환", content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
             }
     )
