@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Tab } from "@/types/Tab"
 
@@ -15,7 +15,7 @@ const Tabs= ({ tabs, activeTab, onTabChange }: TabsProps) => {
   })
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  const updateIndicator = useCallback(() => {
     const index = tabs.findIndex((tab) => tab.value === activeTab)
 
     if (!containerRef.current) {
@@ -31,13 +31,23 @@ const Tabs= ({ tabs, activeTab, onTabChange }: TabsProps) => {
     })
   }, [tabs, activeTab])
 
+  useEffect(() => {
+    updateIndicator()
+
+    window.addEventListener("resize", updateIndicator)
+
+    return () => {
+      window.removeEventListener("resize", updateIndicator)
+    }
+  }, [updateIndicator])
+
   return (
-    <div ref={containerRef} className="relative flex justify-around mt-4 border-b border-em-gray">
+    <div ref={containerRef} className="relative flex justify-around border-b border-em-gray">
       {tabs.map((tab) => (
         <button
           key={tab.value}
-          className={`py-2 w-1/2 ${
-            tab.value === activeTab ? " text-em-black font-bold" : " text-em-gray"
+          className={`flex-1 py-3 text-sm transition-colors duration-200 ${
+            tab.value === activeTab ? " text-em-black font-semibold" : " text-em-gray"
           }`}
           onClick={() => onTabChange(tab.value)} // 탭을 클릭하면 부모 컴포넌트로 상태 변경 요청
         >
@@ -47,7 +57,7 @@ const Tabs= ({ tabs, activeTab, onTabChange }: TabsProps) => {
 
       {/* 슬라이딩 인디케이터 */}
       <div
-        className="absolute bottom-0 left-0 h-0.5 bg-em-black transition-transform duration-300 ease-in-out"
+        className="absolute bottom-0 left-0 h-1 bg-em-black transition-transform duration-300 ease-in-out"
         style={indicatorStyle}
       />
     </div>
