@@ -132,7 +132,6 @@ public class PostService{
                 .toList();
 
         boolean hasNext = dtoList.size() == PAGE_SIZE+1;
-        log.info("hasNext : "+ hasNext);
 
         if (hasNext) {
             dtoList = dtoList.subList(0, PAGE_SIZE);
@@ -147,7 +146,7 @@ public class PostService{
             case "distance" -> {
                 lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
             }
-            case "reaction" -> {
+            case "popular" -> {
                 lastCnt = lastPost.emotionCountList().values().stream()
                         .mapToInt(Long::intValue)
                         .sum();
