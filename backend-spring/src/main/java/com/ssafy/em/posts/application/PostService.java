@@ -14,6 +14,7 @@ import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -219,6 +221,12 @@ public class PostService{
 //        }
 
         return new GetPostListResponse(result, null);
+    }
+
+    public GetCalendarListResponse getCalendarPostList(int userId, YearMonth yearMonth){
+        return new GetCalendarListResponse(
+                postJpaRepository.getCalendarPostList(userId, yearMonth)
+        );
     }
 
     private Double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
