@@ -43,6 +43,11 @@ public class PostService{
     private final Random random = new Random();
     private final RedisTemplate<String, Object> redisTemplate;
 
+    //동물 임시 배열
+    private static final List<String> ANIMALS = List.of(
+            "고양이", "강아지", "팬더", "코끼리", "호랑이", "토끼", "곰", "다람쥐", "여우", "늑대", "햄스터"
+    );
+
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
 
@@ -53,6 +58,8 @@ public class PostService{
 //        int randomIndex = random.nextInt(animalProfilesList.size());
 //        int animalProfileId = animalProfilesList.get(randomIndex).getId();
         //todo: 감정에 대한 형용사 조회해와서 닉네임 생성
+        Random random = new Random();
+        String randomAnimal = ANIMALS.get(random.nextInt(ANIMALS.size()));
 
         Point location = geometryFactory
                 .createPoint(new Coordinate(request.longitude(), request.latitude()));
@@ -61,7 +68,7 @@ public class PostService{
         Post post = Post.builder()
                 .animalProfileId(0)
                 .userId(userId)
-                .nickname(request.emotion()+"고양이")
+                .nickname(request.emotion()+randomAnimal)
                 .content(request.content())
                 .location(location)
                 .address(request.address())
