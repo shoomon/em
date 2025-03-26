@@ -4,9 +4,9 @@ import { PointList, PointListRequest } from "../types/post"
 
 const usePoints = ({ lng, lat, rad = 500 }: PointListRequest) => {
   const { data, isLoading, isError } = useQuery<PointList>({
-    queryKey: ["points"],
+    queryKey: ["points", lng, lat, rad],
     queryFn: () => fetchPointList({ lat, lng, rad }),
-    staleTime: 5 * 1000 * 60,
+    staleTime: 1000 * 60,
     refetchOnWindowFocus: false,
   })
 
