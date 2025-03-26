@@ -1,7 +1,6 @@
+import EmLoading from "@/components/EmLoading/EmLoading"
 import { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-
-import logo from "@/assets/em_logo_simple.svg"
 
 const LoginSuccessPage = () => {
   const [searchParams] = useSearchParams()
@@ -25,12 +24,7 @@ const LoginSuccessPage = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full h-screen bg-em-white">
-        <div className="flex flex-col items-center justify-center gap-4 w-full h-full">
-          <img src={logo} alt="로고" className="w-24 animate-bounce" />
-          <div className="font-bold animate-pulse">로그인 중...</div>
-        </div>
-      </div>
+      <EmLoading />
     </>
   )
 }
