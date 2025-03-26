@@ -1,12 +1,12 @@
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "@tanstack/react-query"
 import { useEffect, useRef } from "react"
 
-interface UseInfiniteScrollProps extends UseInfiniteQueryOptions {
+interface UseInfiniteScrollProps<TData, TError> extends UseInfiniteQueryOptions<TData, TError> {
   rootMargin?: string
   threshold?: number
 }
 
-const useInfiniteScroll = ({
+const useInfiniteScroll = <TData, TError = unknown>({
   rootMargin = "0px",
   threshold = 0.1,
   queryKey,
@@ -14,7 +14,7 @@ const useInfiniteScroll = ({
   getNextPageParam,
   enabled = true,
   ...queryOptions
-}: UseInfiniteScrollProps) => {
+}: UseInfiniteScrollProps<TData, TError>) => {
   const observerRef = useRef<HTMLDivElement>(null) // 마지막 요소를 감지할 ref
 
   const {

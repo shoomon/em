@@ -11,7 +11,7 @@ const MainLayout = () => {
   return (
     <BaseLayout>
       {/* header */}
-      <div className="bg-em-white fixed top-0 max-w-[600px] w-full h-14">
+      <div className="bg-em-white fixed top-0 max-w-[600px] w-full h-14 z-[110]">
         <MainHeader />
       </div>
       {/* main */}
@@ -20,7 +20,7 @@ const MainLayout = () => {
       </main>
       {/* navigation bar */}
       <div
-        className={`bg-em-white fixed bottom-0 max-w-[600px] w-full h-16 ${isIOS ? "pb-2" : ""}`}>
+        className={`bg-em-white fixed bottom-0 max-w-[600px] w-full h-16 z-[110] ${isIOS ? "pb-2" : ""}`}>
         <MainNavigationBar />
       </div>
     </BaseLayout>
