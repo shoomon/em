@@ -1,4 +1,6 @@
+import { useSearchParams } from "react-router-dom"
 import { Post } from "../types/post"
+import usePosts from "./../hooks/usePosts"
 import PostItem from "./PostItem"
 import SortTypeSelector from "./SortTypeSelector"
 
@@ -9,18 +11,35 @@ const sortTypeData = [
 ]
 
 interface PostListProps {
-  posts: Post[]
+  location: { lat: number; lng: number }
 }
 
-const PostList = ({ posts }: PostListProps) => {
+const PostList = ({ location }: PostListProps) => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { data, isLoading, isFetchingNextPage, observerRef } = usePosts({
+    ...location,
+    sort: searchParams.get("sort") || "latest",
+  })
+
   return (
     <div className="overflow-y-auto h-[75dvh]">
-      <SortTypeSelector contents={sortTypeData} />
-      <div className="flex flex-col gap-4 bg-em-gray-sm">
-        {posts.map((item) => (
-          <PostItem key={item.id} {...item} />
-        ))}
-      </div>
+      {isLoading ? (
+        <div>로딩 중...</div>
+      ) : (
+        <>
+          <SortTypeSelector contents={sortTypeData} />
+          <div className="flex flex-col gap-4 bg-em-gray-sm">
+            {data?.pages.map((page: any) =>
+              page.postList.map((item: Post) => <PostItem key={item.id} {...item} />),
+            )}
+          </div>
+          {isFetchingNextPage ? (
+            <div className="bg-em-gray-md animate-pulse h-40" />
+          ) : (
+            <div ref={observerRef} className="h-1" />
+          )}
+        </>
+      )}
     </div>
   )
 }

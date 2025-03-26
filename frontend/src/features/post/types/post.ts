@@ -8,6 +8,12 @@ export interface PointList {
   pointList: Point[]
 }
 
+export interface PointListRequest {
+  lng: number
+  lat: number
+  rad?: number
+}
+
 export interface PostCreateRequest {
   userId: number
   content: string
@@ -20,6 +26,17 @@ export interface PostListRequest {
   lng: number
   lat: number
   rad?: number
+  postId?: number
+  dist?: number
+  emoCnt?: number
+  sort?: string
+}
+
+export interface ClusteredPostListRequest {
+  minLng: number
+  minLat: number
+  maxLng: number
+  maxLat: number
   postId?: number
   dist?: number
   emoCnt?: number

@@ -1,19 +1,16 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchPostList } from "../api/postApi"
+import { fetchPointList } from "../api/postApi"
+import { PointList, PointListRequest } from "../types/post"
 
-interface UsePointsProps {
-  location: { lat: number; lng: number }
-}
-
-const usePoints = ({ location }: UsePointsProps) => {
-  const { data, isLoading, isError } = useQuery({
+const usePoints = ({ lng, lat, rad = 500 }: PointListRequest) => {
+  const { data, isLoading, isError } = useQuery<PointList>({
     queryKey: ["points"],
-    queryFn: () => fetchPostList({ lat: location.lat, lng: location.lng }),
+    queryFn: () => fetchPointList({ lat, lng, rad }),
     staleTime: 5 * 1000 * 60,
     refetchOnWindowFocus: false,
   })
 
-  return { points: data, isPointLoading: isLoading, isPointError: isError }
+  return { pointData: data, isPointLoading: isLoading, isPointError: isError }
 }
 
 export default usePoints

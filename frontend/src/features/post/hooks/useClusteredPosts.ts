@@ -1,11 +1,11 @@
 import useInfiniteScroll from "@/hooks/useInfiniteScroll"
-import { fetchPostList } from "../api/postApi"
-import { PostListRequest } from "../types/post"
+import { fetchPostClusteredList } from "../api/postApi"
+import { ClusteredPostListRequest } from "../types/post"
 
-const usePosts = (props: PostListRequest) => {
+const useClusteredPosts = (props: ClusteredPostListRequest) => {
   const queryFn = async (pageParam: number) => {
     try {
-      const response = await fetchPostList({
+      const response = await fetchPostClusteredList({
         ...props,
         postId: pageParam,
       })
@@ -16,7 +16,7 @@ const usePosts = (props: PostListRequest) => {
   }
 
   const { data, isLoading, observerRef, isError, isFetchingNextPage } = useInfiniteScroll({
-    queryKey: ["posts"],
+    queryKey: ["clustered"],
     queryFn: ({ pageParam = 0 }) => queryFn(pageParam as number),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => (lastPage.meta?.hasNext ? lastPage.meta.lastId : undefined),
@@ -32,4 +32,4 @@ const usePosts = (props: PostListRequest) => {
   }
 }
 
-export default usePosts
+export default useClusteredPosts
