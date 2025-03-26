@@ -23,7 +23,7 @@ public class EmotionService {
     public int create(CreateEmotionRequest request) {
         Emotion emotion = Emotion.builder()
                 .name(request.name())
-                .hexColor(request.hexColor())
+                .korName(request.korName())
                 .build();
 
         emotionRepository.save(emotion);
