@@ -17,7 +17,7 @@ const UserProfileCard = () => {
       <div className="flex flex-col justify-center gap-1">
         {profile.socialId ? (
           <>
-            <h2 className="text-xl font-bold text-em-black">{profile.nickname}</h2>
+            <h2 className="text-xl font-bold text-em-black">{profile.username}</h2>
             <div className="flex items-center gap-1">
               {profile.providerImage && (
                 <img src={profile.providerImage} alt="소셜 아이콘" className="w-4 h-4" />

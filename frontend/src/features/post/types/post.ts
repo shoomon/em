@@ -1,3 +1,5 @@
+import { LatLng } from "@/features/map/types/map"
+
 export interface Point {
   id: number
   lng: number
@@ -65,4 +67,18 @@ export interface Post {
 export interface PostInfiniteData {
   data: Post[]
   meta: { lastId: number; hasNext: boolean }
+}
+
+export enum PostCreateStep {
+  Map = 1,
+  Content = 2,
+  Emotion = 3,
+  Confirm = 4,
+}
+
+export interface PostCreateRequest {
+  content: string
+  latitude: LatLng["lat"]
+  longitude: LatLng["lng"]
+  emotion: string
 }

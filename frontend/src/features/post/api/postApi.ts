@@ -3,12 +3,14 @@ import toQueryString from "@/utils/toQueryString"
 import {
   ClusteredPostListRequest,
   PointListRequest,
-  PostCreateRequest,
   PostListRequest,
+  PostCreateRequest
 } from "../types/post"
 
-export const fetchPostCreate = (postCreateRequest: PostCreateRequest) => {
-  return apiClient.post("/posts/", postCreateRequest)
+// 게시글 작성
+export const fetchPostCreate = async (data: PostCreateRequest) => {
+  const response = await apiClient.post("/api/posts", data)
+  return response.data
 }
 
 export const fetchPostDelete = (id: number) => {
@@ -32,5 +34,4 @@ export const fetchPostClusteredList = async (
 export const fetchPointList = async (pointListRequest: PointListRequest) => {
   const queryString = toQueryString({ ...pointListRequest })
   const response = await apiClient.get(`/posts/points?${queryString}`)
-  return response.data
 }

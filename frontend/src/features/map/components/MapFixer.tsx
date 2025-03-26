@@ -1,14 +1,17 @@
 import useMap from "@/features/map/hooks/useMap"
 import { useEffect, useRef } from "react"
+import { LatLng } from "../types/map"
 
 interface MapFixerProps {
   location?: { lat: number; lng: number }
   className?: string
+  onDragEnd?: (newCenter: LatLng) => void
 }
 
 const MapFixer = ({
   location = { lat: 37.501286, lng: 127.0396029 },
   className,
+  onDragEnd,
 }: MapFixerProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const { map } = useMap({ initLocation: location, mapRef })
@@ -34,6 +37,8 @@ const MapFixer = ({
         const projection = map.current.getProjection()
         const initCenter = new naver.maps.LatLng(location.lat, location.lng)
         const newCenter = map.current.getCenter()
+        // 중앙 위치가 변경되었을 때 호출
+        onDragEnd?.({ lat: newCenter.y, lng: newCenter.x })
         const distance = projection.getDistance(initCenter, newCenter)
         const color = distance > radius ? "rgba(255, 0, 0, 0.1)" : "rgba(0, 255, 0, 0.1)"
 

@@ -2,7 +2,7 @@ export default {
   // 코드 포맷팅 - 들여쓰기 및 공백
   useTabs: false, // 탭 대신 스페이스 사용
   tabWidth: 2, // 들여쓰기 너비 2칸
-  printWidth: 100, // 한 줄 최대 길이 100자
+  printWidth: 80, // 한 줄 최대 길이 100자
   bracketSpacing: true, // 객체 리터럴의 중괄호 앞뒤에 공백 추가
   arrayBracketSpacing: false, // 배열 괄호 내부 공백 금지 (ESLint array-bracket-spacing rule과 일치)
 
