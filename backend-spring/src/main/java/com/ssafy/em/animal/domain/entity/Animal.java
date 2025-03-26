@@ -1,4 +1,4 @@
-package com.ssafy.em.emotion.domain.entity;
+package com.ssafy.em.animal.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,11 +16,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "emotions")
+@Table(name = "animals")
 @Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Emotion {
+public class Animal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class Emotion {
     private LocalDateTime createdAt;
 
     @Builder
-    public Emotion(String name, String korName) {
+    public Animal(String name, String korName) {
         this.name = name;
         this.korName = korName;
     }
