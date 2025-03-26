@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 
 import Tabs from "@/components/Tabs/Tabs"
 import UserProfileCard from "@/features/profile/components/UserProfileCard"
-import EmotionCalendar from "@/features/history/components/EmotionCalendar"
+
+const LazyEmotionCalendar = lazy(
+  () => import("@/features/history/components/EmotionCalendar"),
+)
 
 const MyPage = () => {
   const tabs = [
@@ -12,7 +15,7 @@ const MyPage = () => {
 
   const [currentTab, setCurrentTab] = useState<"history" | "report">(() => {
     const saved = localStorage.getItem("mypage-tab")
-    return (saved === "history" || saved === "report") ? saved : "history"
+    return saved === "history" || saved === "report" ? saved : "history"
   })
 
   useEffect(() => {
@@ -23,14 +26,23 @@ const MyPage = () => {
     switch (currentTab) {
       case "history":
         return (
-          <div className="flex flex-col gap-3">
-            <EmotionCalendar />
-          </div>
+          <Suspense
+            fallback={
+              <div className="mt-6 flex justify-center text-em-gray">
+                감정 달력을 불러오는 중...
+              </div>
+            }>
+            <div className="flex flex-col gap-3">
+              <LazyEmotionCalendar />
+            </div>
+          </Suspense>
         )
       case "report":
         return (
           <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-semibold text-em-black">이 달의 통계</h3>
+            <h3 className="text-lg font-semibold text-em-black">
+              이 달의 통계
+            </h3>
             <div className="bg-em-gray-sm p-4 rounded shadow text-em-black">
               📊 추후 업데이트 됩니다!
             </div>
@@ -49,7 +61,9 @@ const MyPage = () => {
         <Tabs
           tabs={tabs}
           activeTab={currentTab}
-          onTabChange={(tabValue: string) => setCurrentTab(tabValue as "history" | "report")}
+          onTabChange={(tabValue: string) =>
+            setCurrentTab(tabValue as "history" | "report")
+          }
         />
         {renderTabContent()}
       </div>
