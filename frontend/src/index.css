@@ -35,3 +35,9 @@ body {
   --header-height: 3.5rem;
   --navigation-bar-height: 4rem;
 }
+
+@layer base {
+  abbr[title] {
+    text-decoration: none !important;
+  }
+}
