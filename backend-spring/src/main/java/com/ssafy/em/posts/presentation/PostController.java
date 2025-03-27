@@ -69,7 +69,8 @@ public class PostController {
             @RequestParam(name = "postId", required = false) Integer cursorId,
             @RequestParam(name = "dist", required = false) Double cursorDist,
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
-            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
+            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy,
+            @LoginRequired int userId
     ){
         GetPostListResponse response = postService.getPostList(
                 longitude,
@@ -94,7 +95,8 @@ public class PostController {
             @RequestParam(name = "postId", required = false) Integer cursorId,
             @RequestParam(name = "dist", required = false) Double cursorDist,
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
-            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
+            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy,
+            @LoginRequired int userId
     ){
         GetPostListResponse response = postService.getClusteredPostList(
                 lng1,
@@ -105,6 +107,7 @@ public class PostController {
                 cursorDist,
                 cursorEmoCnt,
                 sortBy
+                userId
         );
         return ResponseEntity.ok(response);
     }
