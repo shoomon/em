@@ -6,15 +6,15 @@ import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 
 
+import com.ssafy.em.emotion.dto.ReactionEmotions;
+import com.ssafy.em.post_reaction.domain.PostReactionRepository;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
-import com.ssafy.em.posts.domain.repository.PostReactionQueryDslRepository;
 import com.ssafy.em.posts.dto.LastReadDto;
 import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
-import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +38,7 @@ import java.util.Random;
 @Slf4j
 public class PostService{
     private final PostJpaRepository postJpaRepository;
-    private final PostReactionQueryDslRepository postReactionQueryDslRepository;
+    private final PostReactionRepository postReactionRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     private final Random random = new Random();
@@ -128,7 +127,7 @@ public class PostService{
 
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
-                    Map<String, Long> emotionCounts = postReactionQueryDslRepository.getEmotionCount(post.getId());
+                   ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
                     return Post.from(post, emotionCounts);
                 })
                 .toList();
@@ -187,7 +186,7 @@ public class PostService{
 
         List<PostDetailDto> result =  dtoList.stream()
                 .map(dto -> {
-                    Map<String, Long> emotionCounts = postReactionQueryDslRepository.getEmotionCount(dto.id());
+                    ReactionEmotions emotionCounts = this.getEmotionCounts(dto.id());
                     return new PostDetailDto(
                             dto.id(),
                             dto.userId(),
@@ -226,6 +225,28 @@ public class PostService{
     public GetCalendarListResponse getCalendarPostList(int userId, YearMonth yearMonth){
         return new GetCalendarListResponse(
                 postJpaRepository.getCalendarPostList(userId, yearMonth)
+        );
+    }
+
+    private ReactionEmotions getEmotionCounts(int postId) {
+        List<Object[]> rawCounts = postReactionRepository.countReactionsByEmotionName(postId);
+        Map<String, Long> emotionCountMap = new HashMap<>();
+        int sum = 0;
+        for (Object[] row : rawCounts) {
+            String emotionName = (String) row[0];
+            Long count = (Long) row[1];
+            sum += count.intValue();
+            emotionCountMap.put(emotionName.toLowerCase(), count); // 감정 이름 소문자로
+        }
+
+        return new ReactionEmotions(
+                emotionCountMap.getOrDefault("joy", 0L).intValue(),
+                emotionCountMap.getOrDefault("sadness", 0L).intValue(),
+                emotionCountMap.getOrDefault("anger", 0L).intValue(),
+                emotionCountMap.getOrDefault("surprise", 0L).intValue(),
+                emotionCountMap.getOrDefault("trust", 0L).intValue(),
+                sum
+
         );
     }
 

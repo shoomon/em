@@ -1,6 +1,7 @@
 package com.ssafy.em.posts.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.ssafy.em.emotion.dto.ReactionEmotions;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,7 +78,7 @@ public class Post {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static PostDetailDto from(Post post, Map<String, Long> emotionCounts) {
+    public static PostDetailDto from(Post post, ReactionEmotions emotionCounts) {
         return new PostDetailDto(
                 post.getId(),
                 post.getUserId(),
