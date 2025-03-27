@@ -47,7 +47,7 @@ public class Post {
     @Column(length = 1500, nullable = false)
     private String content;
 
-    @Column(name = "emotion", nullable = false)
+    @Column(name = "emotion", nullable = true)
     private String emotion;
 
     @JdbcTypeCode(SqlTypes.GEOMETRY)
