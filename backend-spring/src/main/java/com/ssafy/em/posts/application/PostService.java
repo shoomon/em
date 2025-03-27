@@ -195,7 +195,7 @@ public class PostService{
                             emotionCounts,
                             dto.createdAt()
                     );
-                        }
+                }
                 )
                 .toList();
 

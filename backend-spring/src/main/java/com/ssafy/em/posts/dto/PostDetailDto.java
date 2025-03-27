@@ -3,7 +3,6 @@ package com.ssafy.em.posts.dto;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public record PostDetailDto(
         int postId,

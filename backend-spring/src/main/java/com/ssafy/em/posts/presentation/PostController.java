@@ -73,29 +73,7 @@ public class PostController {
     ){
         PostCursorDto cursor = null;
 
-        switch (sortBy) {
-            case "popular" -> {
-                if(cursorId == 0 && cursorEmoCnt == 0){
-                    cursor = new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
-                }else{
-                    cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-                }
-                break;
-            }
-            case "distance" -> {
-                if(cursorId == 0 && cursorDist == 0){
-                    cursor = new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
-                }else{
-                    cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-                }
-                break;
-            }
-            default -> {
-                if (cursorId != null && cursorId != 0) {
-                    cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-                }
-            }
-        }
+        cursor = getPostCursorDto(cursorId, cursorDist, cursorEmoCnt, sortBy);
 
         GetPostListResponse response = postService.getPostList(
                 longitude,
@@ -143,5 +121,35 @@ public class PostController {
     ){
         GetCalendarListResponse response = postService.getCalendarPostList(userId, yearMonth);
         return ResponseEntity.ok(response);
+    }
+
+    private static PostCursorDto getPostCursorDto(
+            Integer cursorId,
+            Double cursorDist,
+            Integer cursorEmoCnt,
+            String sortBy
+    ) {
+        switch (sortBy) {
+            case "popular" -> {
+                if(cursorId == 0 && cursorEmoCnt == 0){
+                    return new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
+                }else{
+                    return new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+                }
+            }
+            case "distance" -> {
+                if(cursorId == 0 && cursorDist == 0){
+                    return new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
+                }else{
+                    return new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+                }
+            }
+            default -> {
+                if (cursorId != null && cursorId != 0) {
+                    return new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
+                }
+            }
+        }
+        return null;
     }
 }
