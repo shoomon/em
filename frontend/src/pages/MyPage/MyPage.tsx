@@ -54,7 +54,7 @@ const MyPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-em-white">
+    <div className="flex flex-col flex-1 bg-em-white">
       <div className="flex-grow overflow-y-auto p-4 flex flex-col gap-6">
         <UserProfileCard />
 
