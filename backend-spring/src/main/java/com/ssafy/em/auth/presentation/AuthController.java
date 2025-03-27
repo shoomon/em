@@ -35,8 +35,8 @@ public class AuthController implements AuthControllerDocs {
         // AuthService를 통해 토큰 재발급
         TokenResponse tokenResponse = authService.reissue(refreshToken);
 
-        // 새로운 access token은 응답 헤더에 Bearer 스킴으로 설정
-        response.setHeader("Authorization", "Bearer " + tokenResponse.accessToken());
+        // 새로운 access token은 응답 헤더에 설정
+        response.setHeader("Authorization", tokenResponse.accessToken());
 
         // 새로운 refresh token은 CookieUtils를 사용해 HttpOnly 쿠키에 설정
         ResponseCookie refreshCookie = CookieUtils.createCookie(tokenResponse.refreshToken(), jwtProperties.refreshTokenExpiry());
