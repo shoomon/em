@@ -10,6 +10,8 @@ import PostSearchButton from "@/features/post/components/PostSearchButton"
 import usePoints from "@/features/post/hooks/usePoints"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
+import useLocationStore from "@/store/useLocationStore"
+import usePostStore from "@/store/usePostStore"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -19,37 +21,53 @@ const tabs = [
 ]
 
 const HomePage = () => {
-  const { isDenied, currentPosition, lastFetchedPosition } = useGps()
-  const { isOpen, setIsOpen } = useDrawer("home")
+  const { currentLocation, lastFetchedLocation } = useGps()
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
-  const { pointData } = usePoints({ ...currentPosition })
+  const { pointData } = usePoints({ ...currentLocation })
+  const isLocationPermissionDenied = useLocationStore(
+    (state) => state.isPermissionDenied,
+  )
+  const { isDrawerOpen, setIsDrawerOpen, setClusterGrid } = usePostStore()
+  const { isOpen, setIsOpen } = useDrawer({
+    drawerKey: "home",
+    isOpen: isDrawerOpen,
+    setIsOpen: setIsDrawerOpen,
+  })
   const navigate = useNavigate()
+
   const renderTabContent = () => {
     switch (currentTab) {
       case "posts":
-        return <PostList location={currentPosition} />
+        return <PostList location={currentLocation} />
       default:
         return <div className="h-[75dvh]"></div>
     }
   }
 
+  const onClickRefetchButton = () => {
+    //
+  }
+  const onClickCreateButton = () => {
+    navigate("/posts/create")
+  }
+  const onClickSearchButton = () => {
+    setIsOpen(true)
+    setClusterGrid(null)
+  }
+
   return (
     <div className="relative h-[calc(100dvh-var(--header-height)-var(--navigation-bar-height))]">
-      <AddressDisplay lastFetchedPosition={lastFetchedPosition} />
-      <PostRefetchButton onClick={() => {}} />
+      <AddressDisplay location={lastFetchedLocation} />
+      <PostRefetchButton onClick={onClickRefetchButton} />
       <MapViewer
         className="h-full"
-        isDenied={isDenied}
-        location={currentPosition}
+        isDenied={isLocationPermissionDenied}
+        location={currentLocation}
         points={pointData?.pointList || []}>
         {(focusOnMarker) => <LocationFixButton onClick={focusOnMarker} />}
       </MapViewer>
-      <PostCreateButton
-        onClick={() => {
-          navigate("/posts/create")
-        }}
-      />
-      <PostSearchButton onClick={() => setIsOpen(true)} />
+      <PostCreateButton onClick={onClickCreateButton} />
+      <PostSearchButton onClick={onClickSearchButton} />
 
       <EmDrawer open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
         <div>

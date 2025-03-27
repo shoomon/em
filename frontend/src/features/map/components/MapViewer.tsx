@@ -1,11 +1,13 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Point } from "@/features/post/types/post"
+import usePostStore from "@/store/usePostStore"
 import { ReactNode, useEffect, useRef } from "react"
 import htmlClusterMarkers from "../constants"
+import { LatLng } from "../types/map"
 
 interface MapViewerProps {
   isDenied: boolean
-  location: { lat: number; lng: number }
+  location: LatLng
   points: Point[]
   className?: string
   children?: (focusOnMarker: () => void) => ReactNode
@@ -24,6 +26,7 @@ const MapViewer = ({
   const clusterRef = useRef<any>(null)
   const postMarkerRefs = useRef<naver.maps.Marker[]>([])
   const { map } = useMap({ initLocation: location, mapRef })
+  const { setIsDrawerOpen, setClusterGrid } = usePostStore()
 
   useEffect(() => {
     if (!map.current || !window.naver?.maps) {
@@ -100,9 +103,18 @@ const MapViewer = ({
       }
 
       clusterRef.current._clusters.forEach((cluster: any) => {
-        if (cluster._clusterMarker?.eventTarget) {
-          cluster._clusterMarker.eventTarget.onclick = () =>
-            console.log(cluster._clusterBounds)
+        cluster._clusterMarker.eventTarget.onclick = () => {
+          setClusterGrid([
+            {
+              lat: cluster._clusterBounds._ne._lat,
+              lng: cluster._clusterBounds._ne._lng,
+            },
+            {
+              lat: cluster._clusterBounds._sw._lat,
+              lng: cluster._clusterBounds._sw._lng,
+            },
+          ])
+          setIsDrawerOpen(true)
         }
       })
     }

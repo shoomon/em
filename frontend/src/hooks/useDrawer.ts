@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
-const useDrawer = (drawerKey: string) => {
-  const [isOpen, setIsOpen] = useState(false)
+interface UseDrawerProps {
+  drawerKey: string
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
+}
 
+const useDrawer = ({ drawerKey, isOpen, setIsOpen }: UseDrawerProps) => {
   useEffect(() => {
     const handlePopstate = () => {
       setIsOpen(false)

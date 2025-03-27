@@ -1,7 +1,6 @@
 import apiClient from "@/utils/http-common"
 import toQueryString from "@/utils/toQueryString"
 import {
-  ClusteredPostListRequest,
   PointListRequest,
   PostCreateRequest,
   PostListRequest,
@@ -23,16 +22,20 @@ export const fetchPostList = async (postListRequest: PostListRequest) => {
   return response.data
 }
 
-export const fetchPostClusteredList = async (
-  clusteredPostListRequest: ClusteredPostListRequest,
-) => {
-  const queryString = toQueryString({ ...clusteredPostListRequest })
-  const response = await apiClient.get(`/posts/set?${queryString}`)
-  return response.data
-}
+// export const fetchPostClusteredList = async (
+//   clusteredPostListRequest: ClusteredPostListRequest,
+// ) => {
+//   const queryString = toQueryString({ ...clusteredPostListRequest })
+//   const response = await apiClient.get(`/posts/set?${queryString}`)
+//   return response.data
+// }
 
 export const fetchPointList = async (pointListRequest: PointListRequest) => {
   const queryString = toQueryString({ ...pointListRequest })
   const response = await apiClient.get(`/posts/points?${queryString}`)
   return response.data
+}
+
+export const fetchPostReaction = (postId: number, emotionName: string) => {
+  return apiClient.post(`/reactions/${postId}`, emotionName)
 }

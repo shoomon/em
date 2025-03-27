@@ -28,7 +28,13 @@
 
 body {
   font-family: "Pretendard", sans-serif;
-  background-color: var(--color-em-gray-sm);
+  background-color: #fafafa;
+  overflow-y: scroll;
+}
+
+body [data-vaul-drawer],
+body [data-vaul-overlay] {
+  right: 15px;
 }
 
 :root {
