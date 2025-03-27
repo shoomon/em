@@ -11,6 +11,7 @@ import usePoints from "@/features/post/hooks/usePoints"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const tabs = [
   { value: "posts", label: "이곳에 남긴 글" },
@@ -22,7 +23,7 @@ const HomePage = () => {
   const { isOpen, setIsOpen } = useDrawer("home")
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
   const { pointData } = usePoints({ ...currentPosition })
-
+  const navigate = useNavigate()
   const renderTabContent = () => {
     switch (currentTab) {
       case "posts":
@@ -43,7 +44,11 @@ const HomePage = () => {
         points={pointData?.pointList || []}>
         {(focusOnMarker) => <LocationFixButton onClick={focusOnMarker} />}
       </MapViewer>
-      <PostCreateButton onClick={() => {}} />
+      <PostCreateButton
+        onClick={() => {
+          navigate("/posts/create")
+        }}
+      />
       <PostSearchButton onClick={() => setIsOpen(true)} />
 
       <EmDrawer open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
@@ -51,7 +56,9 @@ const HomePage = () => {
           <Tabs
             tabs={tabs}
             activeTab={currentTab}
-            onTabChange={(tabValue: string) => setCurrentTab(tabValue as "posts" | "playlist")}
+            onTabChange={(tabValue: string) =>
+              setCurrentTab(tabValue as "posts" | "playlist")
+            }
           />
           {renderTabContent()}
         </div>
