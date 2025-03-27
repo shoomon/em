@@ -39,7 +39,7 @@ const responseInterceptor = async (error: AxiosError) => {
     // 이미 리프레시 중인 경우 새로운 요청을 큐에 추가
     if (isRefreshing) {
       return new Promise((resolve) => {
-        refreshSubscribers.push((accessToken: string) => {
+        refreshSubscribers.push(() => {
           // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
           resolve(apiClient(originalRequest))
         })

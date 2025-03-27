@@ -56,7 +56,6 @@ const MapViewer = ({
 
     // 클러스터링 객체 생성
     if (!clusterRef.current && window.MarkerClustering) {
-      // @ts-ignore
       clusterRef.current = new window.MarkerClustering({
         minClusterSize: 2,
         maxZoom: 21,
