@@ -39,8 +39,8 @@ public class PostReactionService {
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
         Optional<PostReaction> optionalPostReaction = postReactionRepository.findByUserIdAndPostId(userId, postId);
-        int emotionId = postReactionRequest.emotionId();
-        Emotion emotion = emotionRepository.findById(emotionId)
+        String emotionName = postReactionRequest.emotionName();
+        Emotion emotion = emotionRepository.findByName(emotionName)
                 .orElseThrow(() -> new EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
         if (optionalPostReaction.isPresent()) {
             PostReaction postReaction = optionalPostReaction.get();
