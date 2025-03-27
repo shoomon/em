@@ -1,4 +1,4 @@
-package com.ssafy.em.post_reaction.domain;
+package com.ssafy.em.post_reaction.domain.entity;
 
 import com.ssafy.em.emotion.domain.entity.Emotion;
 import com.ssafy.em.posts.domain.entity.Post;
