@@ -7,7 +7,6 @@ import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
-import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetPointListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.util.PostConstant;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -133,15 +131,6 @@ public class PostController {
                 cursor,
                 sortBy
         );
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/calendar")
-    public ResponseEntity<GetCalendarListResponse> getCalendarPostList(
-            @LoginRequired int userId,
-            @RequestParam(name = "month")YearMonth yearMonth
-    ){
-        GetCalendarListResponse response = postService.getCalendarPostList(userId, yearMonth);
         return ResponseEntity.ok(response);
     }
 }

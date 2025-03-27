@@ -5,7 +5,9 @@ import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 
-import com.ssafy.em.post_reaction.domain.repository.PostReactionJpaRepository;
+
+import com.ssafy.em.emotion.dto.ReactionEmotions;
+import com.ssafy.em.post_reaction.domain.PostReactionRepository;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.posts.dto.LastReadDto;
@@ -13,7 +15,6 @@ import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
-import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.YearMonth;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +34,7 @@ import java.util.Random;
 @Slf4j
 public class PostService{
     private final PostJpaRepository postJpaRepository;
-    private final PostReactionJpaRepository postReactionRepository;
+    private final PostReactionRepository postReactionRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     private final Random random = new Random();
@@ -68,7 +65,7 @@ public class PostService{
         Post post = Post.builder()
                 .animalProfileId(0)
                 .userId(userId)
-                .nickname(request.emotion()+" "+randomAnimal)
+                .nickname(request.emotion()+randomAnimal)
                 .content(request.content())
                 .location(location)
                 .address(request.address())
@@ -126,8 +123,8 @@ public class PostService{
 
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
-                   Map<String, Long> emotionCounts = postReactionRepository.getEmotionCount(post.getId());
-                    return PostDetailDto.from(post, emotionCounts);
+                   ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
+                    return Post.from(post, emotionCounts);
                 })
                 .toList();
 
@@ -154,7 +151,7 @@ public class PostService{
         }
 
         return new GetPostListResponse(dtoList,
-                new LastReadDto(dtoList.get(dtoList.size()-1).postId(),lastCnt, lastDist, hasNext)
+                new LastReadDto(dtoList.get(dtoList.size()-1).id(),lastCnt, lastDist, hasNext)
         );
     }
 
@@ -185,9 +182,9 @@ public class PostService{
 
         List<PostDetailDto> result =  dtoList.stream()
                 .map(dto -> {
-                    Map<String, Long> emotionCounts = postReactionRepository.getEmotionCount(dto.postId());
+                    ReactionEmotions emotionCounts = this.getEmotionCounts(dto.id());
                     return new PostDetailDto(
-                            dto.postId(),
+                            dto.id(),
                             dto.userId(),
                             dto.nickname(),
                             null,
@@ -221,9 +218,25 @@ public class PostService{
         return new GetPostListResponse(result, null);
     }
 
-    public GetCalendarListResponse getCalendarPostList(int userId, YearMonth yearMonth){
-        return new GetCalendarListResponse(
-                postJpaRepository.getCalendarPostList(userId, yearMonth)
+    private ReactionEmotions getEmotionCounts(int postId) {
+        List<Object[]> rawCounts = postReactionRepository.countReactionsByEmotionName(postId);
+        Map<String, Long> emotionCountMap = new HashMap<>();
+        int sum = 0;
+        for (Object[] row : rawCounts) {
+            String emotionName = (String) row[0];
+            Long count = (Long) row[1];
+            sum += count.intValue();
+            emotionCountMap.put(emotionName.toLowerCase(), count); // 감정 이름 소문자로
+        }
+
+        return new ReactionEmotions(
+                emotionCountMap.getOrDefault("joy", 0L).intValue(),
+                emotionCountMap.getOrDefault("sadness", 0L).intValue(),
+                emotionCountMap.getOrDefault("anger", 0L).intValue(),
+                emotionCountMap.getOrDefault("surprise", 0L).intValue(),
+                emotionCountMap.getOrDefault("trust", 0L).intValue(),
+                sum
+
         );
     }
 
