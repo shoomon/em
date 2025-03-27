@@ -4,7 +4,6 @@ import com.ssafy.em.emotion.dto.ReactionEmotions;
 import com.ssafy.em.posts.domain.entity.Post;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public record PostDetailDto(
         int postId,
