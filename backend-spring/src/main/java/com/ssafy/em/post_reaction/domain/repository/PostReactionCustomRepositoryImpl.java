@@ -18,8 +18,8 @@ public class PostReactionCustomRepositoryImpl implements PostReactionCustomRepos
     public Map<String, Long> getEmotionCount(int postId) {
         String sql = """
                 SELECT e.name, count(*)
-                FROM post_reaction r
-                JOIN emotion e
+                FROM post_reactions r
+                JOIN emotions e
                 ON r.emotion_id = e.id
                 WHERE r.post_id = ?1
                 GROUP BY e.name, r.emotion_id
