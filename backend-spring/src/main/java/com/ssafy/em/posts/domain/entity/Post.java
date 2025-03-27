@@ -81,18 +81,13 @@ public class Post {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static PostDetailDto from(Post post, ReactionEmotions emotionCounts) {
-        return new PostDetailDto(
-                post.getId(),
-                post.getUserId(),
-                post.getNickname(),
-                null,
-                post.getAddress(),
-                post.getContent(),
-                post.getLocation().getX(),
-                post.getLocation().getY(),
-                emotionCounts,
-                post.getCreatedAt()
-        );
+    public void increaseReactionCount() {
+        this.reactionCount++;
+    }
+
+    public void decreaseReactionCount() {
+        if (this.reactionCount > 0) {
+            this.reactionCount--;
+        }
     }
 }

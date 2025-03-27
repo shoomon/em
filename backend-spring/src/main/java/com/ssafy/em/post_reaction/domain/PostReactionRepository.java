@@ -13,7 +13,7 @@ public interface PostReactionRepository extends JpaRepository<PostReaction, Inte
     Optional<PostReaction> findByUserIdAndPostId(int userId, int postId);
     @Query("SELECT pr.emotion.name, COUNT(pr) " +
             "FROM PostReaction pr " +
-            "WHERE pr.post.id = :postId AND pr.emotion.name in ('joy', 'sadness', 'anger', 'surprise', 'trust')" +
-            "GROUP BY pr.emotion.id")
+            "WHERE pr.post.id = :postId AND pr.emotion.name in ('JOY', 'SADNESS', 'ANGER', 'SURPRISE', 'TRUST')" +
+            "GROUP BY pr.emotion.name")
     List<Object[]> countReactionsByEmotionName(@Param("postId") int postId);
 }
