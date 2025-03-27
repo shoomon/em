@@ -46,7 +46,7 @@ const HomePage = () => {
       </MapViewer>
       <PostCreateButton
         onClick={() => {
-          navigate("/posts/create")
+          navigate("/posts/create", { viewTransition: true })
         }}
       />
       <PostSearchButton onClick={() => setIsOpen(true)} />

@@ -54,7 +54,7 @@ const PostConfirm = ({ formData }: PostConfirmProps) => {
             disabled
             textState={content}
             placeholder="내용을 입력해주세요"
-            className="min-h-0"
+            className=""
             isActiveCount={false}
           />
         </div>
