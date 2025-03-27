@@ -159,7 +159,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                             content,
                             longitude,
                             latitude,
-                            Map.of(),
+                            null,
                             createdAt
                     );
                 })

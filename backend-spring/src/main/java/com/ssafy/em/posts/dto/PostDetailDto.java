@@ -1,5 +1,7 @@
 package com.ssafy.em.posts.dto;
 
+import com.ssafy.em.emotion.dto.ReactionEmotions;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public record PostDetailDto(
         String content,
         double longitude,
         double latitude,
-        Map<String, Long> emotionCountList,
+        ReactionEmotions emotionCountList,
         LocalDateTime createdAt
 ) {
 }
