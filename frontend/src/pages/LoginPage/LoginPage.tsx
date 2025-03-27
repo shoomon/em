@@ -1,20 +1,24 @@
 import logo from "@/assets/em_logo_simple.svg"
 import LoginButton from "@/features/auth/components/LoginButton"
 import { LOGIN_PROVIDERS } from "@/features/auth/constants"
-import apiClient from "@/utils/http-common"
 import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 import { Navigate } from "react-router-dom"
 
 const LoginPage = () => {
-  const { data } = useQuery({
+  const { isSuccess } = useQuery({
     queryKey: ["isLoggedIn"],
     queryFn: () => {
-      return apiClient.get("/users")
+      return axios.get("/api/users", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
     },
+    retry: false,
   })
 
-  const isLoggedIn = data?.status === 200
-  if (isLoggedIn) {
+  if (isSuccess) {
     return <Navigate to="/" replace />
   }
 

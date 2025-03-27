@@ -25,7 +25,10 @@ const responseInterceptor = async (error: AxiosError) => {
   if (error.response?.status === 401) {
     // ✅ 이미 토큰 재발급 시도한 요청이면 강제 로그아웃
     if (originalRequest._retry) {
+      console.log("토큰 재발급 실패")
       localStorage.removeItem("accessToken")
+
+      // 로그인 페이지로 이동
       window.location.href = "/login"
 
       return Promise.reject(error)
@@ -60,7 +63,9 @@ const responseInterceptor = async (error: AxiosError) => {
       console.error("토큰 재발급 실패:", error)
 
       localStorage.removeItem("accessToken")
-      window.location.href = "/login"
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login"
+      }
 
       return Promise.reject(error)
     } finally {
