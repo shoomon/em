@@ -18,7 +18,7 @@ import java.io.IOException;
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static final String CONTENT_TYPE = "application/json";
+    private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
