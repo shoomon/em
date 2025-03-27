@@ -19,12 +19,12 @@ export default defineConfig(({ mode }) => {
     server: {
       // 포트 번호 설정
       port: 3000,
-      proxy: {
-        "/api": {
-          target: env.VITE_BASE_SERVER_URL,
-          changeOrigin: true,
-        },
-      },
+      // proxy: {
+      //   "/api": {
+      //     target: env.VITE_BASE_SERVER_URL,
+      //     changeOrigin: true,
+      //   },
+      // },
     },
   }
 })

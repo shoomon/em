@@ -2,22 +2,20 @@ import { LatLng } from "@/features/map/types/map"
 import { create } from "zustand"
 
 interface PostStore {
-  postsType: "normal" | "clustered"
-  setPostsType: (postType: "normal" | "clustered") => void
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (isDrawerOpen: boolean) => void
 
-  grid: [LatLng, LatLng]
-  setGrid: (grid: [LatLng, LatLng]) => void
+  clusterGrid: [LatLng, LatLng] | null
+  setClusterGrid: (clusterGrid: [LatLng, LatLng] | null) => void
 }
 
 const usePostStore = create<PostStore>((set) => ({
-  postsType: "normal",
-  setPostsType: (postsType) => set({ postsType }),
+  isDrawerOpen: false,
+  setIsDrawerOpen: (isDrawerOpen: boolean) => set({ isDrawerOpen }),
 
-  grid: [
-    { lat: 0, lng: 0 },
-    { lat: 0, lng: 0 },
-  ],
-  setGrid: (grid: [LatLng, LatLng]) => set({ grid }),
+  clusterGrid: null,
+  setClusterGrid: (clusterGrid: [LatLng, LatLng] | null) =>
+    set({ clusterGrid }),
 }))
 
 export default usePostStore
