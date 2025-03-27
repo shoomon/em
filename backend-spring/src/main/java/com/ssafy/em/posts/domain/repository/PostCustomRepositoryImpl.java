@@ -11,11 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.geolatte.geom.Point;
 import org.springframework.stereotype.Repository;
 
-import javax.management.QueryEval;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -173,7 +171,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     public Map<Integer, String> getCalendarPostList(int userId, YearMonth yearMonth) {
         String sql = """
                 SELECT DISTINCT ON (DATE(p.created_at))
-                EXTRACT(DAY FROM p.created_at) AS day, p.anonymous_nickname
+                EXTRACT(DAY FROM p.created_at) AS day, p.emotion
                 FROM posts p
                 WHERE p.user_id = :userId
                 AND p.created_at >= :startDate
@@ -193,7 +191,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         return result.stream()
                 .collect(Collectors.toMap(
                         row -> ((Number)row[0]).intValue(),
-                        row -> ((String)row[1]).split(" ")[0]
+                        row -> ((String)row[1])
                 ));
     }
 
