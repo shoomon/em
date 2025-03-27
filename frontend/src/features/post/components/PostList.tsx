@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom"
+import { LatLng } from "@/features/map/types/map"
 import { Post } from "../types/post"
 import usePosts from "./../hooks/usePosts"
 import PostItem from "./PostItem"
@@ -11,14 +11,12 @@ const sortTypeData = [
 ]
 
 interface PostListProps {
-  location: { lat: number; lng: number }
+  location: LatLng
 }
 
 const PostList = ({ location }: PostListProps) => {
-  const [searchParams] = useSearchParams()
   const { data, isLoading, isFetchingNextPage, observerRef } = usePosts({
-    ...location,
-    sort: searchParams.get("sort") || "latest",
+    location,
   })
 
   return (

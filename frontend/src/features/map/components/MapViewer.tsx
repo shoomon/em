@@ -26,7 +26,7 @@ const MapViewer = ({
   const clusterRef = useRef<any>(null)
   const postMarkerRefs = useRef<naver.maps.Marker[]>([])
   const { map } = useMap({ initLocation: location, mapRef })
-  const { setGrid } = usePostStore()
+  const { setIsDrawerOpen, setClusterGrid } = usePostStore()
 
   useEffect(() => {
     if (!map.current || !window.naver?.maps) {
@@ -104,10 +104,22 @@ const MapViewer = ({
       }
 
       clusterRef.current._clusters.forEach((cluster: any) => {
-        cluster._clusterMarker.eventTarget.onclick = () =>
-          console.log(cluster._clusterBounds)
-        // cluster._clusterMarker.eventTarget.addEventListener("click", () =>
-        //   console.log(cluster._clusterBounds),
+        cluster._clusterMarker.eventTarget.onclick = () => {
+          console.log([cluster._clusterBounds._ne, cluster._clusterBounds._sw])
+          setClusterGrid([
+            {
+              lat: cluster._clusterBounds._ne._lat,
+              lng: cluster._clusterBounds._ne._lng,
+            },
+            {
+              lat: cluster._clusterBounds._sw._lat,
+              lng: cluster._clusterBounds._sw._lng,
+            },
+          ])
+          setIsDrawerOpen(true)
+          // cluster._clusterMarker.eventTarget.addEventListener("click", () =>
+          //   console.log(cluster._clusterBounds)
+        }
       })
     }
 

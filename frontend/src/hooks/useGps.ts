@@ -10,7 +10,7 @@ const useGps = () => {
     lastFetchedLocation,
     setLastFetchedLocation,
   } = useLocationStore()
-  const currentLocationRef = useRef(currentLocation)
+  const currentLocationRef = useRef(currentLocation) // setState와 watchPosition 모두 비동기로 동작하기 때문에 필요!
 
   useEffect(() => {
     watchId.current = navigator.geolocation.watchPosition(
