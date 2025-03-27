@@ -9,6 +9,7 @@ export const fetchLogout = async () => {
 
 // 토큰 재발급
 export const fetchReissue = async () => {
+  localStorage.removeItem("accessToken")
   try {
     const response = await apiClient.post("/auth/reissue")
     // ✅ 토큰 재발급 성공
@@ -20,12 +21,7 @@ export const fetchReissue = async () => {
       return accessToken
     }
   } catch (error) {
-    // ✅ 토큰 재발급 요청 실패
-    console.error("토큰 재발급 요청 실패:", error)
-
-    localStorage.removeItem("accessToken")
     window.location.href = "/login"
-
     throw new Error("토큰 재발급 실패")
   }
 }

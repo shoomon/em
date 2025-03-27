@@ -1,9 +1,10 @@
 import { fetchReissue } from "@/features/auth/api/authApi"
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
-
-interface CustomRequestConfig extends InternalAxiosRequestConfig {
-  _retry?: boolean
-}
+import {
+  CustomRequestConfig,
+  ErrorCode,
+  ErrorCustomResponseData,
+} from "@/types/Error"
+import axios, { AxiosError } from "axios"
 
 const apiClient = axios.create({
   baseURL: "/api",
@@ -14,65 +15,24 @@ const apiClient = axios.create({
   withCredentials: true,
 })
 
-let isRefreshing = false // 리프레시 토큰 갱신 중
-let refreshSubscribers: ((token: string) => void)[] = [] // 토큰 갱신 구독자 목록
-let failedTokenRefreshCount = 0 // 토큰 갱신 실패 횟수를 추적
-
 // 리프레시 토큰 인터셉터 핸들러
 const responseInterceptor = async (error: AxiosError) => {
-  console.log("error", error)
   const originalRequest = error.config as CustomRequestConfig // 원래 요청 정보 저장
-
   originalRequest.headers.clear() // 헤더 초기화 (토큰 제거)
 
-  // 401 에러 처리
-  if (error.response?.status === 401) {
-    // 이전 토큰 갱신 실패 횟수 확인
-    if (failedTokenRefreshCount >= 1) {
-      console.log("토큰 재발급 반복 실패")
-      localStorage.removeItem("accessToken")
-      window.location.href = "/login"
-      return Promise.reject(error)
-    }
+  const errorResponseData: ErrorCustomResponseData = error.response
+    ?.data as ErrorCustomResponseData
 
-    originalRequest._retry = true // ✅ 첫 번째 401에서는 재시도 플래그 설정
+  // 만료된 토큰에 대하여 처리
+  if (errorResponseData.code === ErrorCode.EXPIRED_JWT_TOKEN) {
+    localStorage.removeItem("accessToken")
+    await fetchReissue()
+  }
 
-    // 이미 리프레시 중인 경우 새로운 요청을 큐에 추가
-    if (isRefreshing) {
-      return new Promise((resolve) => {
-        refreshSubscribers.push(() => {
-          resolve(apiClient(originalRequest))
-        })
-      })
-    }
-
-    isRefreshing = true // 리프레시 토큰 갱신 중
-
-    try {
-      const newAccessToken = await fetchReissue() // 새로운 토큰 발급
-
-      // ✅ 새로운 토큰을 받은 후, 큐에 대기 중이던 요청들을 다시 실행
-      refreshSubscribers.forEach((callback) => callback(newAccessToken))
-      refreshSubscribers = []
-
-      // ✅ 원래 요청 재시도
-      return apiClient(originalRequest)
-    } catch (error) {
-      failedTokenRefreshCount++ // 실패 횟수 증가
-      console.error("토큰 재발급 실패:", error)
-
-      localStorage.removeItem("accessToken")
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login"
-      }
-
-      return Promise.reject(error)
-    } finally {
-      isRefreshing = false
-    }
-  } else if (error.response?.status === 403) {
+  // 권한 없음
+  if (errorResponseData.code === ErrorCode.FORBIDDEN) {
     // ✅ 403 에러 처리
-    // alert("권한이 없습니다.")
+    console.log("권한 없음", error)
     return Promise.reject(error)
   }
 }
