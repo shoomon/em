@@ -16,7 +16,7 @@ import java.io.IOException;
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
-    private static final String CONTENT_TYPE = "application/json";
+    private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
