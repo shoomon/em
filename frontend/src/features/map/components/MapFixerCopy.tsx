@@ -71,11 +71,7 @@ const MapFixer = ({ className, onDragEnd, initLocation }: MapFixerProps) => {
       strokeWeight: 1,
     })
 
-    window.naver.maps.Event.addListener(
-      mapRef.current,
-      "dragend",
-      handleDragEnd,
-    )
+    window.naver.maps.Event.addListener(mapRef.current, "idle", handleDragEnd)
 
     return () => {
       if (mapRef.current) {

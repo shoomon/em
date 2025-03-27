@@ -40,7 +40,7 @@ const responseInterceptor = async (error: AxiosError) => {
     if (isRefreshing) {
       return new Promise((resolve) => {
         refreshSubscribers.push((accessToken: string) => {
-          originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
+          // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
           resolve(apiClient(originalRequest))
         })
       })
@@ -56,7 +56,7 @@ const responseInterceptor = async (error: AxiosError) => {
       refreshSubscribers = []
 
       // ✅ 원래 요청 재시도
-      originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
+      // originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
       return apiClient(originalRequest)
     } catch (error) {
       // ✅ 리프레시 토큰 갱신 실패 시
