@@ -144,9 +144,7 @@ public class PostService{
                 lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
             }
             case "popular" -> {
-                lastCnt = lastPost.emotionCountList().values().stream()
-                        .mapToInt(Long::intValue)
-                        .sum();
+                lastCnt = lastPost.emotionCountList().sum();
             }
         }
 
