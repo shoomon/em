@@ -15,6 +15,7 @@ import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -149,7 +151,7 @@ public class PostService{
         }
 
         return new GetPostListResponse(dtoList,
-                new LastReadDto(dtoList.get(dtoList.size()-1).id(),lastCnt, lastDist, hasNext)
+                new LastReadDto(dtoList.get(dtoList.size()-1).postId(),lastCnt, lastDist, hasNext)
         );
     }
 
@@ -180,9 +182,9 @@ public class PostService{
 
         List<PostDetailDto> result =  dtoList.stream()
                 .map(dto -> {
-                    ReactionEmotions emotionCounts = this.getEmotionCounts(dto.id());
+                    ReactionEmotions emotionCounts = this.getEmotionCounts(dto.postId());
                     return new PostDetailDto(
-                            dto.id(),
+                            dto.postId(),
                             dto.userId(),
                             dto.nickname(),
                             null,
@@ -214,6 +216,12 @@ public class PostService{
 //        }
 
         return new GetPostListResponse(result, null);
+    }
+
+    public GetCalendarListResponse getCalendarPostList(int userId, YearMonth yearMonth) {
+        return new GetCalendarListResponse(
+                postJpaRepository.getCalendarPostList(userId, yearMonth)
+        );
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {

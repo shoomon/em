@@ -47,6 +47,9 @@ public class Post {
     @Column(length = 1500, nullable = false)
     private String content;
 
+    @Column(name = "emotion", nullable = false)
+    private String emotion;
+
     @JdbcTypeCode(SqlTypes.GEOMETRY)
     @Column(columnDefinition = "geometry(Point, 4326)")
     private Point location;

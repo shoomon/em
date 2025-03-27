@@ -14,9 +14,11 @@ import org.springframework.stereotype.Repository;
 import javax.management.QueryEval;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -166,6 +168,35 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .toList();
 
     }
+
+    @Override
+    public Map<Integer, String> getCalendarPostList(int userId, YearMonth yearMonth) {
+        String sql = """
+                SELECT DISTINCT ON (DATE(p.created_at))
+                EXTRACT(DAY FROM p.created_at) AS day, p.emotion
+                FROM posts p
+                WHERE p.user_id = :userId
+                AND p.created_at >= :startDate
+                AND p.created_at < :endDate
+                ORDER BY DATE(p.created_at), p.id DESC
+                """;
+
+        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime endDate = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+
+        List<Object[]> result = em.createNativeQuery(sql)
+                .setParameter("userId", userId)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+
+        return result.stream()
+                .collect(Collectors.toMap(
+                        row -> ((Number)row[0]).intValue(),
+                        row -> ((String)row[1])
+                ));
+    }
+
 
     private static String getSortCondition(String sortBy) {
         String result = "";
