@@ -71,15 +71,13 @@ public class PostController {
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
-        PostCursorDto cursor = null;
-
-        cursor = getPostCursorDto(cursorId, cursorDist, cursorEmoCnt, sortBy);
-
         GetPostListResponse response = postService.getPostList(
                 longitude,
                 latitude,
                 radius,
-                cursor,
+                cursorId,
+                cursorDist,
+                cursorEmoCnt,
                 sortBy
         );
 
@@ -98,17 +96,14 @@ public class PostController {
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
     ){
-        PostCursorDto cursor = null;
-        if (cursorId != null && cursorId != 0) {
-            cursor = new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-        }
-
         GetPostListResponse response = postService.getClusteredPostList(
                 lng1,
                 lat1,
                 lng2,
                 lat2,
-                cursor,
+                cursorId,
+                cursorDist,
+                cursorEmoCnt,
                 sortBy
         );
         return ResponseEntity.ok(response);
@@ -123,33 +118,4 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    private static PostCursorDto getPostCursorDto(
-            Integer cursorId,
-            Double cursorDist,
-            Integer cursorEmoCnt,
-            String sortBy
-    ) {
-        switch (sortBy) {
-            case "popular" -> {
-                if(cursorId == 0 && cursorEmoCnt == 0){
-                    return new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
-                }else{
-                    return new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-                }
-            }
-            case "distance" -> {
-                if(cursorId == 0 && cursorDist == 0){
-                    return new PostCursorDto(Integer.MAX_VALUE, cursorDist, Integer.MAX_VALUE);
-                }else{
-                    return new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-                }
-            }
-            default -> {
-                if (cursorId != null && cursorId != 0) {
-                    return new PostCursorDto(cursorId, cursorDist, cursorEmoCnt);
-                }
-            }
-        }
-        return null;
-    }
 }

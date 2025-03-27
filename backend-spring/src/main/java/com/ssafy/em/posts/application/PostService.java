@@ -105,9 +105,13 @@ public class PostService{
             double longitude,
             double latitude,
             Integer radius,
-            PostCursorDto cursor,
+            Integer cursorId,
+            Double cursorDist,
+            Integer cursorEmoCnt,
             String sortBy
     ) {
+        PostCursorDto cursor = PostCursorDto.from(cursorId, cursorDist, cursorEmoCnt, sortBy);
+
         List<Post> postList = postJpaRepository.getPostList(
                 longitude,
                 latitude,
@@ -161,9 +165,13 @@ public class PostService{
             double lat1,
             double lng2,
             double lat2,
-            PostCursorDto cursor,
+            Integer cursorId,
+            Double cursorDist,
+            Integer cursorEmoCnt,
             String sortBy
     ){
+        PostCursorDto cursor = PostCursorDto.from(cursorId, cursorDist, cursorEmoCnt, sortBy);
+
         List<PostDetailDto> dtoList = postJpaRepository.getClusteredPostList(
                 lng1,
                 lat1,
@@ -260,4 +268,5 @@ public class PostService{
 
             return R * c; // 거리 (미터 단위)
     }
+
 }
