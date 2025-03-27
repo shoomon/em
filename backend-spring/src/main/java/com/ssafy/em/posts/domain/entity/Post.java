@@ -83,7 +83,7 @@ public class Post {
     }
 
     public void decreaseReactionCount() {
-        if (this.reactionCount <= 0) {
+        if (this.reactionCount > 0) {
             this.reactionCount--;
         }
     }
