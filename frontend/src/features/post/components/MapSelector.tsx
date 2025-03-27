@@ -68,23 +68,29 @@ const MapSelector = ({
     }
   }
   return (
-    <EmSection>
-      <EmSection.Header title="내가 있는 위치를 조정해주세요 👌" />
-      <div className="flex flex-col gap-2">
-        <span className="text-sm font-semibold">현재 나의 위치</span>
-        <span className="text-sm">{address}</span>
-      </div>
-      <div className="relative flex flex-col flex-1 w-full h-60">
-        <MapFixer
-          className="h-full w-full"
-          onDragEnd={handleDragEnd}
-          initLocation={initLocation}
-        />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+12px)] p-2 cursor-pointer border-neutral-200">
-          <MapPinMarker />
+    <div className="flex flex-col h-full gap-2">
+      <EmSection>
+        <EmSection.Header title="🚩내 위치를 조정해 주세요. " />
+        <div className="flex flex-col gap-4 h-full ">
+          {/* 현재 위치 정보 */}
+          <div className="flex flex-col gap-2">
+            <span className="font-semibold">현재 나의 위치</span>
+            <span>{address}</span>
+          </div>
+          {/* 지도 */}
+          <div className="relative h-full w-full bg-em-gray-sm">
+            <MapFixer
+              className="h-full w-full"
+              onDragEnd={handleDragEnd}
+              initLocation={initLocation}
+            />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+12px)] p-2 cursor-pointer border-neutral-200">
+              <MapPinMarker />
+            </div>
+          </div>
         </div>
-      </div>
-    </EmSection>
+      </EmSection>
+    </div>
   )
 }
 export default MapSelector

@@ -8,6 +8,7 @@ interface EmTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number
   textState: string // 텍스트 상태 전달
   onTextChange?: (_text: string) => void // 텍스트 상태 변경
+  isActiveCount?: boolean
 }
 
 const EmTextArea = ({
@@ -16,6 +17,7 @@ const EmTextArea = ({
   maxLength = 500,
   textState,
   onTextChange,
+  isActiveCount = true,
   ...props
 }: EmTextAreaProps) => {
   const countRef = useRef<HTMLSpanElement>(null)
@@ -43,14 +45,19 @@ const EmTextArea = ({
         value={textState}
         onChange={handleChange}
         maxLength={maxLength}
-        className={cn("outline-none resize-none w-full h-full min-h-60", className)}
+        className={cn(
+          "outline-none resize-none w-full h-full min-h-60",
+          className,
+        )}
         {...props}
         placeholder={placeholder}
       />
-      <p className="flex justify-end items-center gap-2 text-sm text-em-gray">
-        <span ref={countRef}>0</span>
-        <span className="">/ {maxLength}</span>
-      </p>
+      {isActiveCount && (
+        <p className="flex justify-end items-center gap-2 text-sm text-em-gray">
+          <span ref={countRef}>0</span>
+          <span className="">/ {maxLength}</span>
+        </p>
+      )}
     </div>
   )
 }

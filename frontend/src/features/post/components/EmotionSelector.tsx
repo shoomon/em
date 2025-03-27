@@ -18,7 +18,7 @@ const EmotionSelector = ({
   return (
     <EmSection>
       <EmSection.Header
-        title="감정 선택"
+        title="😇 감정 선택"
         description="당신의 감정은 어떠신가요?"
       />
       <div className="space-y-4">

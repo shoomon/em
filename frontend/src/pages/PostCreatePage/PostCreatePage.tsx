@@ -7,9 +7,14 @@ const PostCreatePage = () => {
 
   useEffect(() => {
     setTitle("게시글 작성")
+
+    return () => {
+      setTitle("")
+    }
   }, [])
+
   return (
-    <div className="h-full w-full flex justify-center items-center">
+    <div className="w-full flex-1 flex justify-center items-center">
       <PostCreateForm />
     </div>
   )

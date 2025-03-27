@@ -19,7 +19,7 @@ const NextStepButtonSection = ({
   const isMiddleStep = !isFirstStep && !isLastStep
 
   return (
-    <div className="flex gap-2 mb-10 px-4">
+    <div className="flex gap-2 mb-7 px-4 bg-em-white">
       {isMiddleStep && (
         <Button
           variant="outline"
