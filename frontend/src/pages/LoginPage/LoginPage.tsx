@@ -1,8 +1,23 @@
 import logo from "@/assets/em_logo_simple.svg"
 import LoginButton from "@/features/auth/components/LoginButton"
 import { LOGIN_PROVIDERS } from "@/features/auth/constants"
+import apiClient from "@/utils/http-common"
+import { useQuery } from "@tanstack/react-query"
+import { Navigate } from "react-router-dom"
 
 const LoginPage = () => {
+  const { data } = useQuery({
+    queryKey: ["isLoggedIn"],
+    queryFn: () => {
+      return apiClient.get("/users")
+    },
+  })
+
+  const isLoggedIn = data?.status === 200
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen bg-em-white">
       <section className="flex flex-col items-center justify-center flex-1 gap-3">
@@ -18,7 +33,9 @@ const LoginPage = () => {
             <LoginButton key={data.id} data={data} />
           ))}
         </div>
-        <span className="text-sm text-em-black/40">ⓒ 2025. 이음 All rights reserved</span>
+        <span className="text-sm text-em-black/40">
+          ⓒ 2025. 이음 All rights reserved
+        </span>
       </section>
     </div>
   )
