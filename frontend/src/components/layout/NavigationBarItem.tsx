@@ -18,7 +18,10 @@ const NavigationBarItem = ({ data }: NavigationBarItemProps) => {
       <NavLink
         to={path}
         key={id}
-        className={({ isActive }) => (isActive ? "text-em-black" : "text-em-gray")}>
+        viewTransition
+        className={({ isActive }) =>
+          isActive ? "text-em-black" : "text-em-gray"
+        }>
         <div className="flex flex-col items-center justify-center w-full gap-1">
           <span className="size-5">{icon}</span>
           <span className="text-xs">{name}</span>

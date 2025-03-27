@@ -13,7 +13,9 @@ const usePostForm = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false)
 
   // 스탭 상태 관리
-  const [currentStep, setCurrentStep] = useState<PostCreateStep>(PostCreateStep.Map)
+  const [currentStep, setCurrentStep] = useState<PostCreateStep>(
+    PostCreateStep.Map,
+  )
   // Form 상태 관리
   const [formData, setFormData] = useState<PostCreateRequest>({
     content: "",
@@ -68,6 +70,7 @@ const usePostForm = () => {
       navigate("/", { replace: true })
     } catch (error) {
       console.error(error)
+      alert("게시글 작성에 실패했습니다.")
     }
   }
 

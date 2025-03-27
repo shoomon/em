@@ -35,14 +35,28 @@ interface SectionHeaderProps {
   headerRight?: string
 }
 
-const EmSectionHeader = ({ title, description, headerRight }: SectionHeaderProps) => {
+const EmSectionHeader = ({
+  title,
+  description,
+  headerRight,
+}: SectionHeaderProps) => {
   return (
     <header className="flex flex-col gap-1">
       <div className="flex justify-between items-center">
-        {title && <h3 className="text-em-black text-xl font-bold tracking-tight">{title}</h3>}
-        {headerRight && <div className="text-sm text-em-black/60">{headerRight}</div>}
+        {title && (
+          <h3 className="text-em-black text-xl font-bold tracking-tight">
+            {title}
+          </h3>
+        )}
+        {headerRight && (
+          <div className="text-sm text-em-black/60">{headerRight}</div>
+        )}
       </div>
-      {description && <p className="text-em-gray/80 text-sm leading-relaxed">{description}</p>}
+      {description && (
+        <p className="text-em-black/60 text-sm leading-relaxed">
+          {description}
+        </p>
+      )}
     </header>
   )
 }
