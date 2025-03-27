@@ -2,9 +2,9 @@ package com.ssafy.em.common.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.em.auth.exception.AuthErrorCode;
+import com.ssafy.em.auth.exception.JwtAuthenticationException;
 import com.ssafy.em.common.exception.ErrorCode;
 import com.ssafy.em.common.exception.dto.ErrorResponse;
-import com.ssafy.em.common.exception.status.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +40,10 @@ public class ExceptionHandlerConfigurer implements Customizer<ExceptionHandlingC
         response.setContentType(CONTENT_TYPE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ErrorCode errorCode = AuthErrorCode.UNAUTHORIZED.toErrorCode();  // 기본값
+        ErrorCode errorCode = AuthErrorCode.UNAUTHORIZED.toErrorCode(); // 기본값
 
-        Throwable cause = authException.getCause();
-        if (cause instanceof UnauthorizedException) {
-            errorCode = ((UnauthorizedException) cause).getErrorCode();
+        if (authException instanceof JwtAuthenticationException jwtEx) {
+            errorCode = jwtEx.getErrorCode();
         }
 
         ErrorResponse errorResponse = ErrorResponse.from(errorCode);

@@ -2,7 +2,7 @@ package com.ssafy.em.auth.jwt.token;
 
 import com.ssafy.em.auth.domain.entity.OAuth2CustomUser;
 import com.ssafy.em.auth.exception.AuthErrorCode;
-import com.ssafy.em.common.exception.status.UnauthorizedException;
+import com.ssafy.em.auth.exception.JwtAuthenticationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -89,23 +89,23 @@ public class JwtProvider {
 
         } catch (SecurityException | MalformedJwtException e) {
             log.warn("잘못된 JWT 서명 또는 토큰입니다: {}", e.getMessage());
-            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+            throw new JwtAuthenticationException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
 
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다: {}", e.getMessage());
-            throw new UnauthorizedException(AuthErrorCode.EXPIRED_JWT_TOKEN.toErrorCode());
+            throw new JwtAuthenticationException(AuthErrorCode.EXPIRED_JWT_TOKEN.toErrorCode());
 
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다: {}", e.getMessage());
-            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+            throw new JwtAuthenticationException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
 
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 비어있습니다: {}", e.getMessage());
-            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+            throw new JwtAuthenticationException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
 
         } catch (Exception e) {
             log.error("JWT 검증 중 알 수 없는 에러가 발생했습니다: {}", e.getMessage());
-            throw new UnauthorizedException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
+            throw new JwtAuthenticationException(AuthErrorCode.UNAUTHORIZED.toErrorCode());
         }
     }
 
