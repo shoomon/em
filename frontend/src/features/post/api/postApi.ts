@@ -22,13 +22,10 @@ export const fetchPostList = async (postListRequest: PostListRequest) => {
   return response.data
 }
 
-// export const fetchPostClusteredList = async (
-//   clusteredPostListRequest: ClusteredPostListRequest,
-// ) => {
-//   const queryString = toQueryString({ ...clusteredPostListRequest })
-//   const response = await apiClient.get(`/posts/set?${queryString}`)
-//   return response.data
-// }
+export const fetchPost = async (postId: number) => {
+  const response = await apiClient.get(`/posts/${postId}`)
+  return response.data
+}
 
 export const fetchPointList = async (pointListRequest: PointListRequest) => {
   const queryString = toQueryString({ ...pointListRequest })
