@@ -1,11 +1,26 @@
 import { jwtDecode } from "jwt-decode"
 import { Navigate, Outlet } from "react-router-dom"
+
 const ProtectedRoute = () => {
   // 토큰 조회
   const accessToken = localStorage.getItem("accessToken")
+
+  // 로그인 상태
+  // const { isLoggedIn, setIsLoggedIn } = useAuthStore()
+
+  // 1. 로그인 상태 확인
+  // useEffect(() => {
+  //   if (!accessToken && !isLoggedIn) {
+  //     setIsLoggedIn(false)
+  //   } else {
+  //     setIsLoggedIn(true)
+  //   }
+  //   console.log("로그인 상태 확인", isLoggedIn)
+  // }, [accessToken, isLoggedIn, setIsLoggedIn])
+
   let isTokenValid = false
 
-  // JWT 토큰 검증
+  // 2. JWT 토큰 검증 (일단 임시로 JWT 인지만 확인)
   if (accessToken) {
     isTokenValid = jwtDecode(accessToken)
   }

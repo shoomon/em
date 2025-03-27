@@ -68,16 +68,15 @@ const responseInterceptor = async (error: AxiosError) => {
     }
   } else if (error.response?.status === 403) {
     // ✅ 403 에러 처리
-    alert("권한이 없습니다.")
+    // alert("권한이 없습니다.")
     return Promise.reject(error)
   }
-
-  return Promise.reject(error)
 }
 
 // 요청 인터셉터
 apiClient.interceptors.request.use(
   (config) => {
+    // const { accessToken } = useAuthStore.getState()
     const accessToken = localStorage.getItem("accessToken")
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`

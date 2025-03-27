@@ -1,3 +1,4 @@
+import useAuthStore from "@/store/useAuthStore"
 import apiClient from "@/utils/http-common"
 
 // 로그아웃
@@ -13,6 +14,8 @@ export const fetchReissue = async () => {
     // ✅ 토큰 재발급 성공
     if (response.status === 200) {
       const accessToken = response.headers["authorization"]
+      const { setAccessToken } = useAuthStore.getState()
+      setAccessToken(accessToken)
       localStorage.setItem("accessToken", accessToken)
       return accessToken
     }
