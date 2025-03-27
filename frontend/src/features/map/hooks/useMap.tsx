@@ -9,7 +9,7 @@ const useMap = ({ initLocation, mapRef }: useMapProps) => {
   const map = useRef<naver.maps.Map>(null)
 
   useEffect(() => {
-    if (!mapRef.current || map.current) {
+    if (!mapRef.current || map.current || !window.naver?.maps) {
       return
     }
 

@@ -11,7 +11,13 @@ interface MapViewerProps {
   children?: (focusOnMarker: () => void) => ReactNode
 }
 
-const MapViewer = ({ isDenied, location, points, className, children }: MapViewerProps) => {
+const MapViewer = ({
+  isDenied,
+  location,
+  points,
+  className,
+  children,
+}: MapViewerProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const userMarkerRef = useRef<naver.maps.Marker | null>(null)
   const searchRangeRef = useRef<naver.maps.Circle | null>(null)
@@ -20,7 +26,7 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
   const { map } = useMap({ initLocation: location, mapRef })
 
   useEffect(() => {
-    if (!map.current) {
+    if (!map.current || !window.naver?.maps) {
       return
     }
 
@@ -38,9 +44,9 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
 
     // 유저 주위 메시지 탐색 범위 생성
     if (!searchRangeRef.current) {
-      searchRangeRef.current = new naver.maps.Circle({
+      searchRangeRef.current = new window.naver.maps.Circle({
         map: map.current,
-        center: new naver.maps.LatLng(location.lat, location.lng),
+        center: new window.naver.maps.LatLng(location.lat, location.lng),
         radius: 500,
         fillColor: "rgba(0, 230, 0, 0.1)",
         strokeColor: "rgba(0, 230, 0, 0.1)",
@@ -49,7 +55,7 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
     }
 
     // 클러스터링 객체 생성
-    if (!clusterRef.current) {
+    if (!clusterRef.current && window.MarkerClustering) {
       // @ts-ignore
       clusterRef.current = new window.MarkerClustering({
         minClusterSize: 2,
@@ -61,10 +67,17 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
         indexGenerator: [10, 50, 100, 500, 1000],
         stylingFunction: (clusterMarker: any, count: number) => {
           if (clusterMarker) {
-            const firstChild = clusterMarker.getElement().querySelector("div:first-child")
+            const firstChild = clusterMarker
+              .getElement()
+              .querySelector("div:first-child")
             if (firstChild) {
               firstChild.innerHTML = count
-              firstChild.classList.add("flex", "items-center", "justify-center", "text-lg")
+              firstChild.classList.add(
+                "flex",
+                "items-center",
+                "justify-center",
+                "text-lg",
+              )
             }
           }
         },
@@ -72,39 +85,51 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
     }
 
     const handleZoomChange = () => {
-      if (!map.current) {
+      if (!map.current || !clusterRef.current) {
         return
       }
 
       const zoomLevel = map.current.getZoom()
-      clusterRef.current.setMarkers(zoomLevel < 14 ? [] : postMarkerRefs.current)
+      clusterRef.current.setMarkers(
+        zoomLevel < 14 ? [] : postMarkerRefs.current,
+      )
     }
+
     const handleDragend = () => {
-      if (!map.current) {
+      if (!map.current || !clusterRef.current) {
         return
       }
 
       clusterRef.current._clusters.forEach((cluster: any) => {
-        cluster._clusterMarker.eventTarget.onclick = () => console.log(cluster._clusterBounds)
-        // cluster._clusterMarker.eventTarget.addEventListener("click", () =>
-        //   console.log(cluster._clusterBounds),
+        if (cluster._clusterMarker?.eventTarget) {
+          cluster._clusterMarker.eventTarget.onclick = () =>
+            console.log(cluster._clusterBounds)
+        }
       })
     }
 
-    const zoomChangeListener = naver.maps.Event.addListener(
+    const zoomChangeListener = window.naver.maps.Event.addListener(
       map.current,
       "zoom_changed",
       handleZoomChange,
     )
-    const dragendListener = naver.maps.Event.addListener(map.current, "idle", handleDragend)
+    const dragendListener = window.naver.maps.Event.addListener(
+      map.current,
+      "idle",
+      handleDragend,
+    )
 
     return () => {
-      naver.maps.Event.removeListener(zoomChangeListener)
-      naver.maps.Event.removeListener(dragendListener)
+      window.naver.maps.Event.removeListener(zoomChangeListener)
+      window.naver.maps.Event.removeListener(dragendListener)
     }
   }, [map.current])
 
   useEffect(() => {
+    if (!window.naver?.maps) {
+      return
+    }
+
     if (userMarkerRef.current) {
       userMarkerRef.current.setVisible(!isDenied)
     }
@@ -115,7 +140,7 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
   }, [isDenied])
 
   useEffect(() => {
-    if (isDenied) {
+    if (!window.naver?.maps || isDenied) {
       return
     }
 
@@ -131,7 +156,7 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
   }, [location])
 
   useEffect(() => {
-    if (!map.current) {
+    if (!map.current || !window.naver?.maps) {
       return
     }
 
@@ -148,17 +173,24 @@ const MapViewer = ({ isDenied, location, points, className, children }: MapViewe
         },
       })
       // 마커 클릭 이벤트 추가
-      naver.maps.Event.addListener(marker, "click", () => {
+      window.naver.maps.Event.addListener(marker, "click", () => {
         console.log("마커 클릭! 위치: " + marker.getPosition())
       })
       postMarkerRefs.current.push(marker)
     }
 
-    clusterRef.current.setMarkers(postMarkerRefs.current)
+    if (clusterRef.current) {
+      clusterRef.current.setMarkers(postMarkerRefs.current)
+    }
   }, [points])
 
   const focusOnMarker = () => {
-    map.current?.setCenter(new window.naver.maps.LatLng(location.lat, location.lng))
+    if (!map.current || !window.naver?.maps) {
+      return
+    }
+    map.current.setCenter(
+      new window.naver.maps.LatLng(location.lat, location.lng),
+    )
   }
 
   return (
