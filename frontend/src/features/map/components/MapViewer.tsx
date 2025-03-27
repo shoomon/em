@@ -35,7 +35,6 @@ const MapViewer = ({
 
     // 유저 마커 생성
     if (!userMarkerRef.current) {
-      console.log(location)
       userMarkerRef.current = new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(location.lat, location.lng),
         map: map.current,
@@ -105,7 +104,6 @@ const MapViewer = ({
 
       clusterRef.current._clusters.forEach((cluster: any) => {
         cluster._clusterMarker.eventTarget.onclick = () => {
-          console.log([cluster._clusterBounds._ne, cluster._clusterBounds._sw])
           setClusterGrid([
             {
               lat: cluster._clusterBounds._ne._lat,
@@ -117,8 +115,6 @@ const MapViewer = ({
             },
           ])
           setIsDrawerOpen(true)
-          // cluster._clusterMarker.eventTarget.addEventListener("click", () =>
-          //   console.log(cluster._clusterBounds)
         }
       })
     }

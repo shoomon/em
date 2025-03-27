@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 
@@ -10,21 +9,13 @@ interface SortTypeSelectorProps {
 const SortTypeSelector = ({ contents, className }: SortTypeSelectorProps) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const selectedType = searchParams.get("sort") || contents[0].sortType
-  const queryClient = useQueryClient()
 
   useEffect(() => {
-    console.log(searchParams)
-    // queryClient.refetchQueries({ queryKey: ["posts"] })
     return () => {
       // 언마운트 시에 모든 QueryParameter 삭제
       setSearchParams(new URLSearchParams())
     }
   }, [])
-
-  useEffect(() => {
-    console.log(searchParams)
-    queryClient.refetchQueries({ queryKey: ["posts"] })
-  }, [searchParams.get("sort")])
 
   const handleChange = (sortType: string) => {
     setSearchParams((prev) => {
@@ -34,7 +25,8 @@ const SortTypeSelector = ({ contents, className }: SortTypeSelectorProps) => {
   }
 
   return (
-    <ul className={`flex items-center gap-6 px-5 py-3 bg-em-white ${className}`}>
+    <ul
+      className={`flex items-center gap-6 px-5 py-3 bg-em-white ${className}`}>
       {contents.map((item) => (
         <li key={item.label}>
           <label className="flex items-center gap-2 cursor-pointer">
