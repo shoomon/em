@@ -124,7 +124,7 @@ public class PostService{
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
-                    return Post.from(post, emotionCounts);
+                    return PostDetailDto.from(post, emotionCounts);
                 })
                 .toList();
 
@@ -144,9 +144,7 @@ public class PostService{
                 lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
             }
             case "popular" -> {
-                lastCnt = lastPost.emotionCountList().values().stream()
-                        .mapToInt(Long::intValue)
-                        .sum();
+                lastCnt = lastPost.emotionCountList().sum();
             }
         }
 

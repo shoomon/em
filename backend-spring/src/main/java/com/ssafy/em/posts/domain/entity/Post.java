@@ -87,19 +87,4 @@ public class Post {
             this.reactionCount--;
         }
     }
-
-    public static PostDetailDto from(Post post, ReactionEmotions emotionCounts) {
-        return new PostDetailDto(
-                post.getId(),
-                post.getUserId(),
-                post.getNickname(),
-                null,
-                post.getAddress(),
-                post.getContent(),
-                post.getLocation().getX(),
-                post.getLocation().getY(),
-                emotionCounts,
-                post.getCreatedAt()
-        );
-    }
 }
