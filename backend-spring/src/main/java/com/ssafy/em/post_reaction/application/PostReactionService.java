@@ -46,6 +46,7 @@ public class PostReactionService {
             PostReaction postReaction = optionalPostReaction.get();
             if (postReaction.isSameEmotion(emotion)) {
                 postReactionRepository.delete(postReaction);
+                post.decreaseReactionCount();
             } else {
                 postReaction.updateEmotion(emotion);
             }
@@ -56,6 +57,7 @@ public class PostReactionService {
                     .emotion(emotion)
                     .build();
             postReactionRepository.save(postReaction);
+            post.increaseReactionCount();
         }
     }
 
