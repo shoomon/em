@@ -28,7 +28,8 @@ public class SecurityConfig {
     private final DefaultOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2LogoutHandler oAuth2LogoutHandler;
-    private final ExceptionHandlerConfigurer exceptionHandlerConfigurer;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -54,11 +55,14 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .addLogoutHandler(oAuth2LogoutHandler)
                         .logoutUrl("/api/auth/logout")
-                        .deleteCookies("REFRESH_TOKEN_COOKIE_NAME")
+                        .deleteCookies(REFRESH_TOKEN_COOKIE_NAME)
                         .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandlerConfigurer);
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                );
 
         return http.build();
     }
