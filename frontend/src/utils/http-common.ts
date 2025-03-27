@@ -25,7 +25,10 @@ const responseInterceptor = async (error: AxiosError) => {
   if (error.response?.status === 401) {
     // ✅ 이미 토큰 재발급 시도한 요청이면 강제 로그아웃
     if (originalRequest._retry) {
+      console.log("토큰 재발급 실패")
       localStorage.removeItem("accessToken")
+
+      // 로그인 페이지로 이동
       window.location.href = "/login"
 
       return Promise.reject(error)
@@ -60,7 +63,9 @@ const responseInterceptor = async (error: AxiosError) => {
       console.error("토큰 재발급 실패:", error)
 
       localStorage.removeItem("accessToken")
-      window.location.href = "/login"
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login"
+      }
 
       return Promise.reject(error)
     } finally {
@@ -68,16 +73,15 @@ const responseInterceptor = async (error: AxiosError) => {
     }
   } else if (error.response?.status === 403) {
     // ✅ 403 에러 처리
-    alert("권한이 없습니다.")
+    // alert("권한이 없습니다.")
     return Promise.reject(error)
   }
-
-  return Promise.reject(error)
 }
 
 // 요청 인터셉터
 apiClient.interceptors.request.use(
   (config) => {
+    // const { accessToken } = useAuthStore.getState()
     const accessToken = localStorage.getItem("accessToken")
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`

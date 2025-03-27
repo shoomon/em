@@ -7,7 +7,11 @@ interface EmotionSelectItemProps {
   emotion: EmotionItem
 }
 
-const EmotionSelectItem = ({ onSelect, isSelected, emotion }: EmotionSelectItemProps) => {
+const EmotionSelectItem = ({
+  onSelect,
+  isSelected,
+  emotion,
+}: EmotionSelectItemProps) => {
   const { korName, emoji, color, id, engName } = emotion
   return (
     <Button
@@ -15,10 +19,14 @@ const EmotionSelectItem = ({ onSelect, isSelected, emotion }: EmotionSelectItemP
       key={id}
       onClick={() => onSelect(engName)}
       className={`rounded-lg p-4 w-full transition-all duration-200 flex flex-col items-center justify-center ${color} ${
-        isSelected ? "ring-2 ring-em-black ring-offset-2 scale-105 font-bold" : "hover:scale-102"
+        isSelected
+          ? "ring-2 ring-em-black/40 ring-offset-2 scale-102 font-bold"
+          : "hover:scale-102"
       }`}>
       <span className="text-3xl mb-2">{emoji}</span>
-      <span className={`font-medium ${isSelected ? "text-em-primary" : ""}`}>{korName}</span>
+      <span className={`font-medium ${isSelected ? "text-em-primary" : ""}`}>
+        {korName}
+      </span>
     </Button>
   )
 }

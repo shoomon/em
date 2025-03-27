@@ -10,7 +10,10 @@ const StackHeader = memo(() => {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate("/", { replace: true })
+    const shouldLeave = confirm("게시글 작성을 취소하시겠습니까?")
+    if (shouldLeave) {
+      navigate("/", { replace: true })
+    }
   }
 
   return (
