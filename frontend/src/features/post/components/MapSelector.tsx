@@ -6,10 +6,15 @@ import { useEffect, useState } from "react"
 
 type MapSelectorProps = {
   onMapChange: (_map: LatLng, _address: string) => void
+  setIsButtonDisabled: (isDisabled: boolean) => void
 }
 
-const MapSelector = ({ onMapChange }: MapSelectorProps) => {
-  const [currentPosition, setCurrentPosition] = useState<LatLng | null>(null)
+const MapSelector = ({
+  onMapChange,
+  setIsButtonDisabled,
+}: MapSelectorProps) => {
+  const [initLocation, setInitLocation] = useState<LatLng | null>(null)
+  // const [currentPosition, setCurrentPosition] = useState<LatLng | null>(null)
   const [mapCenter, setMapCenter] = useState<LatLng | null>(null) // 지도 중앙 위치
   const [address, setAddress] = useState("") // 주소
   // 현재 위치 가져오기
@@ -17,7 +22,8 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       // 현재 위치 설정
       const { latitude: lat, longitude: lng } = coords
-      setCurrentPosition({ lat, lng })
+      // setCurrentPosition({ lat, lng })
+      setInitLocation({ lat, lng })
       setMapCenter({ lat, lng })
 
       // 주소 조회
@@ -26,7 +32,9 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
           coords: new naver.maps.LatLng(lat, lng),
         },
         (_, response: naver.maps.Service.ReverseGeocodeResponse) => {
-          setAddress(response.v2.address.jibunAddress)
+          const address = response.v2.address.jibunAddress
+          setAddress(address)
+          onMapChange({ lat, lng }, address)
         },
       )
     })
@@ -48,9 +56,16 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
   }, [mapCenter])
 
   // 지도 중앙 위치 변경 시 호출
-  const handleDragEnd = (newCenter: LatLng) => {
+  const handleDragEnd = (newCenter: LatLng, isOutOfRange: boolean) => {
     setMapCenter(newCenter)
-    onMapChange(newCenter, address)
+
+    // 반경 영역을 벗어났는지 확인
+    if (!isOutOfRange) {
+      onMapChange(newCenter, address)
+      setIsButtonDisabled(false)
+    } else {
+      setIsButtonDisabled(true)
+    }
   }
   return (
     <EmSection>
@@ -63,7 +78,7 @@ const MapSelector = ({ onMapChange }: MapSelectorProps) => {
         <MapFixer
           className="h-full w-full"
           onDragEnd={handleDragEnd}
-          initLocation={currentPosition}
+          initLocation={initLocation}
         />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+12px)] p-2 cursor-pointer border-neutral-200">
           <MapPinMarker />

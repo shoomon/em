@@ -23,6 +23,7 @@ const PostCreateForm = () => {
   } = usePostForm()
 
   const [animatedStep, setAnimatedStep] = useState(currentStep)
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true) // 버튼 비활성화 여부
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -34,7 +35,12 @@ const PostCreateForm = () => {
 
   // 현재 스탭 컴포넌트
   const STEP_COMPONENTS = {
-    [PostCreateStep.Map]: <MapSelector onMapChange={handleMapChange} />,
+    [PostCreateStep.Map]: (
+      <MapSelector
+        onMapChange={handleMapChange}
+        setIsButtonDisabled={setIsButtonDisabled}
+      />
+    ),
     [PostCreateStep.Emotion]: (
       <EmotionSelector
         emotionState={formData.emotion}
@@ -66,6 +72,7 @@ const PostCreateForm = () => {
           isFormDataValid={isFormDataValid}
           currentStep={currentStep}
           updateStep={updateStep}
+          isButtonDisabled={isButtonDisabled}
         />
       </div>
     </form>

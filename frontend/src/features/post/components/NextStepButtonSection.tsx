@@ -5,12 +5,14 @@ type NextStepButtonProps = {
   updateStep: (step: PostCreateStep) => void
   currentStep: PostCreateStep
   isFormDataValid: (step: PostCreateStep) => boolean | undefined
+  isButtonDisabled: boolean
 }
 
 const NextStepButtonSection = ({
   updateStep,
   currentStep,
   isFormDataValid,
+  isButtonDisabled,
 }: NextStepButtonProps) => {
   const isFirstStep = currentStep === PostCreateStep.Map
   const isLastStep = currentStep === PostCreateStep.Confirm
@@ -31,8 +33,14 @@ const NextStepButtonSection = ({
       {!isLastStep && (
         <Button
           className="flex-1"
-          variant={isFormDataValid(currentStep) ? "default" : "disabled"}
-          disabled={!isFormDataValid(currentStep)}
+          variant={
+            isButtonDisabled
+              ? "disabled"
+              : isFormDataValid(currentStep)
+                ? "default"
+                : "disabled"
+          }
+          disabled={isButtonDisabled ? true : !isFormDataValid(currentStep)}
           type="button"
           onClick={() => updateStep(currentStep + 1)}>
           다음
