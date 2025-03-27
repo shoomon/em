@@ -93,6 +93,14 @@ public class PostService{
         return null;
     }
 
+    public PostDetailDto getPost(int postId){
+        ReactionEmotions emotionList = getEmotionCounts(postId);
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
+
+        return PostDetailDto.from(post, emotionList);
+    }
+
     public List<PostPointDto> getPointList(
             double longitude,
             double latitude,
@@ -108,7 +116,11 @@ public class PostService{
             Integer cursorId,
             Double cursorDist,
             Integer cursorEmoCnt,
-            String sortBy
+            String sortBy,
+            Double lng1,
+            Double lat1,
+            Double lng2,
+            Double lat2
     ) {
         PostCursorDto cursor = PostCursorDto.from(cursorId, cursorDist, cursorEmoCnt, sortBy);
 
@@ -118,7 +130,11 @@ public class PostService{
                 radius,
                 cursor,
                 sortBy,
-                PAGE_SIZE
+                PAGE_SIZE,
+                lng1,
+                lat1,
+                lng2,
+                lat2
         );
 
         if (postList.isEmpty()) {
@@ -157,73 +173,6 @@ public class PostService{
         return new GetPostListResponse(dtoList,
                 new LastReadDto(dtoList.get(dtoList.size()-1).postId(),lastCnt, lastDist, hasNext)
         );
-    }
-
-    //todo: 거리순 sorting
-    public GetPostListResponse getClusteredPostList(
-            double lng1,
-            double lat1,
-            double lng2,
-            double lat2,
-            Integer cursorId,
-            Double cursorDist,
-            Integer cursorEmoCnt,
-            String sortBy
-    ){
-        PostCursorDto cursor = PostCursorDto.from(cursorId, cursorDist, cursorEmoCnt, sortBy);
-
-        List<PostDetailDto> dtoList = postJpaRepository.getClusteredPostList(
-                lng1,
-                lat1,
-                lng2,
-                lat2,
-                cursor,
-                sortBy,
-                PAGE_SIZE
-        );
-
-        boolean hasNext = dtoList.size() == PAGE_SIZE+1;
-
-        if (hasNext) {
-            dtoList = dtoList.subList(0, PAGE_SIZE);
-        }
-
-        List<PostDetailDto> result =  dtoList.stream()
-                .map(dto -> {
-                    ReactionEmotions emotionCounts = this.getEmotionCounts(dto.postId());
-                    return new PostDetailDto(
-                            dto.postId(),
-                            dto.userId(),
-                            dto.nickname(),
-                            null,
-                            dto.address(),
-                            dto.content(),
-                            dto.longitude(),
-                            dto.latitude(),
-                            emotionCounts,
-                            dto.createdAt()
-                    );
-                }
-                )
-                .toList();
-
-        PostDetailDto lastPost = result.get(result.size() - 1);
-
-        Integer lastCnt=null;
-        Double lastDist=null;
-
-//        switch (sortBy) {
-//            case "distance" -> {
-//                lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
-//            }
-//            case "reaction" -> {
-//                lastCnt = lastPost.emotionCountList().values().stream()
-//                        .mapToInt(Long::intValue)
-//                        .sum();
-//            }
-//        }
-
-        return new GetPostListResponse(result, null);
     }
 
     public GetCalendarListResponse getCalendarPostList(int userId, YearMonth yearMonth) {

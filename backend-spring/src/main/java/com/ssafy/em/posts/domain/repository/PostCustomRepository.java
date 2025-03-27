@@ -16,23 +16,17 @@ public interface PostCustomRepository {
             int radius,
             PostCursorDto cursor,
             String sortBy,
-            int pageSize
+            int pageSize,
+            Double lng1,
+            Double lat1,
+            Double lng2,
+            Double lat2
     );
 
     List<PostPointDto> getPointList(
             double longitude,
             double latitude,
             int radius
-    );
-
-    List<PostDetailDto> getClusteredPostList(
-            double lng1,
-            double lat1,
-            double lng2,
-            double lat2,
-            PostCursorDto cursor,
-            String sortBy,
-            int pageSize
     );
 
     Map<Integer, String> getCalendarPostList(
