@@ -69,7 +69,8 @@ public class PostController {
             @RequestParam(name = "postId", required = false) Integer cursorId,
             @RequestParam(name = "dist", required = false) Double cursorDist,
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
-            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
+            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy,
+            @LoginRequired int userId
     ){
         PostCursorDto cursor = null;
 
@@ -118,7 +119,8 @@ public class PostController {
             @RequestParam(name = "postId", required = false) Integer cursorId,
             @RequestParam(name = "dist", required = false) Double cursorDist,
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
-            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy
+            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy,
+            @LoginRequired int userId
     ){
         PostCursorDto cursor = null;
         if (cursorId != null && cursorId != 0) {
@@ -131,7 +133,8 @@ public class PostController {
                 lng2,
                 lat2,
                 cursor,
-                sortBy
+                sortBy,
+                userId
         );
         return ResponseEntity.ok(response);
     }

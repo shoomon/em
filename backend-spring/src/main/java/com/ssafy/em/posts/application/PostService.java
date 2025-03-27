@@ -6,8 +6,12 @@ import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
 import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 
 
+import com.ssafy.em.emotion.dto.EmotionInfo;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
+import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
+import com.ssafy.em.post_reaction.exception.PostReactionErrorCode;
+import com.ssafy.em.post_reaction.exception.PostReactionException;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.posts.dto.LastReadDto;
@@ -146,7 +150,7 @@ public class PostService{
                 lastDist = calculateDistance(latitude, longitude, lastPost.latitude(), lastPost.longitude());
             }
             case "popular" -> {
-                lastCnt = lastPost.emotionCountList().sum();
+                lastCnt = lastPost.emotionInfo().emotionCounts().sum();
             }
         }
 
@@ -162,7 +166,8 @@ public class PostService{
             double lng2,
             double lat2,
             PostCursorDto cursor,
-            String sortBy
+            String sortBy,
+            int userId
     ){
         List<PostDetailDto> dtoList = postJpaRepository.getClusteredPostList(
                 lng1,
@@ -183,6 +188,12 @@ public class PostService{
         List<PostDetailDto> result =  dtoList.stream()
                 .map(dto -> {
                     ReactionEmotions emotionCounts = this.getEmotionCounts(dto.postId());
+                    PostReaction postReaction = postReactionRepository.findByUserIdAndPostId(userId, dto.postId())
+                            .orElseThrow(()-> new PostReactionException.PostReactionNotFoundException(PostReactionErrorCode.NOT_FOUND));
+                    EmotionInfo emotionInfo = new EmotionInfo(
+                            emotionCounts,
+                            postReaction.getEmotion().getName()
+                    );
                     return new PostDetailDto(
                             dto.postId(),
                             dto.userId(),
@@ -192,7 +203,7 @@ public class PostService{
                             dto.content(),
                             dto.longitude(),
                             dto.latitude(),
-                            emotionCounts,
+                            emotionInfo,
                             dto.createdAt()
                     );
                         }
@@ -226,6 +237,7 @@ public class PostService{
 
     private ReactionEmotions getEmotionCounts(int postId) {
         List<Object[]> rawCounts = postReactionRepository.countReactionsByEmotionName(postId);
+
         Map<String, Long> emotionCountMap = new HashMap<>();
         int sum = 0;
         for (Object[] row : rawCounts) {
