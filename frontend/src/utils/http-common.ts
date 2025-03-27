@@ -16,21 +16,22 @@ const apiClient = axios.create({
 
 let isRefreshing = false // 리프레시 토큰 갱신 중
 let refreshSubscribers: ((token: string) => void)[] = [] // 토큰 갱신 구독자 목록
+let failedTokenRefreshCount = 0 // 토큰 갱신 실패 횟수를 추적
 
 // 리프레시 토큰 인터셉터 핸들러
 const responseInterceptor = async (error: AxiosError) => {
+  console.log("error", error)
   const originalRequest = error.config as CustomRequestConfig // 원래 요청 정보 저장
+
+  originalRequest.headers.clear() // 헤더 초기화 (토큰 제거)
 
   // 401 에러 처리
   if (error.response?.status === 401) {
-    // ✅ 이미 토큰 재발급 시도한 요청이면 강제 로그아웃
-    if (originalRequest._retry) {
-      console.log("토큰 재발급 실패")
+    // 이전 토큰 갱신 실패 횟수 확인
+    if (failedTokenRefreshCount >= 1) {
+      console.log("토큰 재발급 반복 실패")
       localStorage.removeItem("accessToken")
-
-      // 로그인 페이지로 이동
       window.location.href = "/login"
-
       return Promise.reject(error)
     }
 
@@ -40,7 +41,6 @@ const responseInterceptor = async (error: AxiosError) => {
     if (isRefreshing) {
       return new Promise((resolve) => {
         refreshSubscribers.push(() => {
-          // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`
           resolve(apiClient(originalRequest))
         })
       })
@@ -56,10 +56,9 @@ const responseInterceptor = async (error: AxiosError) => {
       refreshSubscribers = []
 
       // ✅ 원래 요청 재시도
-      // originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
       return apiClient(originalRequest)
     } catch (error) {
-      // ✅ 리프레시 토큰 갱신 실패 시
+      failedTokenRefreshCount++ // 실패 횟수 증가
       console.error("토큰 재발급 실패:", error)
 
       localStorage.removeItem("accessToken")
