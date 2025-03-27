@@ -106,7 +106,7 @@ public class PostController {
                 cursorId,
                 cursorDist,
                 cursorEmoCnt,
-                sortBy
+                sortBy,
                 userId
         );
         return ResponseEntity.ok(response);

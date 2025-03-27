@@ -172,7 +172,7 @@ public class PostService{
             Integer cursorId,
             Double cursorDist,
             Integer cursorEmoCnt,
-            String sortBy
+            String sortBy,
             int userId
     ){
         PostCursorDto cursor = PostCursorDto.from(cursorId, cursorDist, cursorEmoCnt, sortBy);
