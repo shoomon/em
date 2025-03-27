@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public record PostDetailDto(
-        int id,
+        int postId,
         int userId,
         String nickname,
         String imageUrl,
