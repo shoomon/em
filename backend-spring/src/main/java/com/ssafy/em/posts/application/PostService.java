@@ -124,7 +124,7 @@ public class PostService{
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
-                    return Post.from(post, emotionCounts);
+                    return PostDetailDto.from(post, emotionCounts);
                 })
                 .toList();
 
