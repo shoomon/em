@@ -19,14 +19,14 @@ public interface PostReactionControllerDocs {
     @Operation(
             summary = "게시글 감정 공감 토글",
             requestBody = @RequestBody(
-                    description = "감정 ID를 포함한 요청",
+                    description = "감정 이름을 포함한 요청",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = PostReactionRequest.class),
                             examples = @ExampleObject(
                                     name = "감정 선택 예시",
-                                    value = "{ \"emotionId\": 3 }"
+                                    value = "{ \"emotionName\": JOY }"
                             )
                     )
             ),
