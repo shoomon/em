@@ -31,7 +31,7 @@ export interface PostListRequest {
 }
 
 export interface Post {
-  id: number
+  postId: number
   userId: number
   nickname: string
   imageUrl: string | null

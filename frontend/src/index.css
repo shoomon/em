@@ -34,7 +34,7 @@ body {
 
 body [data-vaul-drawer],
 body [data-vaul-overlay] {
-  right: 15px;
+  right: var(--removed-body-scroll-bar-size);
 }
 
 :root {

@@ -9,7 +9,7 @@ import { EmojiType, Post } from "../types/post"
 import EmojiButton from "./EmojiButton"
 
 const PostItem = ({
-  id,
+  postId,
   // userId,
   nickname,
   imageUrl,
@@ -27,19 +27,16 @@ const PostItem = ({
 
   const mutation = useMutation({
     mutationFn: (selectedEmotion: EmojiType) =>
-      fetchPostReaction(id, selectedEmotion.toUpperCase()),
-    onMutate: async (selectedEmotion) => {
-      if (!likedByMe) {
-        return
-      }
-
+      fetchPostReaction(postId, selectedEmotion.toUpperCase()),
+    onMutate: async (selectedEmotion: EmojiType) => {
       setLikeCounts({
-        ...likeCounts,
-        [selectedEmotion]: likeCounts[selectedEmotion as EmojiType] + 1,
+        ...emotionInfo.emotionCounts,
+        [selectedEmotion]:
+          likedByMe === selectedEmotion
+            ? emotionInfo.emotionCounts[selectedEmotion]
+            : emotionInfo.emotionCounts[selectedEmotion] + 1,
       })
-      setLikedByMe((prev) =>
-        prev === selectedEmotion ? null : selectedEmotion,
-      )
+      setLikedByMe(likedByMe === selectedEmotion ? null : selectedEmotion)
     },
     onError: () => {
       // 요청에 실패하면 이전 상태로 롤백
@@ -73,15 +70,22 @@ const PostItem = ({
         {content}
       </div>
 
-      <div className="flex items-center gap-4">
-        {Object.entries(emotionInfo.emotionCounts).map(([k, v]) => (
-          <EmojiButton
-            key={k}
-            emotionName={k as EmojiType}
-            count={v as number}
-            onClick={() => mutation.mutate(k as EmojiType)}
-          />
-        ))}
+      <div className="flex items-center gap-2">
+        {Object.entries(emotionInfo.emotionCounts).map(([k, _]) => {
+          if (k === "sum") {
+            return null
+          }
+
+          return (
+            <EmojiButton
+              key={k}
+              emotionName={k as EmojiType}
+              count={likeCounts[k as EmojiType]}
+              onClick={() => mutation.mutate(k as EmojiType)}
+              className={likedByMe === k ? "font-bold" : ""}
+            />
+          )
+        })}
       </div>
     </div>
   )
