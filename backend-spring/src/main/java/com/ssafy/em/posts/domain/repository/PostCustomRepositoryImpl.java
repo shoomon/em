@@ -2,20 +2,15 @@ package com.ssafy.em.posts.domain.repository;
 
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.dto.PostCursorDto;
-import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
-import org.geolatte.geom.Point;
 import org.springframework.stereotype.Repository;
 
-import javax.management.QueryEval;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,14 +29,22 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             int radius,
             PostCursorDto cursor,
             String sortBy,
-            int pageSize
+            int pageSize,
+            Double lng1,
+            Double lat1,
+            Double lng2,
+            Double lat2
     ) {
         StringBuilder baseQuery = new StringBuilder("""
         SELECT *
         FROM posts
         WHERE created_at >= NOW() - INTERVAL '24 HOURS'
-          AND ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
+         AND ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
     """);
+
+        if(lng1 != null && lat1 != null && lng2 != null && lat2 != null) {
+            baseQuery.append(" AND location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)");
+        }
 
         if (sortBy == null || sortBy.isBlank()) {
             sortBy = "latest";
@@ -58,6 +61,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .setParameter("latitude", latitude)
                 .setParameter("radius", radius)
                 .setParameter("limit", pageSize + 1);
+
+        if(lng1 != null && lat1 != null && lng2 != null && lat2 != null) {
+            query.setParameter("lng1", lng1)
+            .setParameter("lat1", lat1)
+            .setParameter("lng2", lng2)
+            .setParameter("lat2", lat2);
+        }
 
         if (cursor != null) {
             query.setParameter("cursorId", cursor.id());
@@ -96,77 +106,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                         ((Number) row[2]).doubleValue()
                 ))
                 .toList();
-    }
-
-    @Override
-    public List<PostDetailDto> getClusteredPostList(
-            double lng1,
-            double lat1,
-            double lng2,
-            double lat2,
-            PostCursorDto cursor,
-            String sortBy,
-            int pageSize
-    ) {
-        StringBuilder baseQuery = new StringBuilder("""
-                SELECT p.id, p.user_id, p.animal_profile_id, p.anonymous_nickname,
-                       p.content, p.location, p.address, p.reaction_count, p.created_at
-                FROM posts p
-                WHERE p.location && ST_MakeEnvelope(:lng1, :lat1, :lng2, :lat2)
-                """);
-
-        String sortCondition = getSortCondition(sortBy);
-        baseQuery.append(sortCondition);
-
-        baseQuery.append(" ORDER BY ").append(resolveSortColumn(sortBy)).append(", id DESC LIMIT :limit");
-
-        Query query = em.createNativeQuery(baseQuery.toString())
-                .setParameter("lng1", lng1)
-                .setParameter("lat1", lat1)
-                .setParameter("lng2", lng2)
-                .setParameter("lat2", lat2)
-                .setParameter("limit", pageSize + 1);
-
-        if (cursor != null) {
-            query.setParameter("cursorId", cursor.id());
-            switch (sortBy) {
-                case "popular" -> query.setParameter("cursorEmotionCount", cursor.emotionCount());
-                case "distance" -> query.setParameter("cursorDistance", cursor.distance());
-            }
-        }else{
-            query.setParameter("cursorId", Integer.MAX_VALUE);
-        }
-
-        List<Object[]> result = query.getResultList();
-
-        return result.stream()
-                .map(row -> {
-                    int id = ((Number) row[0]).intValue();
-                    int userId = ((Number) row[1]).intValue();
-                    String nickname = (String) row[3];
-                    String content = (String) row[4];
-                    Point<?> location = (Point<?>) row[5];
-                    String address = (String) row[6];
-                    LocalDateTime createdAt = ((Timestamp) row[8]).toLocalDateTime();
-
-                    double longitude = location.getPosition().getCoordinate(0);
-                    double latitude = location.getPosition().getCoordinate(1);
-
-                    return new PostDetailDto(
-                            id,
-                            userId,
-                            nickname,
-                            null,
-                            address,
-                            content,
-                            longitude,
-                            latitude,
-                            null,
-                            createdAt
-                    );
-                })
-                .toList();
-
     }
 
     @Override

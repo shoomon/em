@@ -13,6 +13,7 @@ import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.util.PostConstant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,6 +50,11 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDetailDto> getPost(@PathVariable int id){
+        return ResponseEntity.ok(postService.getPost(id));
+    }
+
     @GetMapping("/points")
     public ResponseEntity<GetPointListResponse> getPointList(
             @RequestParam(name = "lng") double longitude,
@@ -70,6 +76,10 @@ public class PostController {
             @RequestParam(name = "dist", required = false) Double cursorDist,
             @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
             @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy,
+            @RequestParam(name = "minLng", required = false) Double lng1,
+            @RequestParam(name = "minLat", required = false) Double lat1,
+            @RequestParam(name = "maxLng", required = false) Double lng2,
+            @RequestParam(name = "maxLat", required = false) Double lat2
             @LoginRequired int userId
     ){
         GetPostListResponse response = postService.getPostList(
@@ -79,36 +89,13 @@ public class PostController {
                 cursorId,
                 cursorDist,
                 cursorEmoCnt,
-                sortBy
-        );
-
-        return ResponseEntity.ok(response);
-    }
-
-    //todo: 거리순 sorting
-    @GetMapping("/set")
-    public ResponseEntity<GetPostListResponse> getClusteredPostList(
-            @RequestParam(name = "lngMiin") double lng1,
-            @RequestParam(name = "latMin") double lat1,
-            @RequestParam(name = "lngMax") double lng2,
-            @RequestParam(name = "latMax") double lat2,
-            @RequestParam(name = "postId", required = false) Integer cursorId,
-            @RequestParam(name = "dist", required = false) Double cursorDist,
-            @RequestParam(name = "emoCnt", required = false) Integer cursorEmoCnt,
-            @RequestParam(name = "sort", defaultValue = "latest", required = false) String sortBy,
-            @LoginRequired int userId
-    ){
-        GetPostListResponse response = postService.getClusteredPostList(
+                sortBy,
                 lng1,
                 lat1,
                 lng2,
-                lat2,
-                cursorId,
-                cursorDist,
-                cursorEmoCnt,
-                sortBy,
-                userId
+                lat2
         );
+
         return ResponseEntity.ok(response);
     }
 
