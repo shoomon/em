@@ -7,7 +7,7 @@ import {
 import axios, { AxiosError } from "axios"
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_BASE_SERVER_URL, //"/api",
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
