@@ -4,7 +4,7 @@ import EmotionSelectItem from "@/features/emotion/components/EmotionSelectItem"
 import { EMOTION_ITEMS } from "@/features/emotion/constants"
 import { EmotionItem } from "@/features/emotion/types/emotion"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
-import useMap from "@/features/map/hooks/useMapCopy"
+import useMap from "@/features/map/hooks/useMap"
 import { PostCreateRequest } from "../types/post"
 
 type PostConfirmProps = {

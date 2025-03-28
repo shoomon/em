@@ -1,5 +1,5 @@
 import EmSection from "@/components/EmSection/EmSection"
-import MapFixer from "@/features/map/components/MapFixerCopy"
+import MapFixer from "@/features/map/components/MapFixer"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import { LatLng } from "@/features/map/types/map"
 import { useEffect, useState } from "react"

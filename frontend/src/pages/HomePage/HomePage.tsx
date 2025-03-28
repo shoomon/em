@@ -27,11 +27,12 @@ const HomePage = () => {
   const isLocationPermissionDenied = useLocationStore(
     (state) => state.isPermissionDenied,
   )
-  const { isDrawerOpen, setIsDrawerOpen, setClusterGrid } = usePostStore()
+
+  const { isVisible, setIsVisible, setType } = usePostStore()
   const { isOpen, setIsOpen } = useDrawer({
     drawerKey: "home",
-    isOpen: isDrawerOpen,
-    setIsOpen: setIsDrawerOpen,
+    isOpen: isVisible,
+    setIsOpen: setIsVisible,
   })
   const navigate = useNavigate()
 

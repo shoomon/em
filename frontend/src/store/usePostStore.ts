@@ -1,21 +1,31 @@
 import { LatLng } from "@/features/map/types/map"
 import { create } from "zustand"
 
-interface PostStore {
-  isDrawerOpen: boolean
-  setIsDrawerOpen: (isDrawerOpen: boolean) => void
+type PostListType = "all" | "cluster" | "marker"
 
-  clusterGrid: [LatLng, LatLng] | null
-  setClusterGrid: (clusterGrid: [LatLng, LatLng] | null) => void
+interface PostStore {
+  type: PostListType
+  setType: (type: PostListType) => void
+
+  isVisible: boolean
+  setIsVisible: (isVisible: boolean) => void
+
+  clusterGrid: [LatLng, LatLng]
+  setClusterGrid: (clusterGrid: [LatLng, LatLng]) => void
 }
 
 const usePostStore = create<PostStore>((set) => ({
-  isDrawerOpen: false,
-  setIsDrawerOpen: (isDrawerOpen: boolean) => set({ isDrawerOpen }),
+  type: "all",
+  setType: (type) => set({ type }),
 
-  clusterGrid: null,
-  setClusterGrid: (clusterGrid: [LatLng, LatLng] | null) =>
-    set({ clusterGrid }),
+  isVisible: false,
+  setIsVisible: (isVisible) => set({ isVisible }),
+
+  clusterGrid: [
+    { lat: 0, lng: 0 },
+    { lat: 0, lng: 0 },
+  ],
+  setClusterGrid: (clusterGrid: [LatLng, LatLng]) => set({ clusterGrid }),
 }))
 
 export default usePostStore
