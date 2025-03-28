@@ -107,12 +107,12 @@ public class PostService{
         return null;
     }
 
-    public PostDetailDto getPost(int postId){
+    public PostDetailDto getPost(int userId, int postId){
         ReactionEmotions emotionList = getEmotionCounts(postId);
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
 
-        return PostDetailDto.from(post, emotionList);
+        return PostDetailDto.from(userId, post, emotionList);
     }
 
     public List<PostPointDto> getPointList(
@@ -124,6 +124,7 @@ public class PostService{
     }
 
     public GetPostListResponse getPostList(
+            int userId,
             double longitude,
             double latitude,
             Integer radius,
@@ -160,7 +161,7 @@ public class PostService{
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
-                    return PostDetailDto.from(post, emotionCounts);
+                    return PostDetailDto.from(userId, post, emotionCounts);
                 })
                 .toList();
 
