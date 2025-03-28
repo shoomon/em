@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react"
 
 import Tabs from "@/components/Tabs/Tabs"
 import UserProfileCard from "@/features/profile/components/UserProfileCard"
+import LogoutText from "@/features/auth/components/LogoutText"
 
 const LazyEmotionCalendar = lazy(
   () => import("@/features/history/components/EmotionCalendar"),
@@ -66,6 +67,10 @@ const MyPage = () => {
           }
         />
         {renderTabContent()}
+
+        <div className="flex pl-2 mt-auto">
+          <LogoutText />
+        </div>
       </div>
     </div>
   )
