@@ -64,7 +64,7 @@ const PostCreateForm = () => {
     <form className="h-full w-full" onSubmit={handleSubmit}>
       <div className="flex w-full flex-col justify-start h-full">
         {/* 현재 스탭 컴포넌트 */}
-        <div className="flex basis-full">
+        <div className="flex basis-full overflow-hidden">
           <StepAnimateLayout>{STEP_COMPONENTS[animatedStep]}</StepAnimateLayout>
         </div>
         {/* 버튼 컴포넌트 */}

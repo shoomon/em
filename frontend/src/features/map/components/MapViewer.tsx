@@ -124,7 +124,7 @@ const MapViewer = ({
       "zoom_changed",
       handleZoomChange,
     )
-    const dragendListener = window.naver.maps.Event.addListener(
+    const dragendListener = naver.maps.Event.addListener(
       map.current,
       "idle",
       handleDragend,
