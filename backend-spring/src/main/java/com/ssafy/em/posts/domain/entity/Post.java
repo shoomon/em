@@ -1,28 +1,35 @@
 package com.ssafy.em.posts.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ssafy.em.emotion.dto.ReactionEmotions;
-import com.ssafy.em.posts.dto.PostDetailDto;
+import com.ssafy.em.animal.domain.entity.AnimalProfile;
+import com.ssafy.em.user.domain.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.CLASS,
-        include = JsonTypeInfo.As.PROPERTY,
+        include = JsonTypeInfo.As .PROPERTY,
         property = "@class"
 )
 
@@ -30,16 +37,20 @@ import java.util.Map;
 @Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
-    @Column(name = "animal_profile_id", nullable = false)
-    private int animalProfileId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "animal_profile_id", nullable = false)
+    private AnimalProfile animalProfile;
 
     @Column(name = "anonymous_nickname", length = 50, nullable = false)
     private String nickname;
@@ -60,25 +71,25 @@ public class Post {
     @Column(name = "reaction_count", nullable = false)
     private int reactionCount;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
     public Post(
-            int animalProfileId,
-            int userId,
+            AnimalProfile animalProfile,
+            User user,
             String nickname,
             String content,
             Point location,
             String address
     ){
-        this.animalProfileId = animalProfileId;
-        this.userId = userId;
+        this.animalProfile = animalProfile;
+        this.user = user;
         this.nickname = nickname;
         this.content = content;
         this.location = location;
         this.address = address;
-        this.createdAt = LocalDateTime.now();
     }
 
     public void increaseReactionCount() {

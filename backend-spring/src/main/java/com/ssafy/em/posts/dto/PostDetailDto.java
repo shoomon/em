@@ -11,6 +11,7 @@ public record PostDetailDto(
         int userId,
         String nickname,
         String imageUrl,
+        String emotion,
         String address,
         String content,
         double longitude,
@@ -21,9 +22,10 @@ public record PostDetailDto(
     public static PostDetailDto from(Post post, EmotionInfo emotionInfo) {
         return new PostDetailDto(
                 post.getId(),
-                post.getUserId(),
+                post.getUser().getId(),
                 post.getNickname(),
-                null,
+                post.getAnimalProfile().getProfileImageUrl(),
+                post.getAnimalProfile().getEmotion().getName(),
                 post.getAddress(),
                 post.getContent(),
                 post.getLocation().getX(),
@@ -36,9 +38,10 @@ public record PostDetailDto(
     public static PostDetailDto from(Post post, ReactionEmotions reactionEmotions) {
         return new PostDetailDto(
                 post.getId(),
-                post.getUserId(),
+                post.getUser().getId(),
                 post.getNickname(),
-                null,
+                post.getAnimalProfile().getProfileImageUrl(),
+                post.getAnimalProfile().getEmotion().getName(),
                 post.getAddress(),
                 post.getContent(),
                 post.getLocation().getX(),
