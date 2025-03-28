@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public record PostDetailDto(
         int postId,
-        int userId,
+        boolean isAuthor,
         String nickname,
         String imageUrl,
         String emotion,
@@ -19,10 +19,10 @@ public record PostDetailDto(
         EmotionInfo emotionInfo,
         LocalDateTime createdAt
 ) {
-    public static PostDetailDto from(Post post, EmotionInfo emotionInfo) {
+    public static PostDetailDto from(int userId, Post post, EmotionInfo emotionInfo) {
         return new PostDetailDto(
                 post.getId(),
-                post.getUser().getId(),
+                post.getUser().getId() == userId,
                 post.getNickname(),
                 post.getAnimalProfile().getProfileImageUrl(),
                 post.getAnimalProfile().getEmotion().getName(),
@@ -35,10 +35,10 @@ public record PostDetailDto(
         );
     }
 
-    public static PostDetailDto from(Post post, ReactionEmotions reactionEmotions) {
+    public static PostDetailDto from(int userId, Post post, ReactionEmotions reactionEmotions) {
         return new PostDetailDto(
                 post.getId(),
-                post.getUser().getId(),
+                post.getUser().getId() == userId,
                 post.getNickname(),
                 post.getAnimalProfile().getProfileImageUrl(),
                 post.getAnimalProfile().getEmotion().getName(),

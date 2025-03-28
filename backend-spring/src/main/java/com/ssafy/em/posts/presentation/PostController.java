@@ -51,8 +51,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailDto> getPost(@PathVariable int id){
-        return ResponseEntity.ok(postService.getPost(id));
+    public ResponseEntity<PostDetailDto> getPost(@LoginRequired int userId, @PathVariable int id){
+        return ResponseEntity.ok(postService.getPost(userId, id));
     }
 
     @GetMapping("/points")
@@ -69,6 +69,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<GetPostListResponse> getPostList(
+            @LoginRequired int userId,
             @RequestParam(name = "lng") double longitude,
             @RequestParam(name = "lat") double latitude,
             @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) Integer radius,
@@ -79,10 +80,10 @@ public class PostController {
             @RequestParam(name = "minLng", required = false) Double lng1,
             @RequestParam(name = "minLat", required = false) Double lat1,
             @RequestParam(name = "maxLng", required = false) Double lng2,
-            @RequestParam(name = "maxLat", required = false) Double lat2,
-            @LoginRequired int userId
+            @RequestParam(name = "maxLat", required = false) Double lat2
     ){
         GetPostListResponse response = postService.getPostList(
+                userId,
                 longitude,
                 latitude,
                 radius,
