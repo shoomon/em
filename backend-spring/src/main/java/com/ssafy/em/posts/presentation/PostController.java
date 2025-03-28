@@ -80,6 +80,7 @@ public class PostController {
             @RequestParam(name = "minLat", required = false) Double lat1,
             @RequestParam(name = "maxLng", required = false) Double lng2,
             @RequestParam(name = "maxLat", required = false) Double lat2
+            @LoginRequired int userId
     ){
         GetPostListResponse response = postService.getPostList(
                 longitude,
