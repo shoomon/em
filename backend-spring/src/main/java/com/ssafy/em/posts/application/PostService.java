@@ -1,17 +1,18 @@
 package com.ssafy.em.posts.application;
 
-import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
-import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
-import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
-import static com.ssafy.em.posts.util.PostConstant.RADIUS;
-
-
-import com.ssafy.em.emotion.dto.EmotionInfo;
+import com.ssafy.em.animal.domain.AnimalProfileRepository;
+import com.ssafy.em.animal.domain.AnimalRepository;
+import com.ssafy.em.animal.domain.entity.Animal;
+import com.ssafy.em.animal.domain.entity.AnimalProfile;
+import com.ssafy.em.animal.exception.AnimalProfileErrorCode;
+import com.ssafy.em.animal.exception.AnimalProfileException;
+import com.ssafy.em.emotion.domain.EmotionRepository;
+import com.ssafy.em.emotion.domain.entity.Emotion;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
-import com.ssafy.em.post_reaction.domain.PostReaction;
+import com.ssafy.em.emotion.exception.EmotionErrorCode;
+import com.ssafy.em.emotion.exception.EmotionException;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
-import com.ssafy.em.post_reaction.exception.PostReactionErrorCode;
-import com.ssafy.em.post_reaction.exception.PostReactionException;
+import com.ssafy.em.posts.domain.entity.NicknameGenerator;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.posts.dto.LastReadDto;
@@ -22,17 +23,28 @@ import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
+import com.ssafy.em.user.domain.UserRepository;
+import com.ssafy.em.user.domain.entity.User;
+import com.ssafy.em.user.exception.UserErrorCode;
+import com.ssafy.em.user.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
+import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
+import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
+import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 
 @Service
 @RequiredArgsConstructor
@@ -42,36 +54,34 @@ public class PostService{
     private final PostJpaRepository postJpaRepository;
     private final PostReactionRepository postReactionRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final UserRepository userRepository;
+    private final EmotionRepository emotionRepository;
+    private final AnimalRepository animalRepository;
+    private final AnimalProfileRepository animalProfileRepository;
 
-    private final Random random = new Random();
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    //동물 임시 배열
-    private static final List<String> ANIMALS = List.of(
-            "고양이", "강아지", "팬더", "코끼리", "호랑이", "토끼", "곰", "다람쥐", "여우", "늑대", "햄스터"
-    );
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
 
-        //todo: user에서 동물 프로필 레포지토리 가져오기
-//        List<animalProfiles> animalProfilesList = animalProfilesJpaRepository
-//                .findAllByEmotionId(request.emotionId());
-//
-//        int randomIndex = random.nextInt(animalProfilesList.size());
-//        int animalProfileId = animalProfilesList.get(randomIndex).getId();
-        //todo: 감정에 대한 형용사 조회해와서 닉네임 생성
-        Random random = new Random();
-        String randomAnimal = ANIMALS.get(random.nextInt(ANIMALS.size()));
+        Animal randomAnimal = animalRepository.findRandomAnimal();
+        Emotion emotion = emotionRepository.findByName(request.emotion())
+                .orElseThrow(() -> new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
+
+        AnimalProfile animalProfile = animalProfileRepository.findByAnimal_IdAndEmotion_Id(randomAnimal.getId(), emotion.getId())
+                .orElseThrow(() -> new AnimalProfileException.AnimalProfileNotFoundException(AnimalProfileErrorCode.NOT_FOUND));
+
+        String nickname = NicknameGenerator.getNickname(emotion.getName(), randomAnimal.getKorName());
 
         Point location = geometryFactory
                 .createPoint(new Coordinate(request.longitude(), request.latitude()));
         location.setSRID(4326);
 
         Post post = Post.builder()
-                .animalProfileId(0)
-                .userId(userId)
-                .nickname(request.emotion()+randomAnimal)
+                .animalProfile(animalProfile)
+                .user(user)
+                .nickname(nickname)
                 .content(request.content())
                 .location(location)
                 .address(request.address())
@@ -85,7 +95,7 @@ public class PostService{
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
 
-        if(post.getUserId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
+        if(post.getUser().getId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
         postJpaRepository.delete(post);
     }
