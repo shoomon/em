@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         // Swagger나 API Docs는 공개
-                        .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**", "/posts/**").permitAll()
+                        .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         // OAuth2 로그인 플로우에 필요한 경로도 공개
                         .requestMatchers("/oauth2/**", "/login/oauth2/**", "/auth/reissue", "/error").permitAll()
                         // 관리자가 사용할 emotions, animalProfiles 경로도 공개
