@@ -19,12 +19,35 @@ export default defineConfig(({ mode }) => {
     server: {
       // 포트 번호 설정
       port: 3000,
-      // proxy: {
-      //   "/api": {
-      //     target: env.VITE_BASE_SERVER_URL,
-      //     changeOrigin: true,
-      //   },
-      // },
+      proxy: {
+        "/api": {
+          target: env.VITE_BASE_SERVER_URL,
+          changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: "assets/[name].[ext]",
+          chunkFileNames: "js/[name]-[hash].js",
+          manualChunks: {
+            vendor: [
+              //
+              "react",
+              "react-dom",
+              "react-router-dom",
+              "lucide-react",
+              "axios",
+              "framer-motion",
+              "tailwind-merge",
+              "tailwindcss",
+              "zustand",
+            ],
+          },
+        },
+      },
     },
   }
 })
