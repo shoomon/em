@@ -59,7 +59,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         Query query = em.createNativeQuery(baseQuery.toString(), Post.class)
                 .setParameter("longitude", longitude)
                 .setParameter("latitude", latitude)
-                .setParameter("radius", radius);
+                .setParameter("radius", radius)
+                .setParameter("limit", pageSize + 1);
 
         if(lng1 != null && lat1 != null && lng2 != null && lat2 != null) {
             query.setParameter("lng1", lng1)
@@ -67,8 +68,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             .setParameter("lng2", lng2)
             .setParameter("lat2", lat2);
         }
-
-        query.setParameter("limit", pageSize + 1);
 
         if (cursor != null) {
             query.setParameter("cursorId", cursor.id());
