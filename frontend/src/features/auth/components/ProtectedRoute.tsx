@@ -13,6 +13,8 @@ const ProtectedRoute = () => {
       return axios.get("/user")
     },
     enabled: !!accessToken,
+    staleTime: 0, // 데이터를 캐시에 저장하지 않음
+    gcTime: 0, // 데이터를 캐시에 저장하지 않음
   })
 
   // 로그인 상태
