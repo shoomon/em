@@ -1,5 +1,6 @@
 import { LatLng } from "@/features/map/types/map"
 import usePostStore from "@/store/usePostStore"
+import React from "react"
 import usePost from "../hooks/usePost"
 import { Post } from "../types/post"
 import usePosts from "./../hooks/usePosts"
@@ -62,4 +63,4 @@ const PostList = ({ location }: PostListProps) => {
   )
 }
 
-export default PostList
+export default React.memo(PostList)
