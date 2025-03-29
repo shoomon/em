@@ -21,6 +21,7 @@ import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
+import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import com.ssafy.em.user.domain.UserRepository;
@@ -35,11 +36,14 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
@@ -83,9 +87,12 @@ public class PostService{
                 .user(user)
                 .nickname(nickname)
                 .content(request.content())
+                .emotion(request.emotion())
                 .location(location)
                 .address(request.address())
                 .build();
+
+        log.info(request.emotion()+" "+post.getEmotion());
 
         postJpaRepository.save(post);
     }
@@ -158,18 +165,18 @@ public class PostService{
             );
         }
 
+        boolean hasNext = postList.size() == PAGE_SIZE+1;
+
+        if (hasNext) {
+            postList = postList.subList(0, PAGE_SIZE);
+        }
+
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
                     return PostDetailDto.from(userId, post, emotionCounts);
                 })
                 .toList();
-
-        boolean hasNext = dtoList.size() == PAGE_SIZE+1;
-
-        if (hasNext) {
-            dtoList = dtoList.subList(0, PAGE_SIZE);
-        }
 
         PostDetailDto lastPost = dtoList.get(dtoList.size() - 1);
 
@@ -190,10 +197,77 @@ public class PostService{
         );
     }
 
-    public GetCalendarListResponse getCalendarPostList(int userId, YearMonth yearMonth) {
-        return new GetCalendarListResponse(
-                postJpaRepository.getCalendarPostList(userId, yearMonth)
+    public GetCalendarListResponse getCalendarEmotionList(int userId, YearMonth yearMonth) {
+        List<Object[]> list = postJpaRepository.getCalendarEmotionList(userId, yearMonth);
+
+        if(list.isEmpty()){
+            return new GetCalendarListResponse(null);
+        }
+
+        Map<Integer, String> result = list.stream()
+                                .collect(Collectors.toMap(
+                                        row -> ((Number)row[0]).intValue(),
+                                        row -> ((String)row[1])
+                                ));
+
+        return new GetCalendarListResponse(result);
+    }
+
+    public GetPostListResponse getDatePostList(
+            int userId,
+            LocalDate date,
+            int lastRead
+    ){
+        List<Post> postList = postJpaRepository.getDatePostList(
+                userId,
+                date,
+                lastRead,
+                PAGE_SIZE
         );
+
+        if (postList.isEmpty()) {
+            return new GetPostListResponse(Collections.emptyList(),
+                    new LastReadDto(0,null,null, false)
+            );
+        }
+
+        boolean hasNext = postList.size() == PAGE_SIZE+1;
+
+        if(hasNext) {
+            postList.subList(0, PAGE_SIZE);
+        }
+
+        List<PostDetailDto> dtoList = postList.stream()
+                .map(post -> {
+                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
+                    return PostDetailDto.from(userId, post, emotionCounts);
+                })
+                .toList();
+
+        return new GetPostListResponse(dtoList,
+                new LastReadDto(dtoList.get(dtoList.size()-1).postId(),null, null, hasNext)
+        );
+    }
+
+    public GetMonthlyEmotionResponse getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
+        List<Object[]> emotionCount = postJpaRepository.getMonthlyEmotionCount(userId, yearMonth);
+
+        Map<Integer, String> emotions = getAllEmotion();
+
+        Map<String, Integer> monthlyEmotionCount = emotionCount.stream()
+                .collect(Collectors.toMap(
+                        row -> (String)row[0],
+                        row -> ((Number)row[1]).intValue()
+                ));
+
+        for(int emotion : emotions.keySet()){
+            String emo = emotions.get(emotion);
+
+            if(monthlyEmotionCount.containsKey(emo)) continue;
+
+            monthlyEmotionCount.put(emo, 0);
+        }
+        return new GetMonthlyEmotionResponse(monthlyEmotionCount);
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {
@@ -232,6 +306,20 @@ public class PostService{
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
             return R * c; // 거리 (미터 단위)
+    }
+
+    private Map<Integer, String> getAllEmotion(){
+        List<Emotion> emotionList = emotionRepository.findAll();
+
+        return emotionList.stream()
+                .collect(Collectors.toMap(Emotion::getId, Emotion::getName));
+    }
+
+    private Map<Integer, String> getAllProfileImage(){
+        List<AnimalProfile> animalProfileList = animalProfileRepository.findAll();
+
+        return animalProfileList.stream()
+                .collect(Collectors.toMap(AnimalProfile::getId, AnimalProfile::getProfileImageUrl));
     }
 
 }

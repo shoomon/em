@@ -81,6 +81,7 @@ public class Post {
             User user,
             String nickname,
             String content,
+            String emotion,
             Point location,
             String address
     ){
@@ -88,6 +89,7 @@ public class Post {
         this.user = user;
         this.nickname = nickname;
         this.content = content;
+        this.emotion = emotion;
         this.location = location;
         this.address = address;
     }
