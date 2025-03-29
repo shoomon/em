@@ -206,6 +206,9 @@ const MapViewer = ({
 
     if (clusterRef.current) {
       clusterRef.current.setMarkers(postMarkerRefs.current)
+
+      // 클러스터가 바로 반영 되도록 강제로 redraw
+      clusterRef.current._redraw()
     }
   }, [points])
 
