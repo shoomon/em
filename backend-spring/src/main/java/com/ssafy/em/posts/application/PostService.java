@@ -87,7 +87,6 @@ public class PostService{
                 .user(user)
                 .nickname(nickname)
                 .content(request.content())
-                .emotion(request.emotion())
                 .location(location)
                 .address(request.address())
                 .build();
