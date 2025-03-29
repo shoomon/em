@@ -12,7 +12,7 @@ const StackHeader = memo(() => {
   const handleClick = () => {
     const shouldLeave = confirm("게시글 작성을 취소하시겠습니까?")
     if (shouldLeave) {
-      navigate("/", { replace: true })
+      navigate("/", { replace: true, viewTransition: true })
     }
   }
 

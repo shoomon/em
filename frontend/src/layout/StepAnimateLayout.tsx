@@ -16,10 +16,10 @@ const StepAnimateLayout = ({ children }: StepAnimateLayoutProps) => {
     <AnimatePresence mode="wait">
       <motion.div
         key={step}
-        className="w-full h-full"
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -30 }}
+        className="w-full h-full overflow-hidden"
+        initial={{ opacity: 0, transform: "translateX(30px)" }}
+        animate={{ opacity: 1, transform: "translateX(0px)" }}
+        exit={{ opacity: 0, transform: "translateX(-30px)" }}
         transition={{
           duration: 0.2,
           ease: "easeInOut",

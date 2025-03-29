@@ -34,5 +34,5 @@ export const fetchPointList = async (pointListRequest: PointListRequest) => {
 }
 
 export const fetchPostReaction = (postId: number, emotionName: string) => {
-  return apiClient.post(`/reactions/${postId}`, emotionName)
+  return apiClient.post(`/reactions/${postId}`, { emotionName })
 }

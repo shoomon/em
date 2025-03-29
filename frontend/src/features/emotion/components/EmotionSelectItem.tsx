@@ -12,7 +12,7 @@ const EmotionSelectItem = ({
   isSelected,
   emotion,
 }: EmotionSelectItemProps) => {
-  const { korName, emoji, color, id, engName } = emotion
+  const { korName, color, id, engName, emojiGif_url } = emotion
   return (
     <Button
       type="button"
@@ -23,7 +23,7 @@ const EmotionSelectItem = ({
           ? "ring-2 ring-em-black/40 ring-offset-2 scale-102 font-bold"
           : "hover:scale-102"
       }`}>
-      <span className="text-3xl mb-2">{emoji}</span>
+      <img src={emojiGif_url} alt={korName} className="w-10 h-10" />
       <span className={`font-medium ${isSelected ? "text-em-primary" : ""}`}>
         {korName}
       </span>
