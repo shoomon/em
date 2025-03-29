@@ -3,7 +3,7 @@ import { MapPinIcon } from "lucide-react"
 import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
 import { getRelativeTime } from "@/utils/time"
 import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { fetchPostReaction } from "../api/postApi"
 import { EmojiType, Post } from "../types/post"
 import EmojiButton from "./EmojiButton"
@@ -19,10 +19,23 @@ const PostItem = ({
   address,
   createdAt,
 }: Post) => {
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [isOverflow, setIsOverflow] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [likeCounts, setLikeCounts] = useState(emotionInfo.emotionCounts)
   const [likedByMe, setLikedByMe] = useState(
     emotionInfo.selectedEmotion || null,
   )
+
+  useEffect(() => {
+    if (!contentRef.current) {
+      return
+    }
+
+    setIsOverflow(
+      contentRef.current.scrollHeight > contentRef.current.clientHeight,
+    )
+  }, [content])
 
   const mutation = useMutation({
     mutationFn: (selectedEmotion: EmojiType) =>
@@ -44,6 +57,10 @@ const PostItem = ({
       alert("좋아요 요청에 실패 했습니다.")
     },
   })
+
+  const handleMoreView = () => {
+    setIsExpanded(!isExpanded)
+  }
 
   return (
     <div className={`flex flex-col gap-3 p-4 bg-em-white`}>
@@ -73,8 +90,24 @@ const PostItem = ({
         )}
       </div>
 
-      <div className="px-2 mb-6 break-all whitespace-pre-wrap min-h-32">
+      <div
+        ref={contentRef}
+        className={`relative px-2 mb-4 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
         {content}
+        {isOverflow &&
+          (isExpanded ? (
+            <button
+              className="block w-full text-sm cursor-pointer text-neutral-500"
+              onClick={handleMoreView}>
+              접기
+            </button>
+          ) : (
+            <button
+              className="absolute flex justify-center items-end inset-0 cursor-pointer text-sm text-neutral-500 bg-[linear-gradient(to_bottom,rgba(253,253,253,0)_0%,rgba(253,253,253,1)_90%,rgba(253,253,253,1)_100%)]"
+              onClick={handleMoreView}>
+              더보기
+            </button>
+          ))}
       </div>
 
       <div className="flex items-center gap-2">
