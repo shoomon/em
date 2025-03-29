@@ -32,9 +32,10 @@ export interface PostListRequest extends PointListRequest {
 
 export interface Post {
   postId: number
-  userId: number
+  isAuthor: boolean
   nickname: string
-  imageUrl: string | null
+  imageUrl: string
+  emotion: string
   content: string
   lng: number
   lat: number

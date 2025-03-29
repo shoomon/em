@@ -1,6 +1,6 @@
 import { MapPinIcon } from "lucide-react"
 
-import profileImage from "@/assets/dog-face.svg"
+import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
 import { getRelativeTime } from "@/utils/time"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
@@ -10,8 +10,10 @@ import EmojiButton from "./EmojiButton"
 
 const PostItem = ({
   postId,
+  isAuthor,
   nickname,
   imageUrl,
+  emotion,
   content,
   emotionInfo,
   address,
@@ -44,7 +46,7 @@ const PostItem = ({
   })
 
   return (
-    <div className="flex flex-col gap-3 p-4 bg-em-white">
+    <div className={`flex flex-col gap-3 p-4 bg-em-white`}>
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <MapPinIcon className="size-5 stroke-red-500" />
@@ -54,13 +56,21 @@ const PostItem = ({
         <p className="text-sm text-em-gray">{getRelativeTime(createdAt)}</p>
       </div>
 
-      <div className="flex items-center gap-2">
-        <img
-          src={imageUrl || profileImage}
-          alt="프로필 사진"
-          className="rounded-full size-8"
-        />
-        <p className="font-semibold text-em-surprise">{nickname}</p>
+      <div className="flex justify-between">
+        <div className="flex items-center gap-2">
+          <img
+            src={imageUrl}
+            alt="프로필 사진"
+            className="rounded-full size-8"
+          />
+          <p className={`font-semibold ${EMOTION_TEXT_COLOR_MAPPER[emotion]}`}>
+            {nickname}
+          </p>
+        </div>
+
+        {isAuthor && (
+          <p className="text-sm cursor-pointer text-rose-400">삭제</p>
+        )}
       </div>
 
       <div className="px-2 mb-6 break-all whitespace-pre-wrap min-h-32">

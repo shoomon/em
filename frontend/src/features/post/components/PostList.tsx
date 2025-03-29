@@ -32,15 +32,15 @@ const PostList = ({ location }: PostListProps) => {
   return (
     <div className="flex flex-col overflow-y-auto h-[75dvh]">
       <SortTypeSelector contents={sortTypeData} />
-      <div className="flex flex-col flex-1 gap-4 pb-2 bg-em-gray-sm">
+      <div className="flex flex-col flex-1 gap-4 bg-em-gray-sm">
         {type === "marker" ? (
           isPostLoading ? (
-            <div>로딩 중...</div>
+            <div className="h-40 bg-em-gray-md animate-pulse" />
           ) : (
             <PostItem {...postData!} />
           )
         ) : isPostListLoading ? (
-          <div>로딩 중...</div>
+          <div className="h-40 bg-em-gray-md animate-pulse" />
         ) : (
           <>
             {postListData?.pages.map((page: any) =>

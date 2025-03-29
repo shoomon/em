@@ -66,3 +66,14 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     emojiGif_url: "/images/emotions/disgust.gif",
   },
 ]
+
+export const EMOTION_TEXT_COLOR_MAPPER: Record<string, string> = {
+  JOY: "text-em-JOY",
+  ANTICIPATION: "text-em-ANTICIPATION",
+  TRUST: "text-em-TRUST",
+  SURPRISE: "text-em-SURPRISE",
+  DISGUST: "text-em-DISGUST",
+  FEAR: "text-em-FEAR",
+  ANGER: "text-em-ANGER",
+  SADNESS: "text-em-SADNESS",
+}
