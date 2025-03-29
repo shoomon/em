@@ -139,6 +139,9 @@ const MapViewer = ({
       handleDragend,
     )
 
+    // 마커의 위치로 카메라 이동
+    focusOnMarker()
+
     return () => {
       window.naver.maps.Event.removeListener(zoomChangeListener)
       window.naver.maps.Event.removeListener(dragendListener)
@@ -171,9 +174,6 @@ const MapViewer = ({
     if (searchRangeRef.current) {
       searchRangeRef.current.setCenter(location)
     }
-
-    console.log(location)
-    focusOnMarker()
   }, [location])
 
   useEffect(() => {
