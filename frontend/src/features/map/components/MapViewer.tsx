@@ -68,6 +68,7 @@ const MapViewer = ({
     // 클러스터링 객체 생성
     if (!clusterRef.current && window.MarkerClustering) {
       clusterRef.current = new window.MarkerClustering({
+        averageCenter: true,
         minClusterSize: 2,
         maxZoom: 21,
         map: mapRef.current,
