@@ -3,24 +3,28 @@ import useInfiniteScroll from "@/hooks/useInfiniteScroll"
 import usePostStore from "@/store/usePostStore"
 import { useSearchParams } from "react-router-dom"
 import { fetchPostList } from "../api/postApi"
+import { PostListType } from "../types/post"
 
 interface UsePostsProps {
+  type: PostListType
   location: LatLng
 }
 
-const usePosts = ({ location }: UsePostsProps) => {
+const usePosts = ({ type, location }: UsePostsProps) => {
   const [searchParams] = useSearchParams()
   const sortType = searchParams.get("sort") || "latest"
   const clusterGrid = usePostStore((state) => state.clusterGrid)
 
   const queryPost = async (pageParam: any) => {
+    const isCluster = type === "cluster"
+
     try {
       const response = await fetchPostList({
         ...location,
-        minLat: clusterGrid ? clusterGrid[0].lat : undefined,
-        minLng: clusterGrid ? clusterGrid[0].lng : undefined,
-        maxLat: clusterGrid ? clusterGrid[1].lat : undefined,
-        maxLng: clusterGrid ? clusterGrid[1].lng : undefined,
+        minLat: isCluster ? clusterGrid[0].lat : undefined,
+        minLng: isCluster ? clusterGrid[0].lng : undefined,
+        maxLat: isCluster ? clusterGrid[1].lat : undefined,
+        maxLng: isCluster ? clusterGrid[1].lng : undefined,
         postId: pageParam.lastId,
         dist: pageParam.lastDist,
         emoCnt: pageParam.lastCnt,
@@ -34,7 +38,7 @@ const usePosts = ({ location }: UsePostsProps) => {
 
   const { data, isLoading, isFetchingNextPage, observerRef } =
     useInfiniteScroll({
-      queryKey: ["posts", location, clusterGrid, sortType],
+      queryKey: ["posts", location, type, clusterGrid, sortType],
       queryFn: ({ pageParam }) => queryPost(pageParam),
       initialPageParam: {
         lastId: 0,
@@ -53,6 +57,7 @@ const usePosts = ({ location }: UsePostsProps) => {
         return undefined
       },
       refetchOnWindowFocus: false,
+      enabled: type !== "marker",
     })
 
   return {

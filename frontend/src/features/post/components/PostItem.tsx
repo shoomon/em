@@ -10,12 +10,9 @@ import EmojiButton from "./EmojiButton"
 
 const PostItem = ({
   postId,
-  // userId,
   nickname,
   imageUrl,
   content,
-  // lng,
-  // lat,
   emotionInfo,
   address,
   createdAt,

@@ -10,6 +10,10 @@ const useMap = ({ initLocation, config }: useMapProps) => {
   const mapRef = useRef<naver.maps.Map>(null)
 
   useEffect(() => {
+    if (mapRef.current) {
+      return
+    }
+
     if (initLocation) {
       mapRef.current = new window.naver.maps.Map(config.mapDiv, {
         center: new window.naver.maps.LatLng(

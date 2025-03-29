@@ -29,7 +29,7 @@ const EmojiButton = ({
 }: EmojiButtonProps) => {
   return (
     <button
-      className={`flex flex-col items-center w-13 p-2 transition-transform duration-200 ease-in-out cursor-pointer hover:scale-110 ${className}`}
+      className={`flex flex-col items-center w-10 p-2 transition-transform duration-200 ease-in-out cursor-pointer hover:scale-110 ${className}`}
       onClick={onClick}>
       <img src={emotionMapper[emotionName]} alt="" className="size-5" />
       <p className="text-xs text-center">{formatNumber(count)}</p>

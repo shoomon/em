@@ -1,12 +1,12 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Point } from "@/features/post/types/post"
 import usePostStore from "@/store/usePostStore"
-import { ReactNode, useEffect, useRef } from "react"
+import React, { ReactNode, useEffect, useRef } from "react"
 import htmlClusterMarkers from "../constants"
 import { LatLng } from "../types/map"
 
 interface MapViewerProps {
-  isDenied: boolean
+  isLocationPermissionGranted: boolean
   location: LatLng
   points: Point[]
   className?: string
@@ -14,22 +14,30 @@ interface MapViewerProps {
 }
 
 const MapViewer = ({
-  isDenied,
+  isLocationPermissionGranted,
   location,
   points,
   className,
   children,
 }: MapViewerProps) => {
-  const mapRef = useRef<HTMLDivElement>(null)
+  const { mapRef } = useMap({
+    initLocation: location,
+    config: {
+      mapDiv: "map",
+      mapOptions: {
+        zoom: 16,
+      },
+    },
+  })
+
   const userMarkerRef = useRef<naver.maps.Marker | null>(null)
   const searchRangeRef = useRef<naver.maps.Circle | null>(null)
   const clusterRef = useRef<any>(null)
   const postMarkerRefs = useRef<naver.maps.Marker[]>([])
-  const { map } = useMap({ initLocation: location, mapRef })
-  const { setIsDrawerOpen, setClusterGrid } = usePostStore()
+  const { setType, setPostId, setClusterGrid, setIsDrawerOpen } = usePostStore()
 
   useEffect(() => {
-    if (!map.current || !window.naver?.maps) {
+    if (!mapRef.current || !window.naver?.maps) {
       return
     }
 
@@ -37,9 +45,9 @@ const MapViewer = ({
     if (!userMarkerRef.current) {
       userMarkerRef.current = new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(location.lat, location.lng),
-        map: map.current,
+        map: mapRef.current,
         icon: {
-          content: `<div class="size-6 bg-red-500 border-4 border-white rounded-full" />`,
+          content: `<div class="size-6 bg-rose-400 border-4 border-white rounded-full" />`,
           anchor: new window.naver.maps.Point(12, 12),
         },
       })
@@ -48,7 +56,7 @@ const MapViewer = ({
     // 유저 주위 메시지 탐색 범위 생성
     if (!searchRangeRef.current) {
       searchRangeRef.current = new window.naver.maps.Circle({
-        map: map.current,
+        map: mapRef.current,
         center: new window.naver.maps.LatLng(location.lat, location.lng),
         radius: 500,
         fillColor: "rgba(0, 230, 0, 0.1)",
@@ -62,7 +70,7 @@ const MapViewer = ({
       clusterRef.current = new window.MarkerClustering({
         minClusterSize: 2,
         maxZoom: 21,
-        map: map.current,
+        map: mapRef.current,
         markers: postMarkerRefs.current,
         gridSize: 500,
         icons: htmlClusterMarkers,
@@ -87,23 +95,24 @@ const MapViewer = ({
     }
 
     const handleZoomChange = () => {
-      if (!map.current || !clusterRef.current) {
+      if (!mapRef.current || !clusterRef.current) {
         return
       }
 
-      const zoomLevel = map.current.getZoom()
+      const zoomLevel = mapRef.current.getZoom()
       clusterRef.current.setMarkers(
-        zoomLevel < 14 ? [] : postMarkerRefs.current,
+        zoomLevel < 15 ? [] : postMarkerRefs.current,
       )
     }
 
     const handleDragend = () => {
-      if (!map.current || !clusterRef.current) {
+      if (!mapRef.current || !clusterRef.current) {
         return
       }
 
       clusterRef.current._clusters.forEach((cluster: any) => {
         cluster._clusterMarker.eventTarget.onclick = () => {
+          setType("cluster")
           setClusterGrid([
             {
               lat: cluster._clusterBounds._ne._lat,
@@ -120,12 +129,12 @@ const MapViewer = ({
     }
 
     const zoomChangeListener = window.naver.maps.Event.addListener(
-      map.current,
+      mapRef.current,
       "zoom_changed",
       handleZoomChange,
     )
-    const dragendListener = naver.maps.Event.addListener(
-      map.current,
+    const dragendListener = window.naver.maps.Event.addListener(
+      mapRef.current,
       "idle",
       handleDragend,
     )
@@ -134,7 +143,7 @@ const MapViewer = ({
       window.naver.maps.Event.removeListener(zoomChangeListener)
       window.naver.maps.Event.removeListener(dragendListener)
     }
-  }, [map.current])
+  }, [mapRef.current])
 
   useEffect(() => {
     if (!window.naver?.maps) {
@@ -142,16 +151,16 @@ const MapViewer = ({
     }
 
     if (userMarkerRef.current) {
-      userMarkerRef.current.setVisible(!isDenied)
+      userMarkerRef.current.setVisible(true)
     }
 
     if (searchRangeRef.current) {
-      searchRangeRef.current.setVisible(!isDenied)
+      searchRangeRef.current.setVisible(true)
     }
-  }, [isDenied])
+  }, [isLocationPermissionGranted])
 
   useEffect(() => {
-    if (!window.naver?.maps || isDenied) {
+    if (!window.naver?.maps || !isLocationPermissionGranted) {
       return
     }
 
@@ -163,11 +172,12 @@ const MapViewer = ({
       searchRangeRef.current.setCenter(location)
     }
 
+    console.log(location)
     focusOnMarker()
   }, [location])
 
   useEffect(() => {
-    if (!map.current || !window.naver?.maps) {
+    if (!mapRef.current || !window.naver?.maps) {
       return
     }
 
@@ -177,15 +187,18 @@ const MapViewer = ({
     for (const point of points) {
       const marker = new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(point.lat, point.lng),
-        map: map.current,
+        map: mapRef.current,
         icon: {
-          content: `<div class="size-8 bg-blue-400/40 rounded-full" />`,
+          content: `<div class="flex justify-center items-center text-lg size-8 bg-em-black/40 rounded-full text-white hover:bg-em-black">1</div>`,
           anchor: new window.naver.maps.Point(12, 12),
         },
       })
+
       // 마커 클릭 이벤트 추가
       window.naver.maps.Event.addListener(marker, "click", () => {
-        console.log("마커 클릭! 위치: " + marker.getPosition())
+        setType("marker")
+        setPostId(point.id)
+        setIsDrawerOpen(true)
       })
       postMarkerRefs.current.push(marker)
     }
@@ -196,19 +209,20 @@ const MapViewer = ({
   }, [points])
 
   const focusOnMarker = () => {
-    if (!map.current || !window.naver?.maps) {
+    if (!mapRef.current || !window.naver?.maps) {
       return
     }
-    map.current.setCenter(
+
+    mapRef.current.setCenter(
       new window.naver.maps.LatLng(location.lat, location.lng),
     )
   }
 
   return (
-    <div ref={mapRef} className={className}>
+    <div id="map" className={className}>
       {children?.(focusOnMarker)}
     </div>
   )
 }
 
-export default MapViewer
+export default React.memo(MapViewer)

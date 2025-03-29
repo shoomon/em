@@ -12,7 +12,7 @@ const LocationFixButton = ({ onClick }: LocationFixButtonProps) => {
       shape="circle"
       className="absolute z-10 p-2 shadow-md bottom-24 right-4 hover:bg-em-gray-md"
       onClick={onClick}>
-      <LocateFixedIcon />
+      <LocateFixedIcon className="size-5" />
     </Button>
   )
 }

@@ -1,5 +1,8 @@
 import { LatLng } from "@/features/map/types/map"
 
+export type PostListType = "all" | "cluster" | "marker"
+export type EmojiType = "joy" | "sadness" | "anger" | "surprise" | "trust"
+
 export interface Point {
   id: number
   lng: number
@@ -16,10 +19,7 @@ export interface PointListRequest {
   rad?: number
 }
 
-export interface PostListRequest {
-  lng: number
-  lat: number
-  rad?: number
+export interface PostListRequest extends PointListRequest {
   postId?: number
   dist?: number
   emoCnt?: number
@@ -71,5 +71,3 @@ export interface PostCreateRequest {
   emotion: string
   address: string
 }
-
-export type EmojiType = "joy" | "sadness" | "anger" | "surprise" | "trust"

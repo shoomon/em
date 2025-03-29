@@ -16,14 +16,14 @@ export const fetchPostDelete = (id: number) => {
   return apiClient.delete(`/posts/${id}`)
 }
 
-export const fetchPostList = async (postListRequest: PostListRequest) => {
-  const queryString = toQueryString({ ...postListRequest })
-  const response = await apiClient.get(`/posts?${queryString}`)
+export const fetchPost = async (postId: number) => {
+  const response = await apiClient.get(`/posts/${postId}`)
   return response.data
 }
 
-export const fetchPost = async (postId: number) => {
-  const response = await apiClient.get(`/posts/${postId}`)
+export const fetchPostList = async (postListRequest: PostListRequest) => {
+  const queryString = toQueryString({ ...postListRequest })
+  const response = await apiClient.get(`/posts?${queryString}`)
   return response.data
 }
 
