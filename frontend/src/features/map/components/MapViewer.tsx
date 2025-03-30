@@ -209,6 +209,22 @@ const MapViewer = ({
 
       // 클러스터가 바로 반영 되도록 강제로 redraw
       clusterRef.current._redraw()
+      clusterRef.current._clusters.forEach((cluster: any) => {
+        cluster._clusterMarker.eventTarget.onclick = () => {
+          setType("cluster")
+          setClusterGrid([
+            {
+              lat: cluster._clusterBounds._ne._lat,
+              lng: cluster._clusterBounds._ne._lng,
+            },
+            {
+              lat: cluster._clusterBounds._sw._lat,
+              lng: cluster._clusterBounds._sw._lng,
+            },
+          ])
+          setIsDrawerOpen(true)
+        }
+      })
     }
   }, [points])
 
