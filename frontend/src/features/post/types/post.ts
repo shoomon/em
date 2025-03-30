@@ -1,7 +1,7 @@
 import { LatLng } from "@/features/map/types/map"
 
 export type PostListType = "all" | "cluster" | "marker"
-export type EmojiType = "joy" | "sadness" | "anger" | "surprise" | "trust"
+export type ReactionType = "joy" | "sadness" | "anger" | "surprise" | "trust"
 
 export interface Point {
   id: number

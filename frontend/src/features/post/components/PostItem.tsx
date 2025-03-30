@@ -5,8 +5,8 @@ import { getRelativeTime } from "@/utils/time"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
 import { fetchPostReaction } from "../api/postApi"
-import { EmojiType, Post } from "../types/post"
-import EmojiButton from "./EmojiButton"
+import { Post, ReactionType } from "../types/post"
+import ReactionButton from "./ReactionButton"
 
 const PostItem = ({
   postId,
@@ -26,6 +26,9 @@ const PostItem = ({
   const [likedByMe, setLikedByMe] = useState(
     emotionInfo.selectedEmotion || null,
   )
+  const [clickedReaction, setClickedReaction] = useState<ReactionType | null>(
+    null,
+  )
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -38,9 +41,9 @@ const PostItem = ({
   }, [content])
 
   const mutation = useMutation({
-    mutationFn: (selectedEmotion: EmojiType) =>
+    mutationFn: (selectedEmotion: ReactionType) =>
       fetchPostReaction(postId, selectedEmotion.toUpperCase()),
-    onMutate: async (selectedEmotion: EmojiType) => {
+    onMutate: async (selectedEmotion: ReactionType) => {
       setLikeCounts({
         ...emotionInfo.emotionCounts,
         [selectedEmotion]:
@@ -60,6 +63,11 @@ const PostItem = ({
 
   const handleMoreView = () => {
     setIsExpanded(!isExpanded)
+  }
+
+  const handleReaction = (reactionType: ReactionType) => {
+    setClickedReaction(reactionType)
+    mutation.mutate(reactionType)
   }
 
   return (
@@ -117,11 +125,13 @@ const PostItem = ({
           }
 
           return (
-            <EmojiButton
+            <ReactionButton
               key={k}
-              emotionName={k as EmojiType}
-              count={likeCounts[k as EmojiType]}
-              onClick={() => mutation.mutate(k as EmojiType)}
+              emotionName={k as ReactionType}
+              count={likeCounts[k as ReactionType]}
+              isClicked={clickedReaction === k}
+              onClick={() => handleReaction(k as ReactionType)}
+              onAnimationComplete={() => setClickedReaction(null)}
               className={likedByMe === k ? "font-bold" : ""}
             />
           )
