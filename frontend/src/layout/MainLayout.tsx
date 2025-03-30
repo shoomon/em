@@ -5,15 +5,19 @@ import MainNavigationBar from "@/components/layout/MainNavigationBar"
 import useDevice from "@/hooks/useDevice"
 import BaseLayout from "@/layout/BaseLayout"
 
-const MainLayout = () => {
+interface MainLayoutProps {
+  hasHeader?: boolean
+}
+const MainLayout = ({ hasHeader = true }: MainLayoutProps) => {
   const { isIOS } = useDevice()
 
   return (
     <BaseLayout>
-      {/* header */}
-      <div className="bg-em-white sticky top-0 max-w-[600px] w-full h-14 z-[110]">
-        <MainHeader />
-      </div>
+      {hasHeader && (
+        <div className="bg-em-white sticky top-0 max-w-[600px] w-full h-14 z-[110]">
+          <MainHeader />
+        </div>
+      )}
       {/* main */}
       <main className="flex-1">
         <Outlet />

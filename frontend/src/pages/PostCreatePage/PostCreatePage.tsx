@@ -28,7 +28,7 @@ const PostCreatePage = () => {
   }, [location])
 
   return (
-    <div className="w-full flex-1 flex justify-center items-center">
+    <div className="w-full min-h-[calc(100dvh-var(--header-height)))] flex justify-center items-center">
       <PostCreateForm />
     </div>
   )

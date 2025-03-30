@@ -70,7 +70,10 @@ const MapSelector = ({
   return (
     <div className="flex flex-col h-full gap-2">
       <EmSection>
-        <EmSection.Header title="🚩내 위치를 조정해 주세요. " />
+        <EmSection.Header
+          title="🚩내 위치를 확인해주세요."
+          description="현재 위치가 올바르지 않다면 위치를 조정해주세요."
+        />
         <div className="flex flex-col gap-4 h-full ">
           {/* 현재 위치 정보 */}
           <div className="flex flex-col gap-2">
