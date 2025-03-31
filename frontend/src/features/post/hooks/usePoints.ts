@@ -19,7 +19,6 @@ const usePoints = ({
       pointListRequest.rad,
     ],
     queryFn: () => fetchPointList({ ...pointListRequest }),
-    staleTime: 1000 * 60,
     refetchOnWindowFocus: false,
     enabled: isLocationPermissionGranted,
   })
