@@ -12,9 +12,9 @@ export type EmotionKorNameType =
   | "분노"
   | "당황"
   | "기쁨"
-  | "신뢰"
+  | "확신"
   | "슬픔"
-  | "두려움"
+  | "공포"
   | "기대"
   | "혐오"
 
@@ -24,7 +24,7 @@ export enum EmotionMapping {
   JOY = "기쁨",
   TRUST = "신뢰",
   SADNESS = "슬픔",
-  FEAR = "두려움",
+  FEAR = "공포",
   ANTICIPATION = "기대",
   DISGUST = "혐오",
 }

@@ -27,7 +27,7 @@ const ReactionButton = ({
       <div className="relative size-5">
         {isAnimating ? (
           <motion.img
-            src={`/images/emotions/${emotionName}.gif`}
+            src={`/assets/images/emotions/${emotionName}.gif`}
             className="absolute inset-0"
             animate={{ scale: [1.0, 1.4, 1.0] }}
             transition={{ duration: 2.0, ease: "easeOut" }}
