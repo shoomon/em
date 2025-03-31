@@ -22,15 +22,15 @@ public class PostReaction {
     private int id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", updatable = false)
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    @JoinColumn(name = "post_id", updatable = false)
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "emotion_id", insertable = false, updatable = false)
+    @JoinColumn(name = "emotion_id", updatable = true)
     private Emotion emotion;
 
     @CreationTimestamp

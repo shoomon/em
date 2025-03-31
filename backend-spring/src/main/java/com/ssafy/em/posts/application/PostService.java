@@ -8,10 +8,14 @@ import com.ssafy.em.animal.exception.AnimalProfileErrorCode;
 import com.ssafy.em.animal.exception.AnimalProfileException;
 import com.ssafy.em.emotion.domain.EmotionRepository;
 import com.ssafy.em.emotion.domain.entity.Emotion;
+import com.ssafy.em.emotion.dto.EmotionInfo;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
 import com.ssafy.em.emotion.exception.EmotionErrorCode;
 import com.ssafy.em.emotion.exception.EmotionException;
+import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
+import com.ssafy.em.post_reaction.exception.PostReactionErrorCode;
+import com.ssafy.em.post_reaction.exception.PostReactionException;
 import com.ssafy.em.posts.domain.entity.NicknameGenerator;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
@@ -38,11 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
@@ -115,11 +115,16 @@ public class PostService{
     }
 
     public PostDetailDto getPost(int userId, int postId){
-        ReactionEmotions emotionList = getEmotionCounts(postId);
+        ReactionEmotions emotionCounts = getEmotionCounts(postId);
         Post post = postJpaRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
-
-        return PostDetailDto.from(userId, post, emotionList);
+        Optional<PostReaction> postReactionOptional = postReactionRepository.findByUserIdAndPostId(userId, post.getId());
+        if (postReactionOptional.isPresent()) {
+            PostReaction postReaction = postReactionOptional.get();
+            EmotionInfo emotionInfo = new EmotionInfo(emotionCounts, postReaction.getEmotion().getName());
+            return PostDetailDto.from(userId, post, emotionInfo);
+        }
+        return PostDetailDto.from(userId, post, emotionCounts);
     }
 
     public List<PostPointDto> getPointList(
@@ -174,6 +179,12 @@ public class PostService{
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
+                   Optional<PostReaction> postReactionOptional = postReactionRepository.findByUserIdAndPostId(userId, post.getId());
+                   if (postReactionOptional.isPresent()) {
+                       PostReaction postReaction = postReactionOptional.get();
+                       EmotionInfo emotionInfo = new EmotionInfo(emotionCounts, postReaction.getEmotion().getName());
+                       return PostDetailDto.from(userId, post, emotionInfo);
+                   }
                     return PostDetailDto.from(userId, post, emotionCounts);
                 })
                 .toList();
@@ -240,6 +251,12 @@ public class PostService{
         List<PostDetailDto> dtoList = postList.stream()
                 .map(post -> {
                     ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
+                    Optional<PostReaction> postReactionOptional = postReactionRepository.findByUserIdAndPostId(userId, post.getId());
+                    if (postReactionOptional.isPresent()) {
+                        PostReaction postReaction = postReactionOptional.get();
+                        EmotionInfo emotionInfo = new EmotionInfo(emotionCounts, postReaction.getEmotion().getName());
+                        return PostDetailDto.from(userId, post, emotionInfo);
+                    }
                     return PostDetailDto.from(userId, post, emotionCounts);
                 })
                 .toList();
