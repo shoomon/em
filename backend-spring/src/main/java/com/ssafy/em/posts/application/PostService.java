@@ -92,8 +92,6 @@ public class PostService{
                 .address(request.address())
                 .build();
 
-        log.info(request.emotion()+" "+post.getEmotion());
-
         postJpaRepository.save(post);
     }
 
@@ -104,6 +102,7 @@ public class PostService{
 
         if(post.getUser().getId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
+        postReactionRepository.deleteByPostId(postId);
         postJpaRepository.delete(post);
     }
 
