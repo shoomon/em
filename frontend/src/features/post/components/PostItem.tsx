@@ -2,7 +2,7 @@ import { MapPinIcon } from "lucide-react"
 
 import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
 import { getRelativeTime } from "@/utils/time"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
 import { fetchPostDelete, fetchPostReaction } from "../api/postApi"
 import { Post, ReactionType } from "../types/post"
@@ -29,6 +29,7 @@ const PostItem = ({
   const [clickedReaction, setClickedReaction] = useState<ReactionType | null>(
     null,
   )
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setLikeCounts({ ...emotionInfo.emotionCounts })
@@ -94,6 +95,7 @@ const PostItem = ({
       }
     },
     onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["posts"] })
       alert("해당 메시지가 삭제 되었습니다.")
     },
   })
