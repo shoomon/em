@@ -47,6 +47,7 @@ export interface Post {
       anger: number
       surprise: number
       trust: number
+      sum: number
     }
   }
   address: string
