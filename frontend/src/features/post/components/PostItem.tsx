@@ -148,7 +148,7 @@ const PostItem = ({
 
       <div
         ref={contentRef}
-        className={`relative px-2 mb-4 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
+        className={`relative px-2 mb-10 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
         {content}
         {isOverflow &&
           (isExpanded ? (
