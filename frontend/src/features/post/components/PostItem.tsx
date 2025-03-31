@@ -95,6 +95,7 @@ const PostItem = ({
       }
     },
     onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["points"] })
       queryClient.refetchQueries({ queryKey: ["posts"] })
       alert("해당 메시지가 삭제 되었습니다.")
     },
