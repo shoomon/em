@@ -47,7 +47,7 @@ const MyPage = () => {
   }
 
   return (
-    <div className="flex flex-col bg-em-white min-h-[calc(100vh-var(--navigation-bar-height))]">
+    <div className="flex flex-col min-h-[calc(100vh-var(--navigation-bar-height))]">
       <section className=" p-4 flex flex-col gap-6">
         <UserProfileCard />
         <div className="w-full h-full sticky top-0 z-50 bg-em-white">
@@ -61,7 +61,7 @@ const MyPage = () => {
         </div>
       </section>
       {renderTabContent()}
-      <div className="flex pl-2 mt-auto">
+      <div className="flex flex-1 justify-end items-end h-full p-4">
         <LogoutText />
       </div>
     </div>
