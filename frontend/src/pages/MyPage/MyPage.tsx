@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react"
 
 import Tabs from "@/components/Tabs/Tabs"
+import LogoutText from "@/features/auth/components/LogoutText"
 import EmotionStatisticsSection from "@/features/emotion/components/Statistics/EmotionStatisticsSection"
 import UserProfileCard from "@/features/profile/components/UserProfileCard"
 
@@ -60,6 +61,9 @@ const MyPage = () => {
         </div>
       </section>
       {renderTabContent()}
+      <div className="flex pl-2 mt-auto">
+        <LogoutText />
+      </div>
     </div>
   )
 }
