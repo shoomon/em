@@ -31,7 +31,7 @@ const PostList = ({ location }: PostListProps) => {
   })
 
   return (
-    <div className="flex flex-col overflow-y-auto h-[75dvh]">
+    <div className="overflow-y-auto h-[75dvh]">
       <SortTypeSelector contents={sortTypeData} />
 
       <div className="flex flex-col flex-1 gap-4 bg-em-gray-sm">
