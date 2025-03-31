@@ -54,7 +54,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .addLogoutHandler(oAuth2LogoutHandler)
-                        .logoutUrl("/api/auth/logout")
+                        .logoutUrl("/auth/logout")
                         .deleteCookies(REFRESH_TOKEN_COOKIE_NAME)
                         .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
                 )
