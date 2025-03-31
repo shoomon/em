@@ -29,7 +29,7 @@ const PostList = ({ location }: PostListProps) => {
           <div className="flex flex-col flex-1 gap-4 pb-2 bg-em-gray-sm">
             {data?.pages.map((page: any) =>
               page.postList.map((item: Post) => (
-                <PostItem key={item.id} {...item} />
+                <PostItem key={item.postId} {...item} />
               )),
             )}
           </div>

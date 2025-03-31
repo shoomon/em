@@ -7,21 +7,27 @@ type EmotionSelectorProps = {
   emotionState: string
 }
 
-const EmotionSelector = ({ onEmotionChange, emotionState }: EmotionSelectorProps) => {
+const EmotionSelector = ({
+  onEmotionChange,
+  emotionState,
+}: EmotionSelectorProps) => {
   const handleEmotionSelect = (emotionId: string) => {
     onEmotionChange(emotionId)
   }
 
   return (
     <EmSection>
-      <EmSection.Header title="감정 선택" description="당신의 감정은 어떠신가요?" />
+      <EmSection.Header
+        title="😇 감정 선택"
+        description="당신의 감정은 어떠신가요?"
+      />
       <div className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {EMOTION_ITEMS.map((emotion) => (
             <EmotionSelectItem
               key={emotion.engName}
               onSelect={handleEmotionSelect}
-              isSelected={emotionState === emotion.engName.toLowerCase()}
+              isSelected={emotionState === emotion.engName}
               emotion={emotion}
             />
           ))}

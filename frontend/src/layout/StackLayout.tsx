@@ -7,11 +7,11 @@ const StackLayout = () => {
   return (
     <BaseLayout>
       {/* header */}
-      <div className="fixed bg-em-white top-0 h-[var(--header-height)] max-w-[600px] w-full">
+      <div className="sticky bg-em-white top-0 h-[var(--header-height)] max-w-[600px] z-40 w-full">
         <StackHeader />
       </div>
       {/* main */}
-      <main className="flex-1 mt-[var(--header-height)]">
+      <main className="flex-1 h-full flex">
         <Outlet />
       </main>
     </BaseLayout>

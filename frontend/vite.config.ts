@@ -44,6 +44,29 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: env.VITE_BASE_SERVER_URL,
           changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: "assets/[name].[ext]",
+          chunkFileNames: "js/[name]-[hash].js",
+          manualChunks: {
+            vendor: [
+              //
+              "react",
+              "react-dom",
+              "react-router-dom",
+              "lucide-react",
+              "axios",
+              "framer-motion",
+              "tailwind-merge",
+              "tailwindcss",
+              "zustand",
+            ],
+          },
         },
       },
     },

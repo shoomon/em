@@ -11,16 +11,16 @@ const MainLayout = () => {
   return (
     <BaseLayout>
       {/* header */}
-      <div className="bg-em-white fixed top-0 max-w-[600px] w-full h-14 z-[110]">
+      <div className="bg-em-white sticky top-0 max-w-[600px] w-full h-14 z-[110]">
         <MainHeader />
       </div>
       {/* main */}
-      <main className="flex-1 mb-[var(--navigation-bar-height)] mt-[var(--header-height)]">
+      <main className="flex-1">
         <Outlet />
       </main>
       {/* navigation bar */}
       <div
-        className={`bg-em-white fixed bottom-0 max-w-[600px] w-full h-16 z-[110] ${isIOS ? "pb-2" : ""}`}>
+        className={`bg-em-white sticky bottom-0 max-w-[600px] w-full h-16 z-[110] ${isIOS ? "pb-2" : ""}`}>
         <MainNavigationBar />
       </div>
     </BaseLayout>

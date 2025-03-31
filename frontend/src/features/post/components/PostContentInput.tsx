@@ -6,12 +6,19 @@ type PostContentInputProps = {
   textState: string
 }
 
-const PostContentInput = ({ onTextChange, textState }: PostContentInputProps) => {
+const PostContentInput = ({
+  onTextChange,
+  textState,
+}: PostContentInputProps) => {
   return (
-    <EmSection>
+    <EmSection className="h-full">
       <EmSection.Header title="글 작성" />
-      <div>
-        <EmTextArea onTextChange={onTextChange} textState={textState} />
+      <div className="h-full">
+        <EmTextArea
+          className="h-full"
+          onTextChange={onTextChange}
+          textState={textState}
+        />
       </div>
     </EmSection>
   )

@@ -24,33 +24,29 @@ export interface PostListRequest {
   dist?: number
   emoCnt?: number
   sort?: string
-}
-
-export interface ClusteredPostListRequest {
-  minLng: number
-  minLat: number
-  maxLng: number
-  maxLat: number
-  postId?: number
-  dist?: number
-  emoCnt?: number
-  sort?: string
+  minLng?: number
+  minLat?: number
+  maxLng?: number
+  maxLat?: number
 }
 
 export interface Post {
-  id: number
+  postId: number
   userId: number
   nickname: string
   imageUrl: string | null
   content: string
   lng: number
   lat: number
-  emotionCountList: {
-    joy: number
-    sadness: number
-    anger: number
-    surprise: number
-    trust: number
+  emotionInfo: {
+    selectedEmotion: string
+    emotionCounts: {
+      joy: number
+      sadness: number
+      anger: number
+      surprise: number
+      trust: number
+    }
   }
   address: string
   createdAt: string
@@ -75,3 +71,5 @@ export interface PostCreateRequest {
   emotion: string
   address: string
 }
+
+export type EmojiType = "joy" | "sadness" | "anger" | "surprise" | "trust"

@@ -1,21 +1,51 @@
 import { MapPinIcon } from "lucide-react"
 
 import profileImage from "@/assets/dog-face.svg"
-import { Post } from "../types/post"
-import EmojiButton from "./EmojiButton"
 import { getRelativeTime } from "@/utils/time"
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
+import { fetchPostReaction } from "../api/postApi"
+import { EmojiType, Post } from "../types/post"
+import EmojiButton from "./EmojiButton"
 
 const PostItem = ({
+  postId,
   // userId,
   nickname,
   imageUrl,
   content,
   // lng,
   // lat,
-  emotionCountList,
+  emotionInfo,
   address,
   createdAt,
 }: Post) => {
+  const [likeCounts, setLikeCounts] = useState(emotionInfo.emotionCounts)
+  const [likedByMe, setLikedByMe] = useState(
+    emotionInfo.selectedEmotion || null,
+  )
+
+  const mutation = useMutation({
+    mutationFn: (selectedEmotion: EmojiType) =>
+      fetchPostReaction(postId, selectedEmotion.toUpperCase()),
+    onMutate: async (selectedEmotion: EmojiType) => {
+      setLikeCounts({
+        ...emotionInfo.emotionCounts,
+        [selectedEmotion]:
+          likedByMe === selectedEmotion
+            ? emotionInfo.emotionCounts[selectedEmotion]
+            : emotionInfo.emotionCounts[selectedEmotion] + 1,
+      })
+      setLikedByMe(likedByMe === selectedEmotion ? null : selectedEmotion)
+    },
+    onError: () => {
+      // 요청에 실패하면 이전 상태로 롤백
+      setLikeCounts(emotionInfo.emotionCounts)
+      setLikedByMe(emotionInfo.selectedEmotion)
+      alert("좋아요 요청에 실패 했습니다.")
+    },
+  })
+
   return (
     <div className="flex flex-col gap-3 p-4 bg-em-white">
       <div className="flex justify-between">
@@ -40,23 +70,22 @@ const PostItem = ({
         {content}
       </div>
 
-      <div className="flex items-center gap-4">
-        {/* {Object.entries(emotionCountList).map(([k, v]) => (
-          <EmojiButton
-            key={k}
-            emotionName={k as keyof typeof emotionCountList}
-            count={v as number}
-          />
-        ))} */}
-        {["joy", "sadness", "anger", "surprise", "trust"].map((item, index) => (
-          <EmojiButton
-            key={index}
-            emotionName={
-              item as "joy" | "sadness" | "anger" | "surprise" | "trust"
-            }
-            count={0}
-          />
-        ))}
+      <div className="flex items-center gap-2">
+        {Object.entries(emotionInfo.emotionCounts).map(([k, _]) => {
+          if (k === "sum") {
+            return null
+          }
+
+          return (
+            <EmojiButton
+              key={k}
+              emotionName={k as EmojiType}
+              count={likeCounts[k as EmojiType]}
+              onClick={() => mutation.mutate(k as EmojiType)}
+              className={likedByMe === k ? "font-bold" : ""}
+            />
+          )
+        })}
       </div>
     </div>
   )

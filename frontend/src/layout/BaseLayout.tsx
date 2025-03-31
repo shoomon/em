@@ -9,7 +9,7 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
   const { isMobile } = useDevice()
   return (
     <div
-      className={`flex relative flex-col min-h-screen max-w-[600px] bg-em-white mx-auto ${!isMobile ? "" : ""}`}>
+      className={`flex relative flex-col min-h-dvh max-w-[600px] bg-em-white mx-auto overflow-y-auto ${!isMobile ? "" : ""}`}>
       {children}
     </div>
   )

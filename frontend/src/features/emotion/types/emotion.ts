@@ -6,5 +6,6 @@ export interface Emotion {
 
 export interface EmotionItem extends Emotion {
   emoji: string
+  emojiGif_url: string
   color: string
 }

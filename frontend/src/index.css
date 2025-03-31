@@ -34,10 +34,16 @@ body {
 
 body [data-vaul-drawer],
 body [data-vaul-overlay] {
-  right: 15px;
+  right: var(--removed-body-scroll-bar-size);
 }
 
 :root {
   --header-height: 3.5rem;
   --navigation-bar-height: 4rem;
+}
+
+@layer base {
+  abbr[title] {
+    text-decoration: none !important;
+  }
 }

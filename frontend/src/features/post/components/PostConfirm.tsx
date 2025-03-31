@@ -17,12 +17,12 @@ const PostConfirm = ({ formData }: PostConfirmProps) => {
   useMap({ initLocation: { lat, lng }, draggable: false, zoomable: false }) // 지도 컴포넌트
 
   return (
-    <section className="flex flex-col w-full p-4">
+    <section className="flex flex-col w-full h-full">
       {/* 내가 있는 위치 확인 */}
       <EmSection>
-        <EmSection.Header title="내가 있는 위치" />
-        <div className="relative flex justify-start items-center w-full h-full">
-          <div id="map" className="w-full h-full min-h-60"></div>
+        <EmSection.Header title="🚩 내가 있는 위치" />
+        <div className="relative flex justify-start items-center w-full h-full rounded-xl shadow">
+          <div id="map" className="w-full h-full min-h-60 rounded-xl"></div>
 
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 cursor-pointer border-neutral-200">
             <MapPinMarker />
@@ -32,25 +32,30 @@ const PostConfirm = ({ formData }: PostConfirmProps) => {
 
       {/* 기존 EmotionSelector 컴포넌트 재사용 (readonly 모드) */}
       <EmSection className="h-full">
-        <EmSection.Header title="선택 한 감정" />
+        <EmSection.Header title="✨ 나의 감정" />
         <div className="flex justify-start  items-center w-full">
           <EmotionSelectItem
             onSelect={() => {}}
             isSelected={false}
-            emotion={EMOTION_ITEMS.find(({ engName }) => engName === emotion) as EmotionItem}
+            emotion={
+              EMOTION_ITEMS.find(
+                ({ engName }) => engName === emotion,
+              ) as EmotionItem
+            }
           />
         </div>
       </EmSection>
 
       {/* 작성한 내용 */}
       <EmSection className="h-full">
-        <EmSection.Header title="작성한 내용" />
+        <EmSection.Header title="📝 나의 속 마음" />
         <div className="flex justify-start  items-center w-full">
           <EmTextArea
             disabled
             textState={content}
             placeholder="내용을 입력해주세요"
-            className="min-h-0"
+            className=""
+            isActiveCount={false}
           />
         </div>
       </EmSection>
