@@ -6,7 +6,7 @@ import { ReactionType } from "../types/post"
 interface ReactionButtonProps {
   emotionName: ReactionType
   count: number
-  isClicked: boolean
+  isAnimating: boolean
   onClick: () => void
   onAnimationComplete: () => void
   className?: string
@@ -15,7 +15,7 @@ interface ReactionButtonProps {
 const ReactionButton = ({
   emotionName,
   count,
-  isClicked,
+  isAnimating,
   onClick,
   onAnimationComplete,
   className,
@@ -25,7 +25,7 @@ const ReactionButton = ({
       className={`flex flex-col items-center w-10 p-2 transition-transform duration-200 ease-in-out cursor-pointer hover:scale-110 ${className}`}
       onClick={onClick}>
       <div className="relative size-5">
-        {isClicked ? (
+        {isAnimating ? (
           <motion.img
             src={`/images/emotions/${emotionName}.gif`}
             className="absolute inset-0"

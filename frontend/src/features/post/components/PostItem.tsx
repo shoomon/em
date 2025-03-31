@@ -129,10 +129,10 @@ const PostItem = ({
               key={k}
               emotionName={k as ReactionType}
               count={likeCounts[k as ReactionType]}
-              isClicked={clickedReaction === k}
+              isAnimating={clickedReaction === k}
               onClick={() => handleReaction(k as ReactionType)}
               onAnimationComplete={() => setClickedReaction(null)}
-              className={likedByMe === k ? "font-bold" : ""}
+              className={likedByMe === k ? "font-bold text-amber-500" : ""}
             />
           )
         })}
