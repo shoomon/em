@@ -1,25 +1,39 @@
-import { RefObject, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
+import { LatLng, NaverMapConstructorParam } from "../types/map"
 
 interface useMapProps {
-  initLocation: { lat: number; lng: number }
-  mapRef: RefObject<HTMLDivElement | null>
+  initLocation?: LatLng | null
+  config: NaverMapConstructorParam
 }
 
-const useMap = ({ initLocation, mapRef }: useMapProps) => {
-  const map = useRef<naver.maps.Map>(null)
+const useMap = ({ initLocation, config }: useMapProps) => {
+  const mapRef = useRef<naver.maps.Map>(null)
 
   useEffect(() => {
-    if (!mapRef.current || map.current || !window.naver?.maps) {
+    if (mapRef.current) {
       return
     }
 
-    map.current = new window.naver.maps.Map(mapRef.current, {
-      center: new window.naver.maps.LatLng(initLocation.lat, initLocation.lng),
-      zoom: 16,
-    })
-  }, [mapRef.current])
+    if (initLocation) {
+      mapRef.current = new window.naver.maps.Map(config.mapDiv, {
+        center: new window.naver.maps.LatLng(
+          initLocation.lat,
+          initLocation.lng,
+        ),
+        ...config.mapOptions,
+      })
+      return
+    }
 
-  return { map }
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      mapRef.current = new window.naver.maps.Map(config.mapDiv, {
+        center: new window.naver.maps.LatLng(coords.latitude, coords.longitude),
+        ...config.mapOptions,
+      })
+    })
+  }, [])
+
+  return { mapRef }
 }
 
 export default useMap

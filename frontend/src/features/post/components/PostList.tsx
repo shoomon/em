@@ -1,4 +1,7 @@
 import { LatLng } from "@/features/map/types/map"
+import usePostStore from "@/store/usePostStore"
+import React from "react"
+import usePost from "../hooks/usePost"
 import { Post } from "../types/post"
 import usePosts from "./../hooks/usePosts"
 import PostItem from "./PostItem"
@@ -15,33 +18,49 @@ interface PostListProps {
 }
 
 const PostList = ({ location }: PostListProps) => {
-  const { data, isLoading, isFetchingNextPage, observerRef } = usePosts({
+  const type = usePostStore((state) => state.type)
+  const { data: postData, isLoading: isPostLoading } = usePost({ type })
+  const {
+    data: postListData,
+    isLoading: isPostListLoading,
+    isFetchingNextPage,
+    observerRef,
+  } = usePosts({
+    type,
     location,
   })
 
   return (
     <div className="flex flex-col overflow-y-auto h-[75dvh]">
-      {isLoading ? (
-        <div>로딩 중...</div>
-      ) : (
-        <>
-          <SortTypeSelector contents={sortTypeData} />
-          <div className="flex flex-col flex-1 gap-4 pb-2 bg-em-gray-sm">
-            {data?.pages.map((page: any) =>
+      <SortTypeSelector contents={sortTypeData} />
+
+      <div className="flex flex-col flex-1 gap-4 bg-em-gray-sm">
+        {type === "marker" ? (
+          isPostLoading ? (
+            <div className="h-40 bg-em-gray-md animate-pulse" />
+          ) : (
+            <PostItem {...postData!} />
+          )
+        ) : isPostListLoading ? (
+          <div className="h-40 bg-em-gray-md animate-pulse" />
+        ) : (
+          <>
+            {postListData?.pages.map((page: any) =>
               page.postList.map((item: Post) => (
                 <PostItem key={item.postId} {...item} />
               )),
             )}
-          </div>
-          {isFetchingNextPage ? (
-            <div className="h-40 bg-em-gray-md animate-pulse" />
-          ) : (
-            <div ref={observerRef} />
-          )}
-        </>
-      )}
+
+            {isFetchingNextPage ? (
+              <div className="h-40 bg-em-gray-md animate-pulse" />
+            ) : (
+              <div ref={observerRef} />
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }
 
-export default PostList
+export default React.memo(PostList)

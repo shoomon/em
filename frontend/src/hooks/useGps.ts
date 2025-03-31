@@ -1,18 +1,23 @@
-import useLocationStore from "@/store/useLocationStore"
 import { getDistance } from "@/utils/math"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import { LatLng } from "./../features/map/types/map"
 
 const useGps = () => {
-  const watchId = useRef<number | null>(null)
-  const {
-    currentLocation,
-    setCurrentLocation,
-    lastFetchedLocation,
-    setLastFetchedLocation,
-  } = useLocationStore()
+  const [isLocationPermissionGranted, setIsLocationPermissionGranted] =
+    useState(false)
+  const [isStoppedWatching, setIsStoppedWatching] = useState(false)
+  const [currentLocation, setCurrentLocation] = useState<LatLng>({
+    lat: 37.501286,
+    lng: 127.0396029,
+  })
+  const [lastFetchedLocation, setLastFetchedLocation] = useState<LatLng>({
+    lat: 37.501286,
+    lng: 127.0396029,
+  })
   const currentLocationRef = useRef(currentLocation) // setState와 watchPosition 모두 비동기로 동작하기 때문에 필요!
+  const watchId = useRef<number | null>(null)
 
-  useEffect(() => {
+  const watchPosition = () => {
     watchId.current = navigator.geolocation.watchPosition(
       (loc) => {
         const newLocation = {
@@ -52,15 +57,60 @@ const useGps = () => {
         enableHighAccuracy: true,
       },
     )
+  }
+
+  const clearWatch = () => {
+    if (!watchId.current) {
+      return
+    }
+
+    navigator.geolocation.clearWatch(watchId.current)
+    watchId.current = null
+  }
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (loc) => {
+        const newLocation = {
+          lat: loc.coords.latitude,
+          lng: loc.coords.longitude,
+        }
+
+        setIsLocationPermissionGranted(true)
+        setCurrentLocation(newLocation)
+        setLastFetchedLocation(newLocation)
+        currentLocationRef.current = newLocation
+
+        clearWatch()
+        watchPosition()
+      },
+      () => {
+        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요.")
+        setIsLocationPermissionGranted(false)
+      },
+      {
+        enableHighAccuracy: true,
+      },
+    )
 
     return () => {
-      if (watchId.current) {
-        navigator.geolocation.clearWatch(watchId.current)
-      }
+      clearWatch()
     }
   }, [])
 
+  useEffect(() => {
+    if (isStoppedWatching) {
+      console.log("위치 추적 멈춤")
+      clearWatch()
+    } else if (isLocationPermissionGranted && !watchId.current) {
+      console.log("위치 추적 재게")
+      watchPosition()
+    }
+  }, [isStoppedWatching])
+
   return {
+    isLocationPermissionGranted,
+    setIsStoppedWatching,
     currentLocation,
     lastFetchedLocation,
   }

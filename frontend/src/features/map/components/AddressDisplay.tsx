@@ -1,5 +1,5 @@
 import { MapPinIcon } from "lucide-react"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { LatLng } from "../types/map"
 
 interface AddressDisplayProps {
@@ -28,4 +28,5 @@ const AddressDisplay = ({ location }: AddressDisplayProps) => {
   )
 }
 
-export default AddressDisplay
+// location이 바뀔 때만 리렌더링하여 ReverseGeocoing API call을 줄임
+export default React.memo(AddressDisplay)

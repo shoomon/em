@@ -1,16 +1,11 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
 import Tabs from "@/components/Tabs/Tabs"
-import AddressDisplay from "@/features/map/components/AddressDisplay"
-import LocationFixButton from "@/features/map/components/LocatonFixButton"
-import MapViewer from "@/features/map/components/MapViewer"
+import MapController from "@/features/map/components/MapController"
 import PostCreateButton from "@/features/post/components/PostCreateButton"
 import PostList from "@/features/post/components/PostList"
-import PostRefetchButton from "@/features/post/components/PostRefetchButton"
 import PostSearchButton from "@/features/post/components/PostSearchButton"
-import usePoints from "@/features/post/hooks/usePoints"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
-import useLocationStore from "@/store/useLocationStore"
 import usePostStore from "@/store/usePostStore"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -21,19 +16,31 @@ const tabs = [
 ]
 
 const HomePage = () => {
-  const { currentLocation, lastFetchedLocation } = useGps()
+  const {
+    isLocationPermissionGranted,
+    setIsStoppedWatching,
+    currentLocation,
+    lastFetchedLocation,
+  } = useGps()
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
-  const { pointData } = usePoints({ ...currentLocation })
-  const isLocationPermissionDenied = useLocationStore(
-    (state) => state.isPermissionDenied,
-  )
-  const { isDrawerOpen, setIsDrawerOpen, setClusterGrid } = usePostStore()
+  const { setType, isDrawerOpen, setIsDrawerOpen } = usePostStore()
   const { isOpen, setIsOpen } = useDrawer({
     drawerKey: "home",
     isOpen: isDrawerOpen,
-    setIsOpen: setIsDrawerOpen,
+    setIsOpen: (isDrawerOpen: boolean) => {
+      setIsDrawerOpen(isDrawerOpen)
+      setIsStoppedWatching(isDrawerOpen)
+    },
   })
   const navigate = useNavigate()
+
+  const handlePostCreate = () => {
+    navigate("/posts/create")
+  }
+  const handlePostSearch = () => {
+    setIsOpen(true)
+    setType("all")
+  }
 
   const renderTabContent = () => {
     switch (currentTab) {
@@ -44,30 +51,16 @@ const HomePage = () => {
     }
   }
 
-  const onClickRefetchButton = () => {
-    //
-  }
-  const onClickCreateButton = () => {
-    navigate("/posts/create")
-  }
-  const onClickSearchButton = () => {
-    setIsOpen(true)
-    setClusterGrid(null)
-  }
-
   return (
     <div className="relative h-[calc(100dvh-var(--header-height)-var(--navigation-bar-height))]">
-      <AddressDisplay location={lastFetchedLocation} />
-      <PostRefetchButton onClick={onClickRefetchButton} />
-      <MapViewer
-        className="h-full"
-        isDenied={isLocationPermissionDenied}
+      <MapController
+        isLocationPermissionGranted={isLocationPermissionGranted}
         location={currentLocation}
-        points={pointData?.pointList || []}>
-        {(focusOnMarker) => <LocationFixButton onClick={focusOnMarker} />}
-      </MapViewer>
-      <PostCreateButton onClick={onClickCreateButton} />
-      <PostSearchButton onClick={onClickSearchButton} />
+        lastFetchedLocation={lastFetchedLocation}
+      />
+
+      <PostCreateButton onClick={handlePostCreate} />
+      <PostSearchButton onClick={handlePostSearch} />
 
       <EmDrawer open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
         <div>
