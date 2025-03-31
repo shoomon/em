@@ -73,7 +73,7 @@ const MapViewer = ({
         maxZoom: 21,
         map: mapRef.current,
         markers: postMarkerRefs.current,
-        gridSize: 500,
+        gridSize: 300,
         icons: htmlClusterMarkers,
         indexGenerator: [10, 50, 100, 500, 1000],
         stylingFunction: (clusterMarker: any, count: number) => {

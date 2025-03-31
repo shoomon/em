@@ -1,6 +1,6 @@
 import PostRefetchButton from "@/features/post/components/PointRefetchButton"
 import usePoints from "@/features/post/hooks/usePoints"
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { LatLng } from "../types/map"
 import AddressDisplay from "./AddressDisplay"
 import LocationFixButton from "./LocatonFixButton"
@@ -62,4 +62,4 @@ const MapController = ({
   )
 }
 
-export default MapController
+export default React.memo(MapController)

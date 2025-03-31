@@ -2,9 +2,9 @@ import { MapPinIcon } from "lucide-react"
 
 import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
 import { getRelativeTime } from "@/utils/time"
-import { useMutation } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
-import { fetchPostReaction } from "../api/postApi"
+import usePostDelete from "../hooks/usePostDelete"
+import useReaction from "../hooks/useReaction"
 import { Post, ReactionType } from "../types/post"
 import ReactionButton from "./ReactionButton"
 
@@ -22,13 +22,14 @@ const PostItem = ({
   const contentRef = useRef<HTMLDivElement>(null)
   const [isOverflow, setIsOverflow] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [likeCounts, setLikeCounts] = useState(emotionInfo.emotionCounts)
-  const [likedByMe, setLikedByMe] = useState(
-    emotionInfo.selectedEmotion || null,
-  )
-  const [clickedReaction, setClickedReaction] = useState<ReactionType | null>(
-    null,
-  )
+  const {
+    mutation: reactionMutation,
+    likeCounts,
+    likedByMe,
+    clickedReaction,
+    setClickedReaction,
+  } = useReaction({ postId, emotionInfo })
+  const postMutation = usePostDelete(postId)
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -40,34 +41,17 @@ const PostItem = ({
     )
   }, [content])
 
-  const mutation = useMutation({
-    mutationFn: (selectedEmotion: ReactionType) =>
-      fetchPostReaction(postId, selectedEmotion.toUpperCase()),
-    onMutate: async (selectedEmotion: ReactionType) => {
-      setLikeCounts({
-        ...emotionInfo.emotionCounts,
-        [selectedEmotion]:
-          likedByMe === selectedEmotion
-            ? emotionInfo.emotionCounts[selectedEmotion]
-            : emotionInfo.emotionCounts[selectedEmotion] + 1,
-      })
-      setLikedByMe(likedByMe === selectedEmotion ? null : selectedEmotion)
-    },
-    onError: () => {
-      // 요청에 실패하면 이전 상태로 롤백
-      setLikeCounts(emotionInfo.emotionCounts)
-      setLikedByMe(emotionInfo.selectedEmotion)
-      alert("좋아요 요청에 실패 했습니다.")
-    },
-  })
-
   const handleMoreView = () => {
     setIsExpanded(!isExpanded)
   }
 
   const handleReaction = (reactionType: ReactionType) => {
     setClickedReaction(reactionType)
-    mutation.mutate(reactionType)
+    reactionMutation.mutate(reactionType)
+  }
+
+  const handlePostDelete = () => {
+    postMutation.mutate()
   }
 
   return (
@@ -94,13 +78,17 @@ const PostItem = ({
         </div>
 
         {isAuthor && (
-          <p className="text-sm cursor-pointer text-rose-400">삭제</p>
+          <button
+            className="text-sm cursor-pointer text-rose-400"
+            onClick={handlePostDelete}>
+            삭제
+          </button>
         )}
       </div>
 
       <div
         ref={contentRef}
-        className={`relative px-2 mb-4 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
+        className={`relative px-2 mb-10 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
         {content}
         {isOverflow &&
           (isExpanded ? (
@@ -119,7 +107,7 @@ const PostItem = ({
       </div>
 
       <div className="flex items-center gap-2">
-        {Object.entries(emotionInfo.emotionCounts).map(([k, _]) => {
+        {Object.entries(likeCounts).map(([k, v]) => {
           if (k === "sum") {
             return null
           }
@@ -128,7 +116,7 @@ const PostItem = ({
             <ReactionButton
               key={k}
               emotionName={k as ReactionType}
-              count={likeCounts[k as ReactionType]}
+              count={v}
               isAnimating={clickedReaction === k}
               onClick={() => handleReaction(k as ReactionType)}
               onAnimationComplete={() => setClickedReaction(null)}

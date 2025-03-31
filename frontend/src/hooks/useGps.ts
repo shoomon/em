@@ -100,10 +100,8 @@ const useGps = () => {
 
   useEffect(() => {
     if (isStoppedWatching) {
-      console.log("위치 추적 멈춤")
       clearWatch()
     } else if (isLocationPermissionGranted && !watchId.current) {
-      console.log("위치 추적 재게")
       watchPosition()
     }
   }, [isStoppedWatching])
