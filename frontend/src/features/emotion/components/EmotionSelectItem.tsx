@@ -2,8 +2,8 @@ import Button from "@/components/Button/Button"
 import { EmotionItem } from "../types/emotion"
 
 interface EmotionSelectItemProps {
-  onSelect: (emotionId: string) => void
-  isSelected: boolean
+  onSelect?: (emotionId: string) => void
+  isSelected?: boolean
   emotion: EmotionItem
 }
 
@@ -17,7 +17,7 @@ const EmotionSelectItem = ({
     <Button
       type="button"
       key={id}
-      onClick={() => onSelect(engName)}
+      onClick={() => onSelect?.(engName)}
       className={`rounded-lg p-4 w-full transition-all duration-200 flex flex-col items-center justify-center ${color} ${
         isSelected
           ? "ring-2 ring-em-black/40 ring-offset-2 scale-102 font-bold"

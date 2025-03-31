@@ -48,9 +48,9 @@ const MyPage = () => {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-var(--navigation-bar-height))]">
-      <section className=" p-4 flex flex-col gap-6">
+      <section className="p-4 flex flex-col gap-6 relative">
         <UserProfileCard />
-        <div className="w-full h-full sticky top-0 z-50 bg-em-white">
+        <div className="w-full sticky top-0 z-50 bg-em-white">
           <Tabs
             tabs={tabs}
             activeTab={currentTab}

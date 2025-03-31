@@ -43,6 +43,7 @@ const PostCreateForm = () => {
     ),
     [PostCreateStep.Emotion]: (
       <EmotionSelectorContainer
+        content={formData.content}
         emotionState={formData.emotion}
         onEmotionChange={(emotion) => updateFormData("emotion", emotion)}
       />
