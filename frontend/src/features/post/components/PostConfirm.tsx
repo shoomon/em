@@ -14,7 +14,19 @@ type PostConfirmProps = {
 const PostConfirm = ({ formData }: PostConfirmProps) => {
   const { latitude: lat, longitude: lng, content, emotion } = formData
 
-  useMap({ initLocation: { lat, lng }, draggable: false, zoomable: false }) // 지도 컴포넌트
+  useMap({
+    initLocation: { lat, lng },
+    config: {
+      mapDiv: "map",
+      mapOptions: {
+        draggable: false,
+        scrollWheel: false,
+        disableDoubleTapZoom: true,
+        disableDoubleClickZoom: true,
+        disableTwoFingerTapZoom: true,
+      },
+    },
+  }) // 지도 컴포넌트
 
   return (
     <section className="flex flex-col w-full h-full">

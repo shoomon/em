@@ -9,7 +9,16 @@ interface MapFixerProps {
 }
 
 const MapFixer = ({ className, onDragEnd, initLocation }: MapFixerProps) => {
-  const { mapRef } = useMap({ initLocation }) // 지도 컴포넌트
+  const { mapRef } = useMap({
+    initLocation,
+    config: {
+      mapDiv: "map",
+      mapOptions: {
+        zoom: 17,
+        minZoom: 17,
+      },
+    },
+  }) // 지도 컴포넌트
   const rangeRef = useRef<naver.maps.Circle>(null) // 반경 영역
 
   const RADIUS = 100 // 반경 반지름

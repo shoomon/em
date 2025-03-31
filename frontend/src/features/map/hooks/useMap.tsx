@@ -20,7 +20,7 @@ const useMap = ({ initLocation, config }: useMapProps) => {
           initLocation.lat,
           initLocation.lng,
         ),
-        ...config,
+        ...config.mapOptions,
       })
       return
     }
@@ -28,7 +28,7 @@ const useMap = ({ initLocation, config }: useMapProps) => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       mapRef.current = new window.naver.maps.Map(config.mapDiv, {
         center: new window.naver.maps.LatLng(coords.latitude, coords.longitude),
-        ...config,
+        ...config.mapOptions,
       })
     })
   }, [])

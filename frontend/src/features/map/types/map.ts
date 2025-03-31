@@ -4,6 +4,6 @@ export interface LatLng {
 }
 
 export interface NaverMapConstructorParam {
-  mapDiv: string | HTMLElement
+  mapDiv: string
   mapOptions?: naver.maps.MapOptions
 }
