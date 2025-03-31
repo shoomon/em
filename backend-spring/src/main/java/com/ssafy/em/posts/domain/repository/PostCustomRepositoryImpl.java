@@ -9,6 +9,7 @@ import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -22,6 +23,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     @PersistenceContext
     private EntityManager em;
 
+    //todo: emotion count join방식으로 변경
     @Override
     public List<Post> getPostList(
             double longitude,
@@ -109,7 +111,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public Map<Integer, String> getCalendarPostList(int userId, YearMonth yearMonth) {
+    public List<Object[]> getCalendarEmotionList(int userId, YearMonth yearMonth) {
         String sql = """
                 SELECT DISTINCT ON (DATE(p.created_at))
                 EXTRACT(DAY FROM p.created_at) AS day, p.emotion
@@ -123,19 +125,63 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
         LocalDateTime endDate = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
 
-        List<Object[]> result = em.createNativeQuery(sql)
+        return em.createNativeQuery(sql)
                 .setParameter("userId", userId)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
-
-        return result.stream()
-                .collect(Collectors.toMap(
-                        row -> ((Number)row[0]).intValue(),
-                        row -> ((String)row[1])
-                ));
     }
 
+    @Override
+    public List<Post> getDatePostList(
+            int userId,
+            LocalDate date,
+            int lastRead,
+            int pageSize
+    ){
+        String sql = """
+                SELECT *
+                FROM posts p
+                WHERE p.user_id = :userId
+                AND p.id < :lastRead
+                AND p.created_at >= :start
+                AND p.created_at < :end
+                ORDER BY p.id DESC
+                LIMIT :limit
+                """;
+
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createNativeQuery(sql,Post.class)
+                .setParameter("userId", userId)
+                .setParameter("lastRead", lastRead)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .setParameter("limit", pageSize+1)
+                .getResultList();
+    }
+
+    @Override
+    public List<Object[]> getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
+        String sql = """
+                SELECT p.emotion, count(p.id) AS count
+                FROM posts p
+                WHERE p.user_id = :userId
+                AND p.created_at >= :startDate
+                AND p.created_at < :endDate
+                GROUP BY p.emotion
+                """;
+
+        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime endDate = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+
+        return em.createNativeQuery(sql)
+                .setParameter("userId", userId)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+    }
 
     private static String getSortCondition(String sortBy) {
         String result = "";

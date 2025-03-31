@@ -8,6 +8,7 @@ import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
+import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPointListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.util.PostConstant;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -101,12 +103,31 @@ public class PostController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<GetCalendarListResponse> getCalendarPostList(
+    public ResponseEntity<GetCalendarListResponse> getCalendarEmotionList(
             @LoginRequired int userId,
             @RequestParam(name = "month") YearMonth yearMonth
     ){
-        GetCalendarListResponse response = postService.getCalendarPostList(userId, yearMonth);
+        GetCalendarListResponse response = postService.getCalendarEmotionList(userId, yearMonth);
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/date")
+    public ResponseEntity<GetPostListResponse> getDatePostList(
+            @LoginRequired int userId,
+            @RequestParam(name = "date") LocalDate date,
+            @RequestParam(name = "last", defaultValue = Integer.MAX_VALUE+"", required = false) int lastRead
+    ){
+        GetPostListResponse response = postService.getDatePostList(userId, date, lastRead);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<GetMonthlyEmotionResponse> getMonthlyEmotionCount(
+            @LoginRequired int userId,
+            @RequestParam(name = "month") YearMonth yearMonth
+    ){
+        GetMonthlyEmotionResponse response = postService
+                .getMonthlyEmotionCount(userId, yearMonth);
+        return ResponseEntity.ok(response);
+    }
 }
