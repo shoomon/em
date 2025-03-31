@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from "react"
 
 import Tabs from "@/components/Tabs/Tabs"
+import EmotionStatisticsSection from "@/features/emotion/components/Statistics/EmotionStatisticsSection"
 import UserProfileCard from "@/features/profile/components/UserProfileCard"
-import LogoutText from "@/features/auth/components/LogoutText"
 
 const LazyEmotionCalendar = lazy(
   () => import("@/features/history/components/EmotionCalendar"),
@@ -39,39 +39,27 @@ const MyPage = () => {
           </Suspense>
         )
       case "report":
-        return (
-          <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-semibold text-em-black">
-              이 달의 통계
-            </h3>
-            <div className="bg-em-gray-sm p-4 rounded shadow text-em-black">
-              📊 추후 업데이트 됩니다!
-            </div>
-          </div>
-        )
+        return <EmotionStatisticsSection />
       default:
         return <div className="h-[600px]"></div>
     }
   }
 
   return (
-    <div className="flex flex-col flex-1 bg-em-white">
-      <div className="flex-grow overflow-y-auto p-4 flex flex-col gap-6">
+    <div className="flex flex-col bg-em-white min-h-[calc(100vh-var(--navigation-bar-height))]">
+      <section className=" p-4 flex flex-col gap-6">
         <UserProfileCard />
-
-        <Tabs
-          tabs={tabs}
-          activeTab={currentTab}
-          onTabChange={(tabValue: string) =>
-            setCurrentTab(tabValue as "history" | "report")
-          }
-        />
-        {renderTabContent()}
-
-        <div className="flex pl-2 mt-auto">
-          <LogoutText />
+        <div className="w-full h-full sticky top-0 z-50 bg-em-white">
+          <Tabs
+            tabs={tabs}
+            activeTab={currentTab}
+            onTabChange={(tabValue: string) =>
+              setCurrentTab(tabValue as "history" | "report")
+            }
+          />
         </div>
-      </div>
+      </section>
+      {renderTabContent()}
     </div>
   )
 }

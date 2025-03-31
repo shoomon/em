@@ -23,7 +23,7 @@ const PostCreateForm = () => {
   } = usePostForm()
 
   const [animatedStep, setAnimatedStep] = useState(currentStep)
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true) // 버튼 비활성화 여부
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false) // 버튼 비활성화 여부
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -64,7 +64,7 @@ const PostCreateForm = () => {
     <form className="h-full w-full" onSubmit={handleSubmit}>
       <div className="flex w-full flex-col justify-start h-full">
         {/* 현재 스탭 컴포넌트 */}
-        <div className="flex basis-full overflow-hidden">
+        <div className="flex basis-full">
           <StepAnimateLayout>{STEP_COMPONENTS[animatedStep]}</StepAnimateLayout>
         </div>
         {/* 버튼 컴포넌트 */}

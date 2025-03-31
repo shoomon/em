@@ -1,11 +1,46 @@
+export type EmotionEngNameType =
+  | "ANGER"
+  | "SURPRISE"
+  | "JOY"
+  | "TRUST"
+  | "SADNESS"
+  | "FEAR"
+  | "ANTICIPATION"
+  | "DISGUST"
+
+export type EmotionKorNameType =
+  | "분노"
+  | "당황"
+  | "기쁨"
+  | "신뢰"
+  | "슬픔"
+  | "두려움"
+  | "기대"
+  | "혐오"
+
+export enum EmotionMapping {
+  ANGER = "분노",
+  SURPRISE = "당황",
+  JOY = "기쁨",
+  TRUST = "신뢰",
+  SADNESS = "슬픔",
+  FEAR = "두려움",
+  ANTICIPATION = "기대",
+  DISGUST = "혐오",
+}
+
 export interface Emotion {
   id: number
-  engName: string
-  korName: string
+  engName: EmotionEngNameType
+  korName: EmotionKorNameType
 }
 
 export interface EmotionItem extends Emotion {
   emoji: string
   emojiGif_url: string
   color: string
+}
+
+export type EmotionStatisticsData = {
+  [key in EmotionEngNameType]: number
 }

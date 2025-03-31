@@ -28,31 +28,36 @@ const router = createBrowserRouter([
             path: "/",
             element: <HomePage />,
           },
-          {
-            path: "/mypage",
-            element: <MyPage />,
-            children: [
-              {
-                path: "history",
-                element: <div>/mypage/history</div>,
-                children: [
-                  {
-                    path: ":date",
-                    element: <div>/mypage/history/:date</div>,
-                  },
-                ],
-              },
-              {
-                path: "report",
-                element: <div>/mypage/report</div>,
-              },
-            ],
-          },
         ],
       },
       {
         path: "*",
         element: <div>404 Not Found</div>,
+      },
+    ],
+  },
+  {
+    element: <MainLayout hasHeader={false} />,
+    children: [
+      {
+        path: "/mypage",
+        element: <MyPage />,
+        children: [
+          {
+            path: "history",
+            element: <div>/mypage/history</div>,
+            children: [
+              {
+                path: ":date",
+                element: <div>/mypage/history/:date</div>,
+              },
+            ],
+          },
+          {
+            path: "report",
+            element: <div>/mypage/report</div>,
+          },
+        ],
       },
     ],
   },

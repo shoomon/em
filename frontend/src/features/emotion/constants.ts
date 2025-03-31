@@ -12,7 +12,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "분노",
     emoji: "😠",
     color: "bg-em-anger hover:bg-em-anger/80",
-    emojiGif_url: "/images/emotions/anger.gif",
+    emojiGif_url: "/assets/images/emotions/anger.gif",
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "당황",
     emoji: "😲",
     color: "bg-em-surprise hover:bg-em-surprise/80",
-    emojiGif_url: "/images/emotions/surprise.gif",
+    emojiGif_url: "/assets/images/emotions/surprise.gif",
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "기쁨",
     emoji: "😊",
     color: "bg-em-joy hover:bg-em-joy/80",
-    emojiGif_url: "/images/emotions/joy.gif",
+    emojiGif_url: "/assets/images/emotions/joy.gif",
   },
   {
     id: 4,
@@ -36,7 +36,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "확신",
     emoji: "👍",
     color: "bg-em-trust hover:bg-em-trust/80",
-    emojiGif_url: "/images/emotions/trust.gif",
+    emojiGif_url: "/assets/images/emotions/trust.gif",
   },
   {
     id: 5,
@@ -44,7 +44,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "슬픔",
     emoji: "😢",
     color: "bg-em-sadness hover:bg-em-sadness/80",
-    emojiGif_url: "/images/emotions/sadness.gif",
+    emojiGif_url: "/assets/images/emotions/sadness.gif",
   },
   {
     id: 6,
@@ -52,7 +52,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "공포",
     emoji: "😨",
     color: "bg-em-fear hover:bg-em-fear/80",
-    emojiGif_url: "/images/emotions/fear.gif",
+    emojiGif_url: "/assets/images/emotions/fear.gif",
   },
   {
     id: 7,
@@ -60,7 +60,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "기대",
     emoji: "🤩",
     color: "bg-em-anticipation hover:bg-em-anticipation/80",
-    emojiGif_url: "/images/emotions/anticipation.gif",
+    emojiGif_url: "/assets/images/emotions/anticipation.gif",
   },
   {
     id: 8,
@@ -68,7 +68,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "혐오",
     emoji: "🤢",
     color: "bg-em-disgust hover:bg-em-disgust/80",
-    emojiGif_url: "/images/emotions/disgust.gif",
+    emojiGif_url: "/assets/images/emotions/disgust.gif",
   },
 ]
 
