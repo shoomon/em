@@ -2,9 +2,9 @@ import { MapPinIcon } from "lucide-react"
 
 import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
 import { getRelativeTime } from "@/utils/time"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
-import { fetchPostDelete, fetchPostReaction } from "../api/postApi"
+import usePostDelete from "../hooks/usePostDelete"
+import useReaction from "../hooks/useReaction"
 import { Post, ReactionType } from "../types/post"
 import ReactionButton from "./ReactionButton"
 
@@ -22,19 +22,14 @@ const PostItem = ({
   const contentRef = useRef<HTMLDivElement>(null)
   const [isOverflow, setIsOverflow] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [likeCounts, setLikeCounts] = useState({ ...emotionInfo.emotionCounts })
-  const [likedByMe, setLikedByMe] = useState(
-    emotionInfo.selectedEmotion?.toLowerCase() || null,
-  )
-  const [clickedReaction, setClickedReaction] = useState<ReactionType | null>(
-    null,
-  )
-  const queryClient = useQueryClient()
-
-  useEffect(() => {
-    setLikeCounts({ ...emotionInfo.emotionCounts })
-    setLikedByMe(emotionInfo.selectedEmotion?.toLowerCase())
-  }, [emotionInfo])
+  const {
+    mutation: reactionMutation,
+    likeCounts,
+    likedByMe,
+    clickedReaction,
+    setClickedReaction,
+  } = useReaction({ postId, emotionInfo })
+  const postMutation = usePostDelete(postId)
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -45,61 +40,6 @@ const PostItem = ({
       contentRef.current.scrollHeight > contentRef.current.clientHeight,
     )
   }, [content])
-
-  const reactionMutation = useMutation({
-    mutationFn: (selectedEmotion: ReactionType) =>
-      fetchPostReaction(postId, selectedEmotion.toUpperCase()),
-    onMutate: (selectedEmotion: ReactionType) => {
-      // 이전에 공감을 누른 적이 있는 상태
-      if (likedByMe) {
-        // 공감 취소하기
-        if (likedByMe === selectedEmotion) {
-          setLikeCounts({
-            ...likeCounts,
-            [selectedEmotion]: likeCounts[selectedEmotion] - 1,
-          })
-          setLikedByMe(null)
-        }
-        // 공감 변경하기
-        else {
-          setLikeCounts({
-            ...likeCounts,
-            [likedByMe]: likeCounts[likedByMe as ReactionType] - 1,
-            [selectedEmotion]: likeCounts[selectedEmotion] + 1,
-          })
-          setLikedByMe(selectedEmotion)
-        }
-      }
-      // 이전에 공감을 누른 적이 없는 상태
-      else {
-        setLikedByMe(selectedEmotion)
-        setLikeCounts({
-          ...emotionInfo.emotionCounts,
-          [selectedEmotion]: emotionInfo.emotionCounts[selectedEmotion] + 1,
-        })
-      }
-    },
-    onError: () => {
-      // 요청에 실패하면 이전 상태로 롤백
-      setLikeCounts({ ...emotionInfo.emotionCounts })
-      setLikedByMe(emotionInfo.selectedEmotion)
-      alert("좋아요 요청에 실패 했습니다.")
-    },
-  })
-
-  const postMutation = useMutation({
-    mutationFn: () => fetchPostDelete(postId),
-    onMutate: () => {
-      if (!window.confirm("정말 삭제하시겠습니까?")) {
-        throw new Error()
-      }
-    },
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["points"] })
-      queryClient.refetchQueries({ queryKey: ["posts"] })
-      alert("해당 메시지가 삭제 되었습니다.")
-    },
-  })
 
   const handleMoreView = () => {
     setIsExpanded(!isExpanded)
