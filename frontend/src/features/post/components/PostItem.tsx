@@ -4,7 +4,7 @@ import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
 import { getRelativeTime } from "@/utils/time"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
-import { fetchPostReaction } from "../api/postApi"
+import { fetchPostDelete, fetchPostReaction } from "../api/postApi"
 import { Post, ReactionType } from "../types/post"
 import ReactionButton from "./ReactionButton"
 
@@ -40,10 +40,10 @@ const PostItem = ({
     )
   }, [content])
 
-  const mutation = useMutation({
+  const reactionMutation = useMutation({
     mutationFn: (selectedEmotion: ReactionType) =>
       fetchPostReaction(postId, selectedEmotion.toUpperCase()),
-    onMutate: async (selectedEmotion: ReactionType) => {
+    onMutate: (selectedEmotion: ReactionType) => {
       setLikeCounts({
         ...emotionInfo.emotionCounts,
         [selectedEmotion]:
@@ -61,13 +61,29 @@ const PostItem = ({
     },
   })
 
+  const postMutation = useMutation({
+    mutationFn: () => fetchPostDelete(postId),
+    onMutate: () => {
+      if (!window.confirm("정말 삭제하시겠습니까?")) {
+        throw new Error()
+      }
+    },
+    onSuccess: () => {
+      alert("해당 메시지가 삭제 되었습니다.")
+    },
+  })
+
   const handleMoreView = () => {
     setIsExpanded(!isExpanded)
   }
 
   const handleReaction = (reactionType: ReactionType) => {
     setClickedReaction(reactionType)
-    mutation.mutate(reactionType)
+    reactionMutation.mutate(reactionType)
+  }
+
+  const handlePostDelete = () => {
+    postMutation.mutate()
   }
 
   return (
@@ -94,7 +110,11 @@ const PostItem = ({
         </div>
 
         {isAuthor && (
-          <p className="text-sm cursor-pointer text-rose-400">삭제</p>
+          <button
+            className="text-sm cursor-pointer text-rose-400"
+            onClick={handlePostDelete}>
+            삭제
+          </button>
         )}
       </div>
 
