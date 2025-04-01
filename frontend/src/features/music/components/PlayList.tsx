@@ -1,6 +1,6 @@
 import { LatLng } from "@/features/map/types/map"
 import React from "react"
-import PlayListItem from "./PlayListItem"
+import MusicItem from "./MusicItem"
 
 const dummyData = [
   {
@@ -64,9 +64,8 @@ const PlayList = ({} /*location*/ : PlayListProps) => {
   return (
     <div className="overflow-y-auto h-[75dvh] px-4">
       {dummyData.map((item, index) => (
-        <PlayListItem
+        <MusicItem
           key={index}
-          albumName=""
           albumImageUrl={item.albumImageUrl}
           title={item.title}
           artistName={item.artistName}
