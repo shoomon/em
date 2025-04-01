@@ -22,7 +22,7 @@ const LoginSuccessPage = () => {
     }
   }, [accessToken, navigate])
 
-  return <EmLoading />
+  return <EmLoading className="w-full h-dvh" />
 }
 
 export default LoginSuccessPage
