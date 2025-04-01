@@ -55,10 +55,10 @@ public class Post {
     @Column(name = "anonymous_nickname", length = 50, nullable = false)
     private String nickname;
 
-    @Column(length = 1500, nullable = false)
+    @Column(length = 1500)
     private String content;
 
-    @Column(name = "emotion", nullable = true)
+    @Column(name = "emotion")
     private String emotion;
 
     @JdbcTypeCode(SqlTypes.GEOMETRY)
