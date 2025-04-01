@@ -12,10 +12,10 @@ import com.ssafy.em.emotion.dto.EmotionInfo;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
 import com.ssafy.em.emotion.exception.EmotionErrorCode;
 import com.ssafy.em.emotion.exception.EmotionException;
+import com.ssafy.em.music.domain.MusicRepository;
+import com.ssafy.em.music.domain.entity.Music;
 import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
-import com.ssafy.em.post_reaction.exception.PostReactionErrorCode;
-import com.ssafy.em.post_reaction.exception.PostReactionException;
 import com.ssafy.em.posts.domain.entity.NicknameGenerator;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
@@ -42,7 +42,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
@@ -55,6 +59,7 @@ import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 @Transactional(readOnly = true)
 @Slf4j
 public class PostService{
+
     private final PostJpaRepository postJpaRepository;
     private final PostReactionRepository postReactionRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
@@ -62,13 +67,14 @@ public class PostService{
     private final EmotionRepository emotionRepository;
     private final AnimalRepository animalRepository;
     private final AnimalProfileRepository animalProfileRepository;
-
+    private final MusicRepository musicRepository;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
 
+        // 1. 동물, 감정, 프로필 조회
         Animal randomAnimal = animalRepository.findRandomAnimal();
         Emotion emotion = emotionRepository.findByName(request.emotion())
                 .orElseThrow(() -> new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
@@ -76,12 +82,15 @@ public class PostService{
         AnimalProfile animalProfile = animalProfileRepository.findByAnimal_IdAndEmotion_Id(randomAnimal.getId(), emotion.getId())
                 .orElseThrow(() -> new AnimalProfileException.AnimalProfileNotFoundException(AnimalProfileErrorCode.NOT_FOUND));
 
+        // 2. 닉네임 생성
         String nickname = NicknameGenerator.getNickname(emotion.getName(), randomAnimal.getKorName());
 
+        // 3. 위치 정보 생성
         Point location = geometryFactory
                 .createPoint(new Coordinate(request.longitude(), request.latitude()));
         location.setSRID(4326);
 
+        // 4. Post 엔티티 생성
         Post post = Post.builder()
                 .animalProfile(animalProfile)
                 .user(user)
@@ -93,6 +102,20 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
+
+        // 6. 음악 정보가 있다면 Music 엔티티 생성
+        //    (artistName, title, albumImageUrl, spotifyAlbumUrl 중 하나라도 null 또는 빈 값이면 음악 없이 저장)
+        if (isMusicInfoPresent(request)) {
+            Music music = Music.builder()
+                    .post(post)
+                    .artistName(request.artistName())
+                    .title(request.title())
+                    .albumImageUrl(request.albumImageUrl())
+                    .spotifyAlbumUrl(request.spotifyAlbumUrl())
+                    .build();
+
+            musicRepository.save(music);
+        }
     }
 
     @Transactional
@@ -284,6 +307,17 @@ public class PostService{
             monthlyEmotionCount.put(emo, 0);
         }
         return new GetMonthlyEmotionResponse(monthlyEmotionCount);
+    }
+
+    /**
+     * 음악 관련 필드들이 모두 null/빈 문자열이 아닌지 확인하는 헬퍼 메서드
+     */
+    private boolean isMusicInfoPresent(CreatePostRequest request) {
+        // 예시: 모든 필드가 null이 아니고, 빈 문자열이 아니면 true
+        return request.artistName() != null && !request.artistName().isBlank()
+                && request.title() != null && !request.title().isBlank()
+                && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
+                && request.spotifyAlbumUrl() != null && !request.spotifyAlbumUrl().isBlank();
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {
