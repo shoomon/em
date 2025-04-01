@@ -11,6 +11,8 @@ const EmotionCalendar = () => {
   const navigate = useNavigate()
   const today = useMemo(() => new Date(), [])
 
+  const [calendarView, setCalendarView] = useState<"month" | "year" | "decade" | "century">("month")
+
   const [selectedDate, setSelectedDate] = useState(() => {
     const saved = sessionStorage.getItem("selectedDate")
     return saved ? new Date(saved) : today
@@ -51,7 +53,7 @@ const EmotionCalendar = () => {
     const formatted = localDate.toISOString().split("T")[0]
 
     sessionStorage.setItem("selectedDate", formatted)
-    navigate("/mypage/list", { viewTransition: true })
+    navigate("/mypage/list")
   }
 
   return (
@@ -69,6 +71,7 @@ const EmotionCalendar = () => {
             setActiveMonth(`${year}-${month}`)
           }
         }}
+        onViewChange={({ view }) => setCalendarView(view)}
         activeStartDate={new Date(`${activeMonth}-01`)}
         // formatDay={(_, date) => String(date.getDate())}
         formatDay={() => ""}
@@ -78,6 +81,8 @@ const EmotionCalendar = () => {
         prev2Label={null}
         minDetail="year"
         tileContent={({ date }) => {
+          if (calendarView !== "month") return null
+
           const day = date.getDate().toString()
           const emotion = emotionData[day]
           const emotionBgClass = emotion ? getEmotionColorClass(emotion) : ""
@@ -97,6 +102,22 @@ const EmotionCalendar = () => {
               </abbr>
             </>
           )
+        }}
+        tileClassName={({ date, view }) => {
+          if (view === "year") {
+            const selectedYear = selectedDate.getFullYear()
+            const selectedMonth = selectedDate.getMonth()
+            const currentYear = date.getFullYear()
+            const currentMonth = date.getMonth()
+
+            if (
+              selectedYear === currentYear &&
+              selectedMonth === currentMonth
+            ) {
+              return "react-calendar__tile--active !text-em-black"
+            }
+          }
+          return undefined
         }}
         className="react-calendar"
       />
