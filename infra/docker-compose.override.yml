@@ -1,0 +1,28 @@
+services:
+    nginx:
+        profiles:
+            - nginx
+
+    postgresql_deploy:
+        profiles:
+            - deploy_db
+
+    redis_deploy:
+        profiles:
+            - deploy_db
+
+    postgresql_dev:
+        profiles:
+            - dev_db
+
+    redis_dev:
+        profiles:
+            - dev_db
+
+    postgresql_test:
+        profiles:
+            - test_db
+
+    redis_test:
+        profiles:
+            - test_db
