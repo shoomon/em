@@ -1,12 +1,7 @@
 import { StepForward } from "lucide-react"
 import { Music } from "../types/music"
 
-const PlayListItem = ({
-  // albumName,
-  albumImageUrl,
-  title,
-  artistName,
-}: Music) => {
+const MusicItem = ({ albumImageUrl, title, artistName }: Music) => {
   return (
     <div className="flex items-center gap-2 py-2 border-b border-b-em-gray-md">
       <img
@@ -32,4 +27,4 @@ const PlayListItem = ({
   )
 }
 
-export default PlayListItem
+export default MusicItem

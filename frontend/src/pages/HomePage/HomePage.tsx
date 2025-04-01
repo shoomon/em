@@ -1,7 +1,10 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
-import MusicSelector from "@/features/music/components/MusicSelector"
+import Tabs from "@/components/Tabs/Tabs"
+import MapController from "@/features/map/components/MapController"
 import PlayList from "@/features/music/components/PlayList"
+import PostCreateButton from "@/features/post/components/PostCreate/PostCreateButton"
 import PostList from "@/features/post/components/PostList"
+import PostSearchButton from "@/features/post/components/PostSearchButton"
 import useDrawer from "@/hooks/useDrawer"
 import useGps from "@/hooks/useGps"
 import usePostStore from "@/store/usePostStore"
@@ -51,11 +54,7 @@ const HomePage = () => {
 
   return (
     <div className="relative h-[calc(100dvh-var(--header-height)-var(--navigation-bar-height))]">
-      <EmDrawer open={true} onOpenChange={() => setIsOpen(!isOpen)}>
-        <MusicSelector />
-      </EmDrawer>
-
-      {/* <MapController
+      <MapController
         isLocationPermissionGranted={isLocationPermissionGranted}
         location={currentLocation}
         lastFetchedLocation={lastFetchedLocation}
@@ -75,7 +74,7 @@ const HomePage = () => {
           />
           {renderTabContent()}
         </div>
-      </EmDrawer> */}
+      </EmDrawer>
     </div>
   )
 }
