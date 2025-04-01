@@ -46,9 +46,13 @@ const useEmotionReport = () => {
   const totalEmotions = datasets.reduce((a, b) => a + b, 0)
 
   // 가장 많은 감정
-  const mostEmotion = emotionItemsLabels.find(
-    (e) => datasets[emotionItemsLabels.indexOf(e)] === Math.max(...datasets),
-  )
+  const mostEmotion = () => {
+    const max = Math.max(...datasets)
+    if (max === 0) return null
+    return emotionItemsLabels.find(
+      (e) => datasets[emotionItemsLabels.indexOf(e)] === max,
+    )
+  }
 
   // 감정 퍼센테이지 데이터 추출
   const emotionPercentages: EmotionPercentages = useMemo(() => {
@@ -72,9 +76,16 @@ const useEmotionReport = () => {
     ) as EmotionEngNameType[]
 
     engNames.forEach((e) => {
-      percentages[e] = new Intl.NumberFormat("ko-KR", {
+      const temp = new Intl.NumberFormat("ko-KR", {
         style: "percent",
-      }).format(Math.round((emotionReport[e] / totalEmotions) * 100) / 100)
+        maximumFractionDigits: 2,
+      }).format(
+        Math.round(
+          (emotionReport[e] / (totalEmotions ? totalEmotions : 0)) * 100,
+        ) / 100,
+      )
+
+      percentages[e] = temp.includes("NaN") ? "0%" : temp
     })
 
     return percentages

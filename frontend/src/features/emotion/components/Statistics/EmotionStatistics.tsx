@@ -1,3 +1,4 @@
+import Button from "@/components/Button/Button"
 import {
   ChartData,
   Chart as ChartJS,
@@ -10,6 +11,7 @@ import {
 import { ChartJSOrUndefined } from "node_modules/react-chartjs-2/dist/types"
 import { useEffect, useRef } from "react"
 import { Radar } from "react-chartjs-2"
+import { Link } from "react-router-dom"
 import useEmotionReport from "../../hooks/useEmotionReport"
 import { EmotionKorNameType } from "../../types/emotion"
 import EmotionGrid from "../EmotionGrid/EmotionGrid"
@@ -66,18 +68,33 @@ const EmotionStatistics = () => {
 
   return (
     <div className="flex flex-col gap-6 h-full">
-      <div className="w-full h-96 max-h-[16rem]">
-        <Radar
-          className="w-full h-full"
-          ref={chartRef}
-          data={data}
-          options={options}
-        />
-      </div>
-      <EmotionStatisticsSummary
-        emotionName={mostEmotion as EmotionKorNameType}
-      />
-      <EmotionGrid emotionPercentages={emotionPercentages} />
+      {mostEmotion() && (
+        <div className="w-full h-96 max-h-[16rem]">
+          <Radar
+            className="w-full h-full"
+            ref={chartRef}
+            data={data}
+            options={options}
+          />
+        </div>
+      )}
+      {mostEmotion() ? (
+        <>
+          <EmotionStatisticsSummary
+            emotionName={mostEmotion() as EmotionKorNameType}
+          />
+          <EmotionGrid emotionPercentages={emotionPercentages} />
+        </>
+      ) : (
+        <div className="w-full flex items-center flex-col gap-4 justify-center">
+          <p className="text-sm text-gray-500">최근 기록이 없습니다.</p>
+          <Link to="/posts/create" viewTransition>
+            <Button className="hover" variant="outline">
+              마음 기록하기
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
