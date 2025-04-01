@@ -50,6 +50,7 @@ const MapViewer = ({
           content: `<div class="size-6 bg-rose-400 border-4 border-white rounded-full" />`,
           anchor: new window.naver.maps.Point(12, 12),
         },
+        visible: isLocationPermissionGranted,
       })
     }
 
@@ -62,6 +63,7 @@ const MapViewer = ({
         fillColor: "rgba(0, 230, 0, 0.1)",
         strokeColor: "rgba(0, 230, 0, 0.1)",
         strokeWeight: 1,
+        visible: isLocationPermissionGranted,
       })
     }
 

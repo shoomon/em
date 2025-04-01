@@ -56,7 +56,12 @@ export interface Post {
 
 export interface PostInfiniteData {
   data: Post[]
-  meta: { lastId: number; hasNext: boolean }
+  meta: {
+    lastId: number
+    lastDist: number
+    lastCnt: number
+    hasNext: boolean
+  }
 }
 
 export enum PostCreateStep {

@@ -1,7 +1,8 @@
 import EmDrawer from "@/components/drawer/EmDrawer"
 import Tabs from "@/components/Tabs/Tabs"
 import MapController from "@/features/map/components/MapController"
-import PostCreateButton from "@/features/post/components/PostCreate/PostCreateButton"
+import PlayList from "@/features/music/components/PlayList"
+import PostCreateButton from "@/features/post/components/PostCreateButton"
 import PostList from "@/features/post/components/PostList"
 import PostSearchButton from "@/features/post/components/PostSearchButton"
 import useDrawer from "@/hooks/useDrawer"
@@ -46,8 +47,8 @@ const HomePage = () => {
     switch (currentTab) {
       case "posts":
         return <PostList location={currentLocation} />
-      default:
-        return <div className="h-[75dvh]"></div>
+      case "playlist":
+        return <PlayList location={currentLocation} />
     }
   }
 

@@ -15,7 +15,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
   const sortType = searchParams.get("sort") || "latest"
   const clusterGrid = usePostStore((state) => state.clusterGrid)
 
-  const queryPost = async (pageParam: any) => {
+  const fetchFn = async (pageParam: any) => {
     const isCluster = type === "cluster"
 
     try {
@@ -39,7 +39,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
   const { data, isLoading, isFetchingNextPage, observerRef } =
     useInfiniteScroll({
       queryKey: ["posts", location, type, clusterGrid, sortType],
-      queryFn: ({ pageParam }) => queryPost(pageParam),
+      queryFn: ({ pageParam }) => fetchFn(pageParam),
       initialPageParam: {
         lastId: 0,
         lastDist: 0,
