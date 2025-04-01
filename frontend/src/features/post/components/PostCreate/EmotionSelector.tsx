@@ -2,7 +2,7 @@ import EmSection from "@/components/EmSection/EmSection"
 import EmotionSelectItem from "@/features/emotion/components/EmotionSelectItem"
 import { EMOTION_ITEMS } from "@/features/emotion/constants"
 
-type EmotionSelectorProps = {
+interface EmotionSelectorProps {
   onEmotionChange: (_emotion: string) => void
   emotionState: string
 }

@@ -1,4 +1,4 @@
-import PostCreateForm from "@/features/post/components/PostCreateForm"
+import PostCreateForm from "@/features/post/components/PostCreate/PostCreateForm"
 import useStackLayoutStore from "@/store/useStackLayoutStore"
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
