@@ -1,8 +1,5 @@
 import EmLoading from "@/components/EmLoading/EmLoading"
-import EmotionAnalysis from "@/features/emotion/components/EmotionAnalysis/EmotionAnalysis"
-import useEmotionAnalysis from "@/features/emotion/hooks/useEmotionAnalysis"
 import { createPortal } from "react-dom"
-import EmotionAnalysisError from "./EmotionAnalysisError"
 import EmotionSelector from "./EmotionSelector"
 
 interface EmotionSelectorContainerProps {
@@ -16,7 +13,7 @@ const EmotionSelectorContainer = ({
   onEmotionChange,
   emotionState,
 }: EmotionSelectorContainerProps) => {
-  const { data, isLoading, isSuccess } = useEmotionAnalysis(content)
+  // const { data, isLoading, isSuccess } = useEmotionAnalysis(content)
 
   const loadingComponent = createPortal(
     <EmLoading
@@ -27,7 +24,7 @@ const EmotionSelectorContainer = ({
   )
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      {isLoading ? (
+      {/* {isLoading ? (
         loadingComponent
       ) : isSuccess ? (
         <EmotionAnalysis data={data} />
@@ -41,7 +38,11 @@ const EmotionSelectorContainer = ({
           onEmotionChange={onEmotionChange}
           emotionState={emotionState}
         />
-      )}
+      )} */}
+      <EmotionSelector
+        onEmotionChange={onEmotionChange}
+        emotionState={emotionState}
+      />
     </div>
   )
 }
