@@ -8,6 +8,7 @@ import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 import { lazy } from "react"
+import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
           {
             path: "/posts/create",
             element: <PostCreatePage />,
+          },
+          {
+            path: "/mypage/list",
+            element: <MyPostListPage />,
           },
         ],
       },
