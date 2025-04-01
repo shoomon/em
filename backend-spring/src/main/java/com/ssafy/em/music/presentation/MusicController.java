@@ -1,5 +1,6 @@
 package com.ssafy.em.music.presentation;
 
+import com.ssafy.em.common.annotation.LoginRequired;
 import com.ssafy.em.music.application.MusicService;
 import com.ssafy.em.music.dto.response.SpotifySearchResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class MusicController implements MusicControllerDocs{
     @GetMapping("/search")
     @Override
     public ResponseEntity<List<SpotifySearchResponse>> searchTracks(
+            @LoginRequired int loginId,
             @RequestParam(value = "trackName", required = false) String trackName) {
         List<SpotifySearchResponse> responses = musicService.search(trackName);
         return ResponseEntity.ok(responses);

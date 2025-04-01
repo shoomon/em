@@ -28,6 +28,7 @@ public interface MusicControllerDocs {
             }
     )
     ResponseEntity<List<SpotifySearchResponse>> searchTracks(
+            @Parameter(hidden = true) int loginId,
             @Parameter(description = "검색할 트랙 이름", example = "나의 사춘기에게")
             @RequestParam(value = "q", required = false) String trackName
     );
