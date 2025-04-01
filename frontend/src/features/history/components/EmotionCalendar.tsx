@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react"
 import { Calendar as ReactCalendar } from "react-calendar"
 import "react-calendar/dist/Calendar.css"
+import { useNavigate } from "react-router-dom"
 import { fetchEmotionCalendar } from "../api/emotionCalendarApi"
+import { getWeekdayColorClass } from "../utils/getCalendarColor"
 import { getEmotionColorClass } from "../utils/getEmotionColor"
 import "./EmotionCalendar.css"
-import { getWeekdayColorClass } from "../utils/getCalendarColor"
-import { useNavigate } from "react-router-dom"
 
 const EmotionCalendar = () => {
   const navigate = useNavigate()
@@ -46,7 +46,7 @@ const EmotionCalendar = () => {
     const formatted = localDate.toISOString().split("T")[0]
 
     sessionStorage.setItem("selectedDate", formatted)
-    navigate("/mypage/list")
+    navigate("/mypage/list", { viewTransition: true })
   }
 
   return (

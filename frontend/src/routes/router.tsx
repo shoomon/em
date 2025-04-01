@@ -6,19 +6,19 @@ import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
+import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 import { lazy } from "react"
-import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
 
 const router = createBrowserRouter([
   {
-    element: <MainLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        element: <ProtectedRoute />,
+        element: <MainLayout />,
         children: [
           {
             path: "/onboard",
@@ -32,41 +32,16 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "*",
-        element: <div>404 Not Found</div>,
-      },
-    ],
-  },
-  {
-    element: <MainLayout hasHeader={false} />,
-    children: [
-      {
-        path: "/mypage",
-        element: <MyPage />,
+        element: <MainLayout hasHeader={false} />,
         children: [
           {
-            path: "history",
-            element: <div>/mypage/history</div>,
-            children: [
-              {
-                path: ":date",
-                element: <div>/mypage/history/:date</div>,
-              },
-            ],
-          },
-          {
-            path: "report",
-            element: <div>/mypage/report</div>,
+            path: "/mypage",
+            element: <MyPage />,
           },
         ],
       },
-    ],
-  },
-  {
-    element: <StackLayout />,
-    children: [
       {
-        element: <ProtectedRoute />,
+        element: <StackLayout />,
         children: [
           {
             path: "/posts/create",
@@ -78,8 +53,13 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "*",
+        element: <div>404 Not Found</div>,
+      },
     ],
   },
+
   {
     element: <BlankLayout />,
     children: [

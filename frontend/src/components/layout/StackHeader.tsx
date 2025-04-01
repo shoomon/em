@@ -1,18 +1,27 @@
 import useStackLayoutStore from "@/store/useStackLayoutStore"
 import { ChevronLeftIcon } from "lucide-react"
 import { memo } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const StackHeader = memo(() => {
   // Todo: Header 타이틀을 zustand로 관리하는 것에 대하여 논의
   const title = useStackLayoutStore((state) => state.title)
-
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleClick = () => {
-    const shouldLeave = confirm("게시글 작성을 취소하시겠습니까?")
-    if (shouldLeave) {
-      navigate("/", { replace: true, viewTransition: true })
+    // PostCreatePage에서만 확인 메시지 표시, 다른 페이지에서는 바로 뒤로가기
+    if (location.pathname === "/posts/create") {
+      const shouldLeave = confirm("게시글 작성을 취소하시겠습니까?")
+      if (shouldLeave) {
+        navigate("/", { replace: true, viewTransition: true })
+      }
+    } else if (location.pathname === "/mypage/list") {
+      // MyPostListPage에서는 마이페이지로 이동
+      navigate("/mypage", { viewTransition: true })
+    } else {
+      // 기본적으로는 홈으로 이동
+      navigate("/", { viewTransition: true })
     }
   }
 
