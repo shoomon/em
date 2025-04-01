@@ -48,7 +48,7 @@ const PostList = ({ location }: PostListProps) => {
             <p className="text-[clamp(3rem,4vw,6rem)] font-bold text-em-gray ">
               텅..
             </p>
-            <p className="text-[clamp(0.8rem,4vw,1.2rem)] font-bold text-em-gray ">
+            <p className="text-[clamp(0.8rem,4vw,1.2rem)] text-em-gray ">
               이곳에는 메시지가 없어요
               <br />
               가장 먼저 메시지를 남겨보세요!
