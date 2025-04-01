@@ -19,6 +19,9 @@ const EmotionCalendar = () => {
   const [emotionData, setEmotionData] = useState<Record<string, string>>({})
 
   const [activeMonth, setActiveMonth] = useState(() => {
+    const saved = sessionStorage.getItem("activeMonth")
+    if (saved) return saved
+
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, "0")
     return `${year}-${month}`
@@ -35,6 +38,8 @@ const EmotionCalendar = () => {
     }
 
     fetchData()
+
+    sessionStorage.setItem("activeMonth", activeMonth)
   }, [activeMonth])
 
   const handleDateClick = (date: Date) => {
@@ -64,6 +69,7 @@ const EmotionCalendar = () => {
             setActiveMonth(`${year}-${month}`)
           }
         }}
+        activeStartDate={new Date(`${activeMonth}-01`)}
         // formatDay={(_, date) => String(date.getDate())}
         formatDay={() => ""}
         calendarType="gregory"
