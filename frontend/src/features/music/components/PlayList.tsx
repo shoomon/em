@@ -1,6 +1,6 @@
 import { LatLng } from "@/features/map/types/map"
 import React from "react"
-import PlayListItem from "./PlaylistItem"
+import PlayListItem from "./PlayListItem"
 
 const dummyData = [
   {
@@ -60,7 +60,7 @@ interface PlayListProps {
   location: LatLng
 }
 
-const PlayList = ({ location }: PlayListProps) => {
+const PlayList = ({} /*location*/ : PlayListProps) => {
   return (
     <div className="overflow-y-auto h-[75dvh] px-4">
       {dummyData.map((item, index) => (

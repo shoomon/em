@@ -2,7 +2,7 @@ import { StepForward } from "lucide-react"
 import { Music } from "../types/music"
 
 const PlayListItem = ({
-  albumName,
+  // albumName,
   albumImageUrl,
   title,
   artistName,
