@@ -21,7 +21,7 @@ const MapController = ({
   const refetchingRef = useRef<NodeJS.Timeout | null>(null)
   const { data, refetch } = usePoints({
     isLocationPermissionGranted,
-    pointListRequest: location,
+    pointListRequest: lastFetchedLocation,
   })
 
   useEffect(() => {
