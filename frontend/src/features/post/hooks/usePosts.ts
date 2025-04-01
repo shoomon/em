@@ -36,7 +36,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
     }
   }
 
-  const { data, isLoading, isFetchingNextPage, observerRef } =
+  const { data, isLoading, isPending, isFetchingNextPage, observerRef } =
     useInfiniteScroll({
       queryKey: ["posts", location, type, clusterGrid, sortType],
       queryFn: ({ pageParam }) => fetchFn(pageParam),
@@ -63,6 +63,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
   return {
     data,
     isLoading,
+    isPending,
     isFetchingNextPage,
     observerRef,
   }

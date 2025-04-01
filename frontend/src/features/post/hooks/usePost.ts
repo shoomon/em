@@ -9,14 +9,14 @@ interface UsePostProps {
 
 const usePost = ({ type }: UsePostProps) => {
   const postId = usePostStore((state) => state.postId)
-  const { data, isLoading } = useQuery<Post>({
+  const { data, isPending } = useQuery<Post>({
     queryKey: ["post", postId],
     queryFn: () => fetchPost(postId),
     refetchOnWindowFocus: false,
     enabled: type === "marker",
   })
 
-  return { data, isLoading }
+  return { data, isPending }
 }
 
 export default usePost
