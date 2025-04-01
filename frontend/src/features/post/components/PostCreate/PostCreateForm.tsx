@@ -1,11 +1,11 @@
 import EmLoading from "@/components/EmLoading/EmLoading"
 import StepAnimateLayout from "@/layout/StepAnimateLayout"
 import { useEffect, useState } from "react"
-import usePostForm from "../hooks/usePostForm"
-import { PostCreateStep } from "../types/post"
-import EmotionSelector from "./EmotionSelector"
+import usePostForm from "../../hooks/usePostForm"
+import { PostCreateStep } from "../../types/post"
+import NextStepButtonSection from "../NextStepButtonSection"
+import EmotionSelectorContainer from "./EmotionSelectorContainer"
 import MapSelector from "./MapSelector"
-import NextStepButtonSection from "./NextStepButtonSection"
 import PostConfirm from "./PostConfirm"
 import PostContentInput from "./PostContentInput"
 
@@ -42,7 +42,8 @@ const PostCreateForm = () => {
       />
     ),
     [PostCreateStep.Emotion]: (
-      <EmotionSelector
+      <EmotionSelectorContainer
+        content={formData.content}
         emotionState={formData.emotion}
         onEmotionChange={(emotion) => updateFormData("emotion", emotion)}
       />

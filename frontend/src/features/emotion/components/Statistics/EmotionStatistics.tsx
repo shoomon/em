@@ -1,3 +1,4 @@
+import Button from "@/components/Button/Button"
 import {
   ChartData,
   Chart as ChartJS,
@@ -10,50 +11,23 @@ import {
 import { ChartJSOrUndefined } from "node_modules/react-chartjs-2/dist/types"
 import { useEffect, useRef } from "react"
 import { Radar } from "react-chartjs-2"
-import { EMOTION_ITEMS } from "../../constants"
-import useEmotionStatistics from "../../hooks/useEmotionStatistics"
-import { EmotionStatisticsData } from "../../types/emotion"
-
-const initialEmotionStatisticsData: EmotionStatisticsData = {
-  ANGER: 1,
-  SURPRISE: 2,
-  JOY: 3,
-  TRUST: 4,
-  SADNESS: 5,
-  FEAR: 6,
-  ANTICIPATION: 7,
-  DISGUST: 8,
-}
+import { Link } from "react-router-dom"
+import useEmotionReport from "../../hooks/useEmotionReport"
+import { EmotionKorNameType } from "../../types/emotion"
+import EmotionGrid from "../EmotionGrid/EmotionGrid"
+import EmotionStatisticsSummary from "./EmotionStatisticsSummary"
 
 const EmotionStatistics = () => {
   const chartRef = useRef<ChartJSOrUndefined<"radar">>(null)
   ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler) // 차트 라이브러리 등록
-
-  const { data: emotionStatistics } = useEmotionStatistics()
-
-  // 감정 통계 데이터
-  const emotionStatisticsData: EmotionStatisticsData =
-    emotionStatistics || initialEmotionStatisticsData
-
-  // 감정 아이템 라벨 정렬 (사전 순)
-  const EMOTION_ITEMS_LABELS = EMOTION_ITEMS.map((item) => item.korName).sort(
-    (a, b) => a.localeCompare(b),
-  )
+  const { emotionItemsLabels, datasets, emotionPercentages, mostEmotion } =
+    useEmotionReport()
 
   const data: ChartData<"radar"> = {
-    labels: EMOTION_ITEMS_LABELS,
+    labels: emotionItemsLabels,
     datasets: [
       {
-        data: [
-          emotionStatisticsData.ANGER,
-          emotionStatisticsData.SURPRISE,
-          emotionStatisticsData.JOY,
-          emotionStatisticsData.TRUST,
-          emotionStatisticsData.SADNESS,
-          emotionStatisticsData.FEAR,
-          emotionStatisticsData.ANTICIPATION,
-          emotionStatisticsData.DISGUST,
-        ],
+        data: datasets,
         backgroundColor: "#8979FF30",
         borderColor: "#8979FF",
         borderWidth: 1,
@@ -74,8 +48,11 @@ const EmotionStatistics = () => {
     scales: {
       r: {
         ticks: {
+          count: 5,
           display: false,
+          stepSize: 20,
         },
+        beginAtZero: true,
       },
     },
   }
@@ -90,8 +67,34 @@ const EmotionStatistics = () => {
   }, [])
 
   return (
-    <div className="w-full h-full max-h-[16rem] flex-1">
-      <Radar ref={chartRef} data={data} options={options} />
+    <div className="flex flex-col gap-6 h-full">
+      {mostEmotion() && (
+        <div className="w-full h-96 max-h-[16rem]">
+          <Radar
+            className="w-full h-full"
+            ref={chartRef}
+            data={data}
+            options={options}
+          />
+        </div>
+      )}
+      {mostEmotion() ? (
+        <>
+          <EmotionStatisticsSummary
+            emotionName={mostEmotion() as EmotionKorNameType}
+          />
+          <EmotionGrid emotionPercentages={emotionPercentages} />
+        </>
+      ) : (
+        <div className="w-full flex items-center flex-col gap-4 justify-center">
+          <p className="text-sm text-gray-500">최근 기록이 없습니다.</p>
+          <Link to="/posts/create" viewTransition>
+            <Button className="hover" variant="outline">
+              마음 기록하기
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

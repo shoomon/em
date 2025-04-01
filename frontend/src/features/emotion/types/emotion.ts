@@ -19,14 +19,14 @@ export type EmotionKorNameType =
   | "혐오"
 
 export enum EmotionMapping {
-  ANGER = "분노",
-  SURPRISE = "당황",
-  JOY = "기쁨",
-  TRUST = "신뢰",
-  SADNESS = "슬픔",
-  FEAR = "공포",
-  ANTICIPATION = "기대",
-  DISGUST = "혐오",
+  분노 = "ANGER",
+  당황 = "SURPRISE",
+  기쁨 = "JOY",
+  확신 = "TRUST",
+  슬픔 = "SADNESS",
+  공포 = "FEAR",
+  기대 = "ANTICIPATION",
+  혐오 = "DISGUST",
 }
 
 export interface Emotion {
@@ -43,4 +43,14 @@ export interface EmotionItem extends Emotion {
 
 export type EmotionStatisticsData = {
   [key in EmotionEngNameType]: number
+}
+
+export interface EmotionAnalysisResponse {}
+
+export type EmotionReportResponse = {
+  [key in EmotionEngNameType]: number
+}
+
+export type EmotionPercentages = {
+  [key in EmotionEngNameType]: string
 }

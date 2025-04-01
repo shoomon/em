@@ -41,19 +41,21 @@ const EmSectionHeader = ({
   headerRight,
 }: SectionHeaderProps) => {
   return (
-    <header className="flex flex-col gap-1">
-      <div className="flex justify-between items-center">
+    <header className="flex flex-col gap-1 sm:gap-2">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
         {title && (
-          <h3 className="text-em-black text-xl font-bold tracking-tight">
+          <h3 className="text-lg sm:text-xl font-bold tracking-tight text-em-black">
             {title}
           </h3>
         )}
         {headerRight && (
-          <div className="text-sm text-em-black/60">{headerRight}</div>
+          <div className="text-xs sm:text-sm text-em-black/60">
+            {headerRight}
+          </div>
         )}
       </div>
       {description && (
-        <p className="text-em-black/60 text-sm leading-relaxed">
+        <p className="text-xs sm:text-sm text-em-black/60 leading-relaxed">
           {description}
         </p>
       )}
