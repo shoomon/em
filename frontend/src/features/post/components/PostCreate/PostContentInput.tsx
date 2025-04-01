@@ -1,15 +1,22 @@
 import EmSection from "@/components/EmSection/EmSection"
 import EmTextArea from "@/components/EmTextArea/EmTextArea"
+import {
+  usePostFormAction,
+  usePostFormState,
+} from "../../contexts/PostFormContext"
+import { PostFormStateType, PostFormActionType } from "../../types/post"
 
-type PostContentInputProps = {
-  onTextChange: (_text: string) => void
-  textState: string
-}
+type PostContentInputProps = {}
 
-const PostContentInput = ({
-  onTextChange,
-  textState,
-}: PostContentInputProps) => {
+const PostContentInput = ({}: PostContentInputProps) => {
+  const { formData } = usePostFormState() as PostFormStateType
+  const { updateFormData } = usePostFormAction() as PostFormActionType
+
+  const { content: textState } = formData
+
+  const handleTextChange = (text: string) => {
+    updateFormData("content", text)
+  }
   return (
     <EmSection className="h-full">
       <EmSection.Header title="✨ 마음을 적어주세요" />
@@ -17,7 +24,7 @@ const PostContentInput = ({
         <EmTextArea
           placeholder="현재 어떤 생각을 하고 있나요?"
           className="h-full"
-          onTextChange={onTextChange}
+          onTextChange={handleTextChange}
           textState={textState}
         />
       </div>

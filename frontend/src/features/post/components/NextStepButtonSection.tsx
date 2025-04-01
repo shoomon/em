@@ -1,19 +1,22 @@
 import Button from "@/components/Button/Button"
+import {
+  PostFormActionType,
+  usePostFormAction,
+} from "../contexts/PostFormContext"
 import { PostCreateStep } from "../types/post"
 
 type NextStepButtonProps = {
-  updateStep: (step: PostCreateStep) => void
   currentStep: PostCreateStep
-  isFormDataValid: (step: PostCreateStep) => boolean | undefined
   isButtonDisabled: boolean
 }
 
 const NextStepButtonSection = ({
-  updateStep,
   currentStep,
-  isFormDataValid,
   isButtonDisabled,
 }: NextStepButtonProps) => {
+  const { updateStep } = usePostFormAction() as PostFormActionType
+  const { isFormDataValid } = usePostFormAction() as PostFormActionType
+
   const isFirstStep = currentStep === PostCreateStep.Map
   const isLastStep = currentStep === PostCreateStep.Confirm
   const isMiddleStep = !isFirstStep && !isLastStep

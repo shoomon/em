@@ -1,8 +1,15 @@
 import EmLoading from "@/components/EmLoading/EmLoading"
 import StepAnimateLayout from "@/layout/StepAnimateLayout"
 import { useEffect, useState } from "react"
-import usePostForm from "../../hooks/usePostForm"
-import { PostCreateStep } from "../../types/post"
+import {
+  usePostFormAction,
+  usePostFormState,
+} from "../../contexts/PostFormContext"
+import {
+  PostCreateStep,
+  PostFormActionType,
+  PostFormStateType,
+} from "../../types/post"
 import NextStepButtonSection from "../NextStepButtonSection"
 import EmotionSelectorContainer from "./EmotionSelectorContainer"
 import MapSelector from "./MapSelector"
@@ -10,17 +17,9 @@ import PostConfirm from "./PostConfirm"
 import PostContentInput from "./PostContentInput"
 
 const PostCreateForm = () => {
-  const {
-    //
-    isSubmitPending,
-    currentStep,
-    formData,
-    updateFormData,
-    handleSubmit,
-    handleMapChange,
-    updateStep,
-    isFormDataValid,
-  } = usePostForm()
+  const { currentStep, isSubmitPending } =
+    usePostFormState() as PostFormStateType
+  const { handleSubmit } = usePostFormAction() as PostFormActionType
 
   const [animatedStep, setAnimatedStep] = useState(currentStep)
   const [isButtonDisabled, setIsButtonDisabled] = useState(false) // 버튼 비활성화 여부
@@ -36,25 +35,11 @@ const PostCreateForm = () => {
   // 현재 스탭 컴포넌트
   const STEP_COMPONENTS = {
     [PostCreateStep.Map]: (
-      <MapSelector
-        onMapChange={handleMapChange}
-        setIsButtonDisabled={setIsButtonDisabled}
-      />
+      <MapSelector setIsButtonDisabled={setIsButtonDisabled} />
     ),
-    [PostCreateStep.Emotion]: (
-      <EmotionSelectorContainer
-        content={formData.content}
-        emotionState={formData.emotion}
-        onEmotionChange={(emotion) => updateFormData("emotion", emotion)}
-      />
-    ),
-    [PostCreateStep.Content]: (
-      <PostContentInput
-        onTextChange={(text) => updateFormData("content", text)}
-        textState={formData.content}
-      />
-    ),
-    [PostCreateStep.Confirm]: <PostConfirm formData={formData} />,
+    [PostCreateStep.Emotion]: <EmotionSelectorContainer />,
+    [PostCreateStep.Content]: <PostContentInput />,
+    [PostCreateStep.Confirm]: <PostConfirm />,
   }
 
   if (isSubmitPending) {
@@ -70,9 +55,7 @@ const PostCreateForm = () => {
         </div>
         {/* 버튼 컴포넌트 */}
         <NextStepButtonSection
-          isFormDataValid={isFormDataValid}
           currentStep={currentStep}
-          updateStep={updateStep}
           isButtonDisabled={isButtonDisabled}
         />
       </div>
