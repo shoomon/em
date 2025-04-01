@@ -2,6 +2,7 @@ package com.ssafy.em.posts.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ssafy.em.animal.domain.entity.AnimalProfile;
+import com.ssafy.em.music.domain.entity.Music;
 import com.ssafy.em.user.domain.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,6 +53,10 @@ public class Post {
     @JoinColumn(name = "animal_profile_id", nullable = false)
     private AnimalProfile animalProfile;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "music_id")
+    private Music music;
+
     @Column(name = "anonymous_nickname", length = 50, nullable = false)
     private String nickname;
 
@@ -78,6 +83,7 @@ public class Post {
     @Builder
     public Post(
             AnimalProfile animalProfile,
+            Music music,
             User user,
             String nickname,
             String content,
@@ -86,6 +92,7 @@ public class Post {
             String address
     ){
         this.animalProfile = animalProfile;
+        this.music = music;
         this.user = user;
         this.nickname = nickname;
         this.content = content;
