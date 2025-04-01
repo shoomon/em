@@ -16,12 +16,12 @@ const MyPage = () => {
   ]
 
   const [currentTab, setCurrentTab] = useState<"history" | "report">(() => {
-    const saved = localStorage.getItem("mypage-tab")
+    const saved = sessionStorage.getItem("mypage-tab")
     return saved === "history" || saved === "report" ? saved : "history"
   })
 
   useEffect(() => {
-    localStorage.setItem("mypage-tab", currentTab)
+    sessionStorage.setItem("mypage-tab", currentTab)
   }, [currentTab])
 
   const renderTabContent = () => {
