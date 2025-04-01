@@ -41,6 +41,10 @@ export interface Post {
   content: string
   lng: number
   lat: number
+  musicInfo: {
+    title: "string"
+    artistName: "string"
+  }
   emotionInfo: {
     selectedEmotion: string
     emotionCounts: {
