@@ -31,7 +31,7 @@ public class MusicController implements MusicControllerDocs{
     @Override
     public ResponseEntity<List<SpotifySearchResponse>> searchTracks(
             @LoginRequired int loginId,
-            @RequestParam(value = "trackName", required = false) String trackName) {
+            @RequestParam(value = "q", required = false) String trackName) {
         List<SpotifySearchResponse> responses = musicService.search(trackName);
         return ResponseEntity.ok(responses);
     }
