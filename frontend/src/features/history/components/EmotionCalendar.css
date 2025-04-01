@@ -86,6 +86,7 @@
   content: "";
   position: absolute;
   width: 72%;
+  max-width: 70px;
   aspect-ratio: 1/1;
   border: 2px solid var(--color-em-black); /* 밝은 노랑 */
   border-radius: 50%;
@@ -102,6 +103,7 @@
   content: "";
   position: absolute;
   width: 72%;
+  max-width: 70px;
   aspect-ratio: 1/1;
   border: 2px solid var(--color-em-gray);
   border-radius: 50%;
