@@ -18,6 +18,8 @@ const EmotionAnalysis = ({ data }: EmotionAnalysisProps) => {
     DISGUST: 20,
   }
 
+  console.log(data)
+
   // Top 3 감정 추출
   const topEmotions = Object.entries(mockEmotionScores)
     .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
