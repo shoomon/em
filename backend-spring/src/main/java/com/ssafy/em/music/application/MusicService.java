@@ -2,6 +2,7 @@ package com.ssafy.em.music.application;
 
 import com.ssafy.em.common.config.SpotifyConfig;
 import com.ssafy.em.music.dto.response.SpotifySearchResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -19,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MusicService {
 
     private static final int LIMIT = 10;
@@ -40,6 +42,8 @@ public class MusicService {
         if (trackName == null || trackName.trim().isEmpty()) {
             trackName = "a";
         }
+
+        log.info("Searching for music for " + trackName);
 
         try {
             SearchTracksRequest searchTrackRequest = spotifyApi.searchTracks(trackName)
