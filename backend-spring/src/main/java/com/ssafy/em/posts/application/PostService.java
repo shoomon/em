@@ -90,10 +90,32 @@ public class PostService{
                 .createPoint(new Coordinate(request.longitude(), request.latitude()));
         location.setSRID(4326);
 
-        // 4. Post 엔티티 생성
+        // 4. 음악 정보가 있다면 Music 엔티티 생성
+        Music music = null;
+        //    (artistName, title, albumImageUrl, spotifyAlbumUrl 중 하나라도 null 또는 빈 값이면 음악 없이 저장)
+        if (isMusicInfoPresent(request)) {
+            // DB에서 해당 음악 정보가 이미 존재하는지 확인
+            Optional<Music> existedMusic = musicRepository.findByArtistNameAndTitle(request.artistName(), request.title());
+            if (existedMusic.isPresent()) {
+                music = existedMusic.get();
+                music.increaseMusicCount();
+            } else {
+                music = Music.builder()
+                        .artistName(request.artistName())
+                        .title(request.title())
+                        .albumImageUrl(request.albumImageUrl())
+                        .spotifyAlbumUrl(request.spotifyAlbumUrl())
+                        .build();
+
+                musicRepository.save(music);
+            }
+        }
+
+        // 5. Post 엔티티 생성
         Post post = Post.builder()
                 .animalProfile(animalProfile)
                 .user(user)
+                .music(music)
                 .nickname(nickname)
                 .content(request.content())
                 .emotion(request.emotion())
@@ -102,20 +124,6 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
-
-        // 6. 음악 정보가 있다면 Music 엔티티 생성
-        //    (artistName, title, albumImageUrl, spotifyAlbumUrl 중 하나라도 null 또는 빈 값이면 음악 없이 저장)
-        if (isMusicInfoPresent(request)) {
-            Music music = Music.builder()
-                    .post(post)
-                    .artistName(request.artistName())
-                    .title(request.title())
-                    .albumImageUrl(request.albumImageUrl())
-                    .spotifyAlbumUrl(request.spotifyAlbumUrl())
-                    .build();
-
-            musicRepository.save(music);
-        }
     }
 
     @Transactional
@@ -125,7 +133,19 @@ public class PostService{
 
         if(post.getUser().getId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
+        // 1. 게시글 관련 공감 삭제
         postReactionRepository.deleteByPostId(postId);
+
+        // 2. 게시글과 연관된 음악이 있으면 처리
+        if(post.getMusic() != null) {
+            Music music = post.getMusic();
+            music.decreaseMusicCount();
+            if (music.getMusicCount() <= 0) {
+                musicRepository.delete(music);
+            }
+        }
+
+        // 3. 게시글 삭제
         postJpaRepository.delete(post);
     }
 
