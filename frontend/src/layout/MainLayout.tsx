@@ -4,6 +4,7 @@ import MainHeader from "@/components/layout/MainHeader"
 import MainNavigationBar from "@/components/layout/MainNavigationBar"
 import useDevice from "@/hooks/useDevice"
 import BaseLayout from "@/layout/BaseLayout"
+import { cn } from "@/utils/cn"
 
 interface MainLayoutProps {
   hasHeader?: boolean
@@ -19,7 +20,13 @@ const MainLayout = ({ hasHeader = true }: MainLayoutProps) => {
         </div>
       )}
       {/* main */}
-      <main className="flex-1">
+      <main
+        className={cn(
+          "flex-1 flex flex-col",
+          hasHeader
+            ? "min-h-[calc(100vh-var(--navigation-bar-height)-var(--header-height))]"
+            : "min-h-[calc(100vh-var(--navigation-bar-height))]",
+        )}>
         <Outlet />
       </main>
       {/* navigation bar */}
