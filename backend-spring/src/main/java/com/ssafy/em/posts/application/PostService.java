@@ -12,8 +12,11 @@ import com.ssafy.em.emotion.dto.EmotionInfo;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
 import com.ssafy.em.emotion.exception.EmotionErrorCode;
 import com.ssafy.em.emotion.exception.EmotionException;
-import com.ssafy.em.music.domain.MusicRepository;
 import com.ssafy.em.music.domain.entity.Music;
+import com.ssafy.em.music.domain.repository.MusicRepository;
+import com.ssafy.em.music.dto.LastMusicCursor;
+import com.ssafy.em.music.dto.response.GetPlaylistResponse;
+import com.ssafy.em.music.dto.response.SpotifySearchResponse;
 import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
 import com.ssafy.em.posts.domain.entity.NicknameGenerator;
@@ -59,6 +62,8 @@ import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 @Transactional(readOnly = true)
 @Slf4j
 public class PostService{
+
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
     private final PostJpaRepository postJpaRepository;
     private final PostReactionRepository postReactionRepository;
@@ -328,6 +333,44 @@ public class PostService{
         }
         return new GetMonthlyEmotionResponse(monthlyEmotionCount);
     }
+
+    /**
+            * 현재 위치(longitude, latitude)와 반경(radius) 내에서 music 정보가 있는 Post들을 조회하고,
+     * Music의 music_count 내림차순, Music id 오름차순 기준으로 커서 기반 페이지네이션을 적용합니다.
+            * 페이지당 조회 건수는 pageSize 파라미터를 사용하며, 없으면 기본값 10을 사용합니다.
+            *
+            * @param longitude 기준 경도
+     * @param latitude 기준 위도
+     * @param radius 검색 반경 (미터 단위)
+     * @param cursor 이전 페이지의 마지막 커서 (없으면 null)
+     * @param pageSize 한 페이지당 조회할 Post 개수
+     * @return GetPlaylistResponse - 조회된 Post 리스트와 새 커서 정보
+     */
+    public GetPlaylistResponse getMusicPlaylist(double longitude, double latitude, int radius, LastMusicCursor cursor, int pageSize) {
+        int limit = (pageSize > 0) ? pageSize : DEFAULT_PAGE_SIZE;
+        List<Music> musicList = musicRepository.getMusicPlaylist(longitude, latitude, radius, cursor, limit);
+
+        boolean hasNext = musicList.size() > limit;
+        if (hasNext) {
+            musicList = musicList.subList(0, limit);
+        }
+
+        // SpotifySearchResponse DTO 리스트로 변환 (Music 테이블의 정보만 사용)
+        List<SpotifySearchResponse> dtoList = musicList.stream()
+                .map(SpotifySearchResponse::from)
+                .collect(Collectors.toList());
+
+        LastMusicCursor newCursor;
+        if (!musicList.isEmpty()) {
+            Music last = musicList.get(musicList.size() - 1);
+            newCursor = new LastMusicCursor(last.getId(), last.getMusicCount(), hasNext);
+        } else {
+            newCursor = new LastMusicCursor(0, 0, false);
+        }
+
+        return new GetPlaylistResponse(dtoList, newCursor);
+    }
+
 
     /**
      * 음악 관련 필드들이 모두 null/빈 문자열이 아닌지 확인하는 헬퍼 메서드
