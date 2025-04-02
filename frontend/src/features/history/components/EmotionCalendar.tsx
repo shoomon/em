@@ -11,7 +11,9 @@ const EmotionCalendar = () => {
   const navigate = useNavigate()
   const today = useMemo(() => new Date(), [])
 
-  const [calendarView, setCalendarView] = useState<"month" | "year" | "decade" | "century">("month")
+  const [calendarView, setCalendarView] = useState<
+    "month" | "year" | "decade" | "century"
+  >("month")
 
   const [selectedDate, setSelectedDate] = useState(() => {
     const saved = sessionStorage.getItem("selectedDate")
@@ -53,7 +55,7 @@ const EmotionCalendar = () => {
     const formatted = localDate.toISOString().split("T")[0]
 
     sessionStorage.setItem("selectedDate", formatted)
-    navigate("/mypage/list")
+    navigate("/mypage/list", { viewTransition: true })
   }
 
   return (
