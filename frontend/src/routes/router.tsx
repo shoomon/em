@@ -9,6 +9,9 @@ import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 import { lazy } from "react"
+import CalendarPage from "@/pages/CalendarPage/CalendarPage"
+import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
+import RecommendPage from "@/pages/RecommendPage/RecommendPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -28,6 +31,18 @@ const router = createBrowserRouter([
           {
             path: "/",
             element: <HomePage />,
+          },
+          {
+            path: "/recommend",
+            element: <RecommendPage />,
+          },
+          {
+            path: "/calendar",
+            element: <CalendarPage />,
+          },
+          {
+            path: "/emotion-report",
+            element: <EmotionReportPage />,
           },
         ],
       },
