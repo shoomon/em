@@ -5,13 +5,12 @@ import {
   usePostFormAction,
   usePostFormState,
 } from "../../contexts/PostFormContext"
-import { PostFormStateType, PostFormActionType } from "../../types/post"
 
 interface EmotionSelectorProps {}
 
 const EmotionSelector = ({}: EmotionSelectorProps) => {
-  const { formData } = usePostFormState() as PostFormStateType
-  const { updateFormData } = usePostFormAction() as PostFormActionType
+  const { formData } = usePostFormState()
+  const { updateFormData } = usePostFormAction()
 
   const { emotion: emotionState } = formData
 

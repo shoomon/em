@@ -4,14 +4,13 @@ import MapPinMarker from "@/features/map/components/MapPinMarker"
 import { LatLng } from "@/features/map/types/map"
 import { useEffect, useState } from "react"
 import { usePostFormAction } from "../../contexts/PostFormContext"
-import { PostFormActionType } from "../../types/post"
 
 interface MapSelectorProps {
   setIsButtonDisabled: (isDisabled: boolean) => void
 }
 
 const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
-  const { handleMapChange } = usePostFormAction() as PostFormActionType
+  const { handleMapChange } = usePostFormAction()
   const [initLocation, setInitLocation] = useState<LatLng | null>(null)
   const [mapCenter, setMapCenter] = useState<LatLng | null>(null) // 지도 중앙 위치
   const [address, setAddress] = useState("") // 주소

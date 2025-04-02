@@ -5,11 +5,7 @@ import {
   usePostFormAction,
   usePostFormState,
 } from "../../contexts/PostFormContext"
-import {
-  PostCreateStep,
-  PostFormActionType,
-  PostFormStateType,
-} from "../../types/post"
+import { PostCreateStep } from "../../types/post"
 import NextStepButtonSection from "../NextStepButtonSection"
 import EmotionSelectorContainer from "./EmotionSelectorContainer"
 import MapSelector from "./MapSelector"
@@ -17,9 +13,8 @@ import PostConfirm from "./PostConfirm"
 import PostContentInput from "./PostContentInput"
 
 const PostCreateForm = () => {
-  const { currentStep, isSubmitPending } =
-    usePostFormState() as PostFormStateType
-  const { handleSubmit } = usePostFormAction() as PostFormActionType
+  const { currentStep, isSubmitPending } = usePostFormState()
+  const { handleSubmit } = usePostFormAction()
 
   const [animatedStep, setAnimatedStep] = useState(currentStep)
   const [isButtonDisabled, setIsButtonDisabled] = useState(false) // 버튼 비활성화 여부

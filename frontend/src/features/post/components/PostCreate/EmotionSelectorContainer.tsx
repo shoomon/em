@@ -4,7 +4,7 @@ import EmotionSelector from "./EmotionSelector"
 interface EmotionSelectorContainerProps {}
 
 const EmotionSelectorContainer = ({}: EmotionSelectorContainerProps) => {
-  // const { formData } = usePostFormState() as PostFormStateType
+  // const { formData } = usePostFormState()
   // const { data, isLoading, isSuccess } = useEmotionAnalysis(formData.content)
 
   // const loadingComponent = createPortal(

@@ -131,8 +131,10 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
 
 export default PostFormProvider
 
-export const usePostFormState = () => use(PostFormStateContext)
-export const usePostFormAction = () => use(PostFormActionContext)
+export const usePostFormState = () =>
+  use(PostFormStateContext) as PostFormStateType
+export const usePostFormAction = () =>
+  use(PostFormActionContext) as PostFormActionType
 export const usePostForm = () => ({
   ...usePostFormState(),
   ...usePostFormAction(),

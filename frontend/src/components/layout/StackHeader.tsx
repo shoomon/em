@@ -26,15 +26,17 @@ const StackHeader = memo(() => {
   }
 
   return (
-    <header className="flex items-center justify-between h-full px-5">
-      <div onClick={handleClick} className="cursor-pointer basis-1/3">
-        <ChevronLeftIcon className="w-8 h-8" />
+    <header className="flex items-center justify-between h-full px-4">
+      <div onClick={handleClick} className="cursor-pointer basis-1/8">
+        <ChevronLeftIcon className="size-7" />
       </div>
 
-      <div className="basis-1/3">
-        <h3 className="text-xl text-center font-bold text-em-black">{title}</h3>
+      <div className="flex-1">
+        <h3 className="text-base text-center font-extrabold text-em-black">
+          {title}
+        </h3>
       </div>
-      <div className="basis-1/3"></div>
+      <div className="basis-1/8"></div>
     </header>
   )
 })

@@ -1,17 +1,16 @@
 import EmSection from "@/components/EmSection/EmSection"
 import EmTextArea from "@/components/EmTextArea/EmTextArea"
+import { memo } from "react"
 import {
   usePostFormAction,
   usePostFormState,
 } from "../../contexts/PostFormContext"
-import { PostFormActionType, PostFormStateType } from "../../types/post"
-import { memo } from "react"
 
 type PostContentInputProps = {}
 
 const PostContentInput = ({}: PostContentInputProps) => {
-  const { formData } = usePostFormState() as PostFormStateType
-  const { updateFormData } = usePostFormAction() as PostFormActionType
+  const { formData } = usePostFormState()
+  const { updateFormData } = usePostFormAction()
 
   const { content: textState } = formData
 
