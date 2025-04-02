@@ -12,6 +12,7 @@ import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 import java.io.IOException;
+import java.time.Instant;
 
 @Configuration
 @Slf4j
@@ -30,6 +31,8 @@ public class SpotifyConfig {
     @Getter
     private SpotifyApi spotifyApi;
 
+    private Instant tokenExpiry;
+
     @PostConstruct
     public void init() {
         spotifyApi = new SpotifyApi.Builder()
@@ -41,8 +44,11 @@ public class SpotifyConfig {
     public String accessToken() {
         ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
         try {
-            final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            if (tokenExpiry == null || Instant.now().isAfter(tokenExpiry)) {
+                final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+                spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+                tokenExpiry = Instant.now().plusSeconds(clientCredentials.getExpiresIn()-10);
+            }
             return spotifyApi.getAccessToken();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             log.error("Error getting access token: {}", e.getMessage());
