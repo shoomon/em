@@ -35,7 +35,7 @@ public class MusicService {
         this.spotifyConfig = spotifyConfig;
         this.spotifyApi = spotifyConfig.getSpotifyApi();
         // 서비스 시작 시 access token을 갱신합니다.
-        spotifyConfig.accessToken();
+//        spotifyConfig.accessToken();
     }
 
     public List<SpotifySearchResponse> search(String trackName) {

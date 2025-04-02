@@ -44,7 +44,7 @@ public class SpotifyConfig {
     public String accessToken() {
         ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
         try {
-            if (Instant.now().isAfter(tokenExpiry)) {
+            if (tokenExpiry == null || Instant.now().isAfter(tokenExpiry)) {
                 final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
                 spotifyApi.setAccessToken(clientCredentials.getAccessToken());
                 tokenExpiry = Instant.now().plusSeconds(clientCredentials.getExpiresIn()-10);
