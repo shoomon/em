@@ -48,7 +48,6 @@ public class SpotifyConfig {
                 final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
                 spotifyApi.setAccessToken(clientCredentials.getAccessToken());
                 tokenExpiry = Instant.now().plusSeconds(clientCredentials.getExpiresIn()-10);
-                return spotifyApi.getAccessToken();
             }
             return spotifyApi.getAccessToken();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
