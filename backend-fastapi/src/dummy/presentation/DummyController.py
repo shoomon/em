@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct
-from main.common.config.Emotions import EMOTIONS
-from main.common.config.QdrantConfig import COLLECTION_NAME, qdrantClient
+from src.common.config.Emotions import EMOTIONS
+from src.common.config.QdrantConfig import COLLECTION_NAME, qdrantClient
 
 dummyController = APIRouter(
     prefix="/dummy",

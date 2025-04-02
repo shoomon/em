@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from main.dummy.presentation.DummyController import dummyController
-from main.music_recommendation.presentation.MusicRecommendationController import musicRecommendationController
+from src.dummy.presentation.DummyController import dummyController
+from src.music_recommendation.presentation.MusicRecommendationController import musicRecommendationController
 app = FastAPI()
 app.include_router(dummyController)
 app.include_router(musicRecommendationController)

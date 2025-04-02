@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
-from main.music_recommendation.dto.request.AddSongRequest import AddSongRequest
-from main.music_recommendation.dto.request.EmotionCountRequest import EmotionCountRequest
-from main.music_recommendation.dto.request.EmotionUpdateRequest import EmotionUpdateRequest
-from main.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
-from main.common.config.Emotions import EMOTIONS
-from main.music_recommendation.util.VectorUtil import VectorUtil
+from src.music_recommendation.dto.request.AddSongRequest import AddSongRequest
+from src.music_recommendation.dto.request.EmotionCountRequest import EmotionCountRequest
+from src.music_recommendation.dto.request.EmotionUpdateRequest import EmotionUpdateRequest
+from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
+from src.common.config.Emotions import EMOTIONS
+from src.music_recommendation.util.VectorUtil import VectorUtil
 
 musicRecommendationController = APIRouter(
     prefix="/recommendation",
