@@ -3,7 +3,6 @@ package com.ssafy.em.music.application;
 import com.neovisionaries.i18n.CountryCode;
 import com.ssafy.em.common.config.SpotifyConfig;
 import com.ssafy.em.music.dto.response.SpotifySearchResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -18,14 +17,13 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequ
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
 @Slf4j
 public class MusicService {
 
-    private static final int LIMIT = 10;
+    private static final int LIMIT = 50;
 
     private final SpotifyApi spotifyApi;
     private final SpotifyConfig spotifyConfig;
