@@ -1,12 +1,14 @@
-import { MapPinIcon } from "lucide-react"
-
 import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
+import ReactionButton from "@/features/post/components/ReactionButton"
+import useReaction from "@/features/post/hooks/useReaction"
+import { Post, ReactionType } from "@/features/post/types/post"
 import { getRelativeTime } from "@/utils/time"
+import { ListMusicIcon, MapPinIcon } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
-import usePostDelete from "../hooks/usePostDelete"
-import useReaction from "../hooks/useReaction"
-import { Post, ReactionType } from "../types/post"
-import ReactionButton from "./ReactionButton"
+
+interface PostItemProps extends Post {
+  onDelete: () => void
+}
 
 const PostItem = ({
   postId,
@@ -15,10 +17,12 @@ const PostItem = ({
   imageUrl,
   emotion,
   content,
+  musicInfo,
   emotionInfo,
   address,
   createdAt,
-}: Post) => {
+  onDelete,
+}: PostItemProps) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const [isOverflow, setIsOverflow] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -29,7 +33,6 @@ const PostItem = ({
     clickedReaction,
     setClickedReaction,
   } = useReaction({ postId, emotionInfo })
-  const postMutation = usePostDelete(postId)
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -48,10 +51,6 @@ const PostItem = ({
   const handleReaction = (reactionType: ReactionType) => {
     setClickedReaction(reactionType)
     reactionMutation.mutate(reactionType)
-  }
-
-  const handlePostDelete = () => {
-    postMutation.mutate()
   }
 
   return (
@@ -79,8 +78,8 @@ const PostItem = ({
 
         {isAuthor && (
           <button
-            className="text-sm cursor-pointer text-rose-400"
-            onClick={handlePostDelete}>
+            className="self-start text-sm cursor-pointer text-rose-400"
+            onClick={onDelete}>
             삭제
           </button>
         )}
@@ -105,6 +104,15 @@ const PostItem = ({
             </button>
           ))}
       </div>
+
+      {musicInfo && (
+        <div className="flex items-center gap-1 px-2 py-1 border border-green-400 rounded-full w-fit max-w-2/3 bg-em-white">
+          <ListMusicIcon className="stroke-green-400 size-4 shrink-0" />
+          <p className="text-xs break-all line-clamp-1">
+            {musicInfo.artistName} - {musicInfo.title}
+          </p>
+        </div>
+      )}
 
       <div className="flex items-center gap-2">
         {Object.entries(likeCounts).map(([k, v]) => {

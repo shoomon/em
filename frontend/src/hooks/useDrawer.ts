@@ -27,8 +27,6 @@ const useDrawer = ({ drawerKey, isOpen, setIsOpen }: UseDrawerProps) => {
       }
     }
   }, [isOpen])
-
-  return { isOpen, setIsOpen }
 }
 
 export default useDrawer

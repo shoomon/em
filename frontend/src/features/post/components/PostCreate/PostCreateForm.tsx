@@ -10,7 +10,7 @@ import NextStepButtonSection from "../NextStepButtonSection"
 import EmotionSelectorContainer from "./EmotionSelectorContainer"
 import MapSelector from "./MapSelector"
 import PostConfirm from "./PostConfirm"
-import PostContentInput from "./PostContentInput"
+import PostContentsContainer from "./PostContentsContainer"
 
 const PostCreateForm = () => {
   const { currentStep, isSubmitPending } = usePostFormState()
@@ -33,7 +33,7 @@ const PostCreateForm = () => {
       <MapSelector setIsButtonDisabled={setIsButtonDisabled} />
     ),
     [PostCreateStep.Emotion]: <EmotionSelectorContainer />,
-    [PostCreateStep.Content]: <PostContentInput />,
+    [PostCreateStep.Content]: <PostContentsContainer />,
     [PostCreateStep.Confirm]: <PostConfirm />,
   }
 
@@ -42,8 +42,8 @@ const PostCreateForm = () => {
   }
 
   return (
-    <form className="h-full w-full" onSubmit={handleSubmit}>
-      <div className="flex w-full flex-col justify-start h-full">
+    <form className="w-full h-full" onSubmit={handleSubmit}>
+      <div className="flex flex-col justify-start w-full h-full">
         {/* 현재 스탭 컴포넌트 */}
         <div className="flex basis-full">
           <StepAnimateLayout>{STEP_COMPONENTS[animatedStep]}</StepAnimateLayout>
