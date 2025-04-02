@@ -19,23 +19,19 @@ const usePosts = ({ type, location }: UsePostsProps) => {
 
   const fetchFn = async (pageParam: any) => {
     const isCluster = type === "cluster"
+    const response = await fetchPostList({
+      ...location,
+      minLat: isCluster ? clusterGrid[0].lat : undefined,
+      minLng: isCluster ? clusterGrid[0].lng : undefined,
+      maxLat: isCluster ? clusterGrid[1].lat : undefined,
+      maxLng: isCluster ? clusterGrid[1].lng : undefined,
+      postId: pageParam.lastId,
+      dist: pageParam.lastDist,
+      emoCnt: pageParam.lastCnt,
+      sort: sortType,
+    })
 
-    try {
-      const response = await fetchPostList({
-        ...location,
-        minLat: isCluster ? clusterGrid[0].lat : undefined,
-        minLng: isCluster ? clusterGrid[0].lng : undefined,
-        maxLat: isCluster ? clusterGrid[1].lat : undefined,
-        maxLng: isCluster ? clusterGrid[1].lng : undefined,
-        postId: pageParam.lastId,
-        dist: pageParam.lastDist,
-        emoCnt: pageParam.lastCnt,
-        sort: sortType,
-      })
-      return response
-    } catch (error) {
-      console.error(error)
-    }
+    return response
   }
 
   // 게시글 조회
@@ -55,7 +51,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
       lastCnt: 0,
     },
     getNextPageParam: (lastPage) => {
-      if (lastPage.meta?.hasNext) {
+      if (lastPage.meta.hasNext) {
         return {
           lastId: lastPage.meta.lastId ?? undefined,
           lastDist: lastPage.meta.lastDist ?? undefined,

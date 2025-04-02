@@ -70,6 +70,14 @@ export interface PostInfiniteData {
   }
 }
 
+export interface PlayListRequest {
+  lng: number
+  lat: number
+  rad?: number
+  lastMusicId: number
+  lastMusicCount: number
+}
+
 export enum PostCreateStep {
   Map = 1,
   Content = 2,
