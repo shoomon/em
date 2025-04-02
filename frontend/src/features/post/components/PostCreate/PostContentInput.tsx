@@ -4,7 +4,8 @@ import {
   usePostFormAction,
   usePostFormState,
 } from "../../contexts/PostFormContext"
-import { PostFormStateType, PostFormActionType } from "../../types/post"
+import { PostFormActionType, PostFormStateType } from "../../types/post"
+import { memo } from "react"
 
 type PostContentInputProps = {}
 
@@ -31,4 +32,4 @@ const PostContentInput = ({}: PostContentInputProps) => {
     </EmSection>
   )
 }
-export default PostContentInput
+export default memo(PostContentInput)

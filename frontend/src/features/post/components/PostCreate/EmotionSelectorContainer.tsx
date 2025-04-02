@@ -1,3 +1,4 @@
+import { memo } from "react"
 import EmotionSelector from "./EmotionSelector"
 
 interface EmotionSelectorContainerProps {}
@@ -34,4 +35,4 @@ const EmotionSelectorContainer = ({}: EmotionSelectorContainerProps) => {
     </div>
   )
 }
-export default EmotionSelectorContainer
+export default memo(EmotionSelectorContainer)

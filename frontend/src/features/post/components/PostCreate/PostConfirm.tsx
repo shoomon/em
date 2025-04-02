@@ -7,6 +7,7 @@ import MapPinMarker from "@/features/map/components/MapPinMarker"
 import useMap from "@/features/map/hooks/useMap"
 import { usePostFormState } from "../../contexts/PostFormContext"
 import { PostFormStateType } from "../../types/post"
+import { memo } from "react"
 
 type PostConfirmProps = {}
 
@@ -76,4 +77,4 @@ const PostConfirm = ({}: PostConfirmProps) => {
   )
 }
 
-export default PostConfirm
+export default memo(PostConfirm)
