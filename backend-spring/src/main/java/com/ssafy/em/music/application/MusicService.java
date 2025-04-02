@@ -1,7 +1,9 @@
 package com.ssafy.em.music.application;
 
+import com.neovisionaries.i18n.CountryCode;
 import com.ssafy.em.common.config.SpotifyConfig;
 import com.ssafy.em.music.dto.response.SpotifySearchResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -26,16 +28,20 @@ public class MusicService {
     private static final int LIMIT = 10;
 
     private final SpotifyApi spotifyApi;
+    private final SpotifyConfig spotifyConfig;
 
     public MusicService(SpotifyConfig spotifyConfig) {
         // SpotifyConfig에서 이미 생성한 SpotifyApi 인스턴스를 재사용합니다.
+        this.spotifyConfig = spotifyConfig;
         this.spotifyApi = spotifyConfig.getSpotifyApi();
         // 서비스 시작 시 access token을 갱신합니다.
-        String token = spotifyConfig.accessToken();
-        this.spotifyApi.setAccessToken(token);
+        spotifyConfig.accessToken();
     }
 
     public List<SpotifySearchResponse> search(String trackName) {
+
+        spotifyConfig.accessToken();
+
         List <SpotifySearchResponse> musicList = new ArrayList<>();
 
         // 입력값이 없으면 기본 검색어 사용
@@ -47,6 +53,7 @@ public class MusicService {
 
         try {
             SearchTracksRequest searchTrackRequest = spotifyApi.searchTracks(trackName)
+                    .market(CountryCode.KR)
                     .limit(LIMIT)
                     .build();
 
@@ -55,7 +62,7 @@ public class MusicService {
 
             // popularity 기준 내림차순 정렬 (값이 높을수록 인기)
             List<Track> sortedTracks = Arrays.stream(tracks)
-                    .sorted(Comparator.comparingInt(Track::getPopularity).reversed())
+//                    .sorted(Comparator.comparingInt(Track::getPopularity).reversed())
                     .toList();
 
             for (Track track : sortedTracks) {
