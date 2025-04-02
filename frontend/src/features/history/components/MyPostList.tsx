@@ -14,7 +14,15 @@ const MyPostList = ({ postList }: MyPostListProps) => {
             작성한 게시글이 없습니다.
           </div>
         ) : (
-          postList.map((item) => <PostItem key={item.postId} {...item} />)
+          postList.map((item) => (
+            <PostItem
+              key={item.postId}
+              {...item}
+              onDelete={() => {
+                console.log("delete")
+              }}
+            />
+          ))
         )}
       </div>
     </div>

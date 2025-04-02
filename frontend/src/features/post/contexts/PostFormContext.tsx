@@ -48,7 +48,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
 
   // formData에 입력을 했는지 확인하는 함수
   const isFormDataValid = useCallback(
-    (step: PostCreateStep) => {
+    (step: PostCreateStep): boolean => {
       if (step === PostCreateStep.Map) {
         return formData.latitude !== 0 && formData.longitude !== 0
       }
@@ -56,8 +56,9 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
         return formData.emotion !== ""
       }
       if (step === PostCreateStep.Content) {
-        return formData.content.trim() !== "" || formData.title
+        return formData.content.trim() !== "" || formData.title !== null
       }
+      return false
     },
     [formData],
   )
