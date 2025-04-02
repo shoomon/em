@@ -3,7 +3,7 @@ import { Music } from "../types/music"
 
 const MusicItem = ({ albumImageUrl, title, artistName }: Music) => {
   return (
-    <div className="flex items-center gap-2 py-2 border-b border-b-em-gray-md">
+    <div className="flex items-center gap-2 p-3 border-b border-b-em-gray-md">
       <img
         src={
           albumImageUrl ||

@@ -1,12 +1,14 @@
-import { ListMusicIcon, MapPinIcon } from "lucide-react"
-
 import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
+import ReactionButton from "@/features/post/components/ReactionButton"
+import useReaction from "@/features/post/hooks/useReaction"
+import { Post, ReactionType } from "@/features/post/types/post"
 import { getRelativeTime } from "@/utils/time"
+import { ListMusicIcon, MapPinIcon } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
-import usePostDelete from "../hooks/usePostDelete"
-import useReaction from "../hooks/useReaction"
-import { Post, ReactionType } from "../types/post"
-import ReactionButton from "./ReactionButton"
+
+interface PostItemProps extends Post {
+  onDelete: () => void
+}
 
 const PostItem = ({
   postId,
@@ -19,7 +21,8 @@ const PostItem = ({
   emotionInfo,
   address,
   createdAt,
-}: Post) => {
+  onDelete,
+}: PostItemProps) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const [isOverflow, setIsOverflow] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -30,7 +33,6 @@ const PostItem = ({
     clickedReaction,
     setClickedReaction,
   } = useReaction({ postId, emotionInfo })
-  const postMutation = usePostDelete(postId)
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -49,10 +51,6 @@ const PostItem = ({
   const handleReaction = (reactionType: ReactionType) => {
     setClickedReaction(reactionType)
     reactionMutation.mutate(reactionType)
-  }
-
-  const handlePostDelete = () => {
-    postMutation.mutate()
   }
 
   return (
@@ -81,7 +79,7 @@ const PostItem = ({
         {isAuthor && (
           <button
             className="self-start text-sm cursor-pointer text-rose-400"
-            onClick={handlePostDelete}>
+            onClick={onDelete}>
             삭제
           </button>
         )}
