@@ -1,18 +1,22 @@
 import EmSection from "@/components/EmSection/EmSection"
 import EmotionSelectItem from "@/features/emotion/components/EmotionSelectItem"
 import { EMOTION_ITEMS } from "@/features/emotion/constants"
+import {
+  usePostFormAction,
+  usePostFormState,
+} from "../../contexts/PostFormContext"
+import { PostFormStateType, PostFormActionType } from "../../types/post"
 
-interface EmotionSelectorProps {
-  onEmotionChange: (_emotion: string) => void
-  emotionState: string
-}
+interface EmotionSelectorProps {}
 
-const EmotionSelector = ({
-  onEmotionChange,
-  emotionState,
-}: EmotionSelectorProps) => {
+const EmotionSelector = ({}: EmotionSelectorProps) => {
+  const { formData } = usePostFormState() as PostFormStateType
+  const { updateFormData } = usePostFormAction() as PostFormActionType
+
+  const { emotion: emotionState } = formData
+
   const handleEmotionSelect = (emotionId: string) => {
-    onEmotionChange(emotionId)
+    updateFormData("emotion", emotionId)
   }
 
   return (

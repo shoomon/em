@@ -1,5 +1,6 @@
 import Button from "@/components/Button/Button"
 import { EmotionItem } from "../types/emotion"
+import { memo } from "react"
 
 interface EmotionSelectItemProps {
   onSelect?: (emotionId: string) => void
@@ -31,4 +32,4 @@ const EmotionSelectItem = ({
   )
 }
 
-export default EmotionSelectItem
+export default memo(EmotionSelectItem)

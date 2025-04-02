@@ -1,17 +1,11 @@
+import { memo } from "react"
 import EmotionSelector from "./EmotionSelector"
 
-interface EmotionSelectorContainerProps {
-  content: string
-  onEmotionChange: (_emotion: string) => void
-  emotionState: string
-}
+interface EmotionSelectorContainerProps {}
 
-const EmotionSelectorContainer = ({
-  // content,
-  onEmotionChange,
-  emotionState,
-}: EmotionSelectorContainerProps) => {
-  // const { data, isLoading, isSuccess } = useEmotionAnalysis(content)
+const EmotionSelectorContainer = ({}: EmotionSelectorContainerProps) => {
+  // const { formData } = usePostFormState() as PostFormStateType
+  // const { data, isLoading, isSuccess } = useEmotionAnalysis(formData.content)
 
   // const loadingComponent = createPortal(
   //   <EmLoading
@@ -37,11 +31,8 @@ const EmotionSelectorContainer = ({
           emotionState={emotionState}
         />
       )} */}
-      <EmotionSelector
-        onEmotionChange={onEmotionChange}
-        emotionState={emotionState}
-      />
+      <EmotionSelector />
     </div>
   )
 }
-export default EmotionSelectorContainer
+export default memo(EmotionSelectorContainer)

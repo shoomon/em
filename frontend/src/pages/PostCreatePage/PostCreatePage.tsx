@@ -1,4 +1,5 @@
 import PostCreateForm from "@/features/post/components/PostCreate/PostCreateForm"
+import PostFormProvider from "@/features/post/contexts/PostFormContext"
 import useStackLayoutStore from "@/store/useStackLayoutStore"
 import { useEffect } from "react"
 
@@ -29,9 +30,11 @@ const PostCreatePage = () => {
   }, [])
 
   return (
-    <div className="w-full min-h-[calc(100dvh-var(--header-height)))] flex justify-center items-center">
-      <PostCreateForm />
-    </div>
+    <PostFormProvider>
+      <div className="w-full min-h-[calc(100dvh-var(--header-height)))] flex justify-center items-center">
+        <PostCreateForm />
+      </div>
+    </PostFormProvider>
   )
 }
 export default PostCreatePage

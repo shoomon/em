@@ -3,18 +3,16 @@ import MapFixer from "@/features/map/components/MapFixer"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import { LatLng } from "@/features/map/types/map"
 import { useEffect, useState } from "react"
+import { usePostFormAction } from "../../contexts/PostFormContext"
+import { PostFormActionType } from "../../types/post"
 
-type MapSelectorProps = {
-  onMapChange: (_map: LatLng, _address: string) => void
+interface MapSelectorProps {
   setIsButtonDisabled: (isDisabled: boolean) => void
 }
 
-const MapSelector = ({
-  onMapChange,
-  setIsButtonDisabled,
-}: MapSelectorProps) => {
+const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
+  const { handleMapChange } = usePostFormAction() as PostFormActionType
   const [initLocation, setInitLocation] = useState<LatLng | null>(null)
-  // const [currentPosition, setCurrentPosition] = useState<LatLng | null>(null)
   const [mapCenter, setMapCenter] = useState<LatLng | null>(null) // 지도 중앙 위치
   const [address, setAddress] = useState("") // 주소
   // 현재 위치 가져오기
@@ -34,7 +32,7 @@ const MapSelector = ({
         (_, response: naver.maps.Service.ReverseGeocodeResponse) => {
           const address = response.v2.address.jibunAddress
           setAddress(address)
-          onMapChange({ lat, lng }, address)
+          handleMapChange({ lat, lng }, address)
         },
       )
     })
@@ -61,7 +59,7 @@ const MapSelector = ({
 
     // 반경 영역을 벗어났는지 확인
     if (!isOutOfRange) {
-      onMapChange(newCenter, address)
+      handleMapChange(newCenter, address)
       setIsButtonDisabled(false)
     } else {
       setIsButtonDisabled(true)
