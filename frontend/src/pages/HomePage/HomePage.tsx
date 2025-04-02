@@ -25,7 +25,9 @@ const HomePage = () => {
   } = useGps()
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
   const { setType, isDrawerOpen, setIsDrawerOpen } = usePostStore()
-  const { isOpen, setIsOpen } = useDrawer({
+  const navigate = useNavigate()
+
+  useDrawer({
     drawerKey: "home",
     isOpen: isDrawerOpen,
     setIsOpen: (isDrawerOpen: boolean) => {
@@ -33,13 +35,12 @@ const HomePage = () => {
       setIsStoppedWatching(isDrawerOpen)
     },
   })
-  const navigate = useNavigate()
 
   const handlePostCreate = () => {
     navigate("/posts/create")
   }
   const handlePostSearch = () => {
-    setIsOpen(true)
+    setIsDrawerOpen(true)
     setType("all")
   }
 
@@ -63,7 +64,9 @@ const HomePage = () => {
       <PostCreateButton onClick={handlePostCreate} />
       <PostSearchButton onClick={handlePostSearch} />
 
-      <EmDrawer open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
+      <EmDrawer
+        open={isDrawerOpen}
+        onOpenChange={() => setIsDrawerOpen(!isDrawerOpen)}>
         <div>
           <Tabs
             tabs={tabs}

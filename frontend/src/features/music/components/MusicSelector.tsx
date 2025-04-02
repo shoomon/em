@@ -6,12 +6,17 @@ import { Music } from "@/features/music/types/music"
 import { FormEvent, useRef } from "react"
 import MusicEmpty from "./MusicEmpty"
 
-const MusicSelector = () => {
+interface MusicSelectorProps {
+  onSelect: (music: Music) => void
+}
+
+const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
   const { data, isPending, setKeyword } = useMusicSearch()
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.stopPropagation()
 
     if (inputRef.current) {
       setKeyword(inputRef.current.value)
@@ -51,7 +56,11 @@ const MusicSelector = () => {
           ))
         ) : data && data.length > 0 ? (
           data.map((item: Music, index: number) => (
-            <MusicItem key={index} {...item} />
+            <MusicItem
+              key={index}
+              music={item}
+              onClick={() => onSelect(item)}
+            />
           ))
         ) : (
           <MusicEmpty description="해당하는 음악이 없어요" />

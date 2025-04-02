@@ -56,7 +56,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
         return formData.emotion !== ""
       }
       if (step === PostCreateStep.Content) {
-        return formData.content.trim() !== ""
+        return formData.content.trim() !== "" || formData.title
       }
     },
     [formData],

@@ -1,14 +1,26 @@
 import { StepForward } from "lucide-react"
 import { Music } from "../types/music"
 
-const MusicItem = ({ albumImageUrl, title, artistName }: Music) => {
+interface MusicItemProps {
+  music: Music
+  readOnly?: boolean
+
+  onClick?: (music: Music) => void
+}
+
+const MusicItem = ({ music, readOnly = false, onClick }: MusicItemProps) => {
+  const { artistName, title, albumImageUrl } = music
+
+  const handleClick = () => {
+    onClick?.(music)
+  }
+
   return (
-    <div className="flex items-center gap-2 p-3 border-b border-b-em-gray-md">
+    <div
+      className={`flex items-center w-full gap-2 p-3 ${!readOnly ? "border-b border-b-em-gray-md" : ""}`}
+      onClick={handleClick}>
       <img
-        src={
-          albumImageUrl ||
-          "https://i.maniadb.com/images/album/747/747251_1_f.jpg"
-        }
+        src={albumImageUrl || ""}
         alt=""
         className="object-cover rounded-lg size-12"
       />
@@ -21,7 +33,9 @@ const MusicItem = ({ albumImageUrl, title, artistName }: Music) => {
           </p>
         </div>
 
-        <StepForward className="cursor-pointer shrink-0 stroke-em-gray size-5" />
+        {!readOnly && (
+          <StepForward className="cursor-pointer shrink-0 stroke-em-gray size-5" />
+        )}
       </div>
     </div>
   )

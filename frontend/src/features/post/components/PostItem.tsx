@@ -114,15 +114,6 @@ const PostItem = ({
         </div>
       )}
 
-      {musicInfo && (
-        <div className="flex items-center gap-1 px-2 py-1 border border-green-400 rounded-full w-fit max-w-2/3 bg-em-white">
-          <ListMusicIcon className="stroke-green-400 size-4 shrink-0" />
-          <p className="text-xs break-all line-clamp-1">
-            {musicInfo.artistName} - {musicInfo.title}
-          </p>
-        </div>
-      )}
-
       <div className="flex items-center gap-2">
         {Object.entries(likeCounts).map(([k, v]) => {
           if (k === "sum") {
