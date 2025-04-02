@@ -5,14 +5,13 @@ import { EMOTION_ITEMS } from "@/features/emotion/constants"
 import { EmotionItem } from "@/features/emotion/types/emotion"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import useMap from "@/features/map/hooks/useMap"
-import { usePostFormState } from "../../contexts/PostFormContext"
-import { PostFormStateType } from "../../types/post"
 import { memo } from "react"
+import { usePostFormState } from "../../contexts/PostFormContext"
 
 type PostConfirmProps = {}
 
 const PostConfirm = ({}: PostConfirmProps) => {
-  const { formData } = usePostFormState() as PostFormStateType
+  const { formData } = usePostFormState()
 
   const { latitude: lat, longitude: lng, content, emotion } = formData
 
