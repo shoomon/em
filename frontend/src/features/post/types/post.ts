@@ -1,4 +1,5 @@
 import { LatLng } from "@/features/map/types/map"
+import { Music } from "@/features/music/types/music"
 import { FormEvent } from "react"
 
 export type PostListType = "all" | "cluster" | "marker"
@@ -72,7 +73,7 @@ export enum PostCreateStep {
   Confirm = 4,
 }
 
-export interface PostCreateRequest {
+export interface PostCreateRequest extends Music {
   content: string
   latitude: LatLng["lat"]
   longitude: LatLng["lng"]
@@ -81,17 +82,16 @@ export interface PostCreateRequest {
 }
 
 export interface PostFormStateType {
-  isFocus: boolean
   currentStep: PostCreateStep
   formData: PostCreateRequest
   isSubmitPending: boolean
 }
 
 export interface PostFormActionType {
-  setIsFocus: (isFocus: boolean) => void
   updateStep: (step: PostCreateStep) => void
   handleMapChange: (map: LatLng, address: string) => void
   updateFormData: (key: keyof PostCreateRequest, value: any) => void
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void
   isFormDataValid: (step: PostCreateStep) => boolean | undefined
+  handleMusicChange: (music: Music) => void
 }

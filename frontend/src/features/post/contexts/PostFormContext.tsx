@@ -1,4 +1,5 @@
 import { LatLng } from "@/features/map/types/map"
+import { Music } from "@/features/music/types/music"
 import {
   createContext,
   FormEvent,
@@ -28,9 +29,6 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate()
   const { createPostAsync, isPending } = usePostCreate()
 
-  // 포커스 상태 관리
-  const [isFocus, setIsFocus] = useState<boolean>(false)
-
   // 스탭 상태 관리
   const [currentStep, setCurrentStep] = useState<PostCreateStep>(
     PostCreateStep.Map,
@@ -42,6 +40,10 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     longitude: 0,
     emotion: "",
     address: "",
+    title: null,
+    artistName: null,
+    albumImageUrl: null,
+    spotifyAlbumUrl: null,
   })
 
   // formData에 입력을 했는지 확인하는 함수
@@ -78,6 +80,11 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     })
   }
 
+  // 음악 변경 시 호출
+  const handleMusicChange = (music: Music) => {
+    setFormData((prev) => ({ ...prev, ...music }))
+  }
+
   // 폼 데이터 업데이트 이벤트
   const updateFormData = useCallback(
     (key: keyof PostCreateRequest, value: any) => {
@@ -106,18 +113,17 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
 
   // value 초기화
   const postFormStateValue = {
-    isFocus,
     currentStep,
     formData,
     isSubmitPending: isPending,
   }
   const postFormActionValue = {
-    setIsFocus,
     updateStep,
     handleMapChange,
     updateFormData,
     handleSubmit,
     isFormDataValid,
+    handleMusicChange,
   }
 
   return (
