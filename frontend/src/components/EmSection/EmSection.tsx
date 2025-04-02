@@ -49,13 +49,13 @@ const EmSectionHeader = ({
           </h3>
         )}
         {headerRight && (
-          <div className="text-xs sm:text-sm text-em-black/60">
+          <div className="text-sm sm:text-base text-em-black/60">
             {headerRight}
           </div>
         )}
       </div>
       {description && (
-        <p className="text-xs sm:text-sm text-em-black/60 leading-relaxed">
+        <p className="text-sm sm:text-base text-em-black/60 leading-relaxed">
           {description}
         </p>
       )}

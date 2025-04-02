@@ -5,6 +5,8 @@ import { EMOTION_ITEMS } from "@/features/emotion/constants"
 import { EmotionItem } from "@/features/emotion/types/emotion"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import useMap from "@/features/map/hooks/useMap"
+import MusicItem from "@/features/music/components/MusicItem"
+import { ListMusicIcon } from "lucide-react"
 import { memo } from "react"
 import { usePostFormState } from "../../contexts/PostFormContext"
 
@@ -33,11 +35,11 @@ const PostConfirm = ({}: PostConfirmProps) => {
     <section className="flex flex-col w-full h-full">
       {/* 내가 있는 위치 확인 */}
       <EmSection>
-        <EmSection.Header title="🚩 내가 있는 위치" />
-        <div className="relative flex justify-start items-center w-full h-full rounded-xl shadow">
+        <EmSection.Header title="🚩 나의 위치" />
+        <div className="relative flex items-center justify-start w-full h-full shadow rounded-xl">
           <div id="map" className="w-full h-full min-h-60 rounded-xl"></div>
 
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 cursor-pointer border-neutral-200">
+          <div className="absolute p-2 -translate-x-1/2 -translate-y-1/2 cursor-pointer top-1/2 left-1/2 border-neutral-200">
             <MapPinMarker />
           </div>
         </div>
@@ -45,8 +47,8 @@ const PostConfirm = ({}: PostConfirmProps) => {
 
       {/* 기존 EmotionSelector 컴포넌트 재사용 (readonly 모드) */}
       <EmSection className="h-full">
-        <EmSection.Header title="✨ 나의 감정" />
-        <div className="flex justify-start  items-center w-full">
+        <EmSection.Header title="😇 나의 감정" />
+        <div className="flex items-center justify-start w-full">
           <EmotionSelectItem
             onSelect={() => {}}
             isSelected={false}
@@ -61,8 +63,28 @@ const PostConfirm = ({}: PostConfirmProps) => {
 
       {/* 작성한 내용 */}
       <EmSection className="h-full">
-        <EmSection.Header title="📝 나의 속 마음" />
-        <div className="flex justify-start  items-center w-full">
+        <EmSection.Header title="❤️ 나의 속마음" />
+        <div className="flex flex-col items-center justify-start w-full gap-4">
+          <div
+            className={`flex items-center justify-center w-full h-20 gap-2 border rounded-lg border-em-gray-md ${formData.title ? "bg-em-white" : "bg-em-gray-sm/30  border-dashed"}`}>
+            {formData.title ? (
+              <MusicItem
+                music={{
+                  artistName: formData.artistName,
+                  title: formData.title,
+                  albumImageUrl: formData.albumImageUrl,
+                  spotifyAlbumUrl: formData.spotifyAlbumUrl,
+                }}
+                readOnly={true}
+              />
+            ) : (
+              <>
+                <ListMusicIcon className="stroke-em-black/30" />
+                <p className="text-em-black/30">등록된 음악이 없습니다.</p>
+              </>
+            )}
+          </div>
+
           <EmTextArea
             disabled
             textState={content}

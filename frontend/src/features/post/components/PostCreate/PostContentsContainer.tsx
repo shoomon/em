@@ -21,10 +21,13 @@ const PostContentsContainer = () => {
   }
   return (
     <EmSection className="h-full">
-      <EmSection.Header title="✨ 속마음을 남겨주세요" />
+      <EmSection.Header
+        title="❤️ 속마음을 남겨 주세요."
+        description="글을 작성하고, 음악을 추가할 수 있어요!"
+      />
 
       <div
-        className={`flex items-center justify-center h-20 gap-2 border border-dashed rounded-lg cursor-pointer border-em-gray ${formData.title ? "bg-em-white" : "bg-em-gray-sm/40"}`}
+        className={`flex items-center justify-center h-20 gap-2 border rounded-lg cursor-pointer border-em-gray-md ${formData.title ? "bg-em-white" : "bg-em-gray-sm/30  border-dashed"}`}
         onClick={() => setIsOpen(true)}>
         {formData.title ? (
           <MusicItem
@@ -38,8 +41,8 @@ const PostContentsContainer = () => {
           />
         ) : (
           <>
-            <ListMusicIcon className="stroke-em-gray" />
-            <p className="text-em-gray">메시지에 음악 추가하기</p>
+            <ListMusicIcon className="stroke-em-black/30" />
+            <p className="text-em-black/30">게시글에 음악 추가하기</p>
           </>
         )}
       </div>
@@ -55,8 +58,8 @@ const PostContentsContainer = () => {
 
       <div className="h-full">
         <EmTextArea
-          placeholder="현재 어떤 생각을 하고 있나요?"
-          className="h-full"
+          placeholder="지금 어떤 생각을 하고 계신가요?"
+          className="h-full placeholder-em-black/30"
           onTextChange={handleTextChange}
           textState={textState}
         />

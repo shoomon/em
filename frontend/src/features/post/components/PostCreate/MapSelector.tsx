@@ -68,19 +68,19 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
     <div className="flex flex-col h-full gap-2">
       <EmSection>
         <EmSection.Header
-          title="🚩내 위치를 확인해주세요."
-          description="현재 위치가 올바르지 않다면 위치를 조정해주세요."
+          title="🚩 위치를 확인해 주세요."
+          description="드래그를 통해 영역 안에서 상세 위치를 조정할 수 있어요!"
         />
-        <div className="flex flex-col gap-4 h-full ">
+        <div className="flex flex-col h-full gap-4 ">
           {/* 현재 위치 정보 */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <span className="font-semibold">현재 나의 위치</span>
             <span>{address}</span>
           </div>
           {/* 지도 */}
-          <div className="relative h-full w-full bg-em-gray-sm">
+          <div className="relative w-full h-full bg-em-gray-sm">
             <MapFixer
-              className="h-full w-full"
+              className="w-full h-full"
               onDragEnd={handleDragEnd}
               initLocation={initLocation}
             />
