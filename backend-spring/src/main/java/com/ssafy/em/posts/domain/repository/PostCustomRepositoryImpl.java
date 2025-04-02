@@ -40,7 +40,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         StringBuilder baseQuery = new StringBuilder("""
         SELECT *
         FROM posts
-        WHERE created_at >= NOW() - INTERVAL '24 HOURS'
+        WHERE created_at >= (NOW() AT TIME ZONE 'Asia/Seoul') - INTERVAL '24 HOURS'
          AND ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
     """);
 
@@ -91,7 +91,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         String sql = """
         SELECT p.id, ST_X(p.location) AS longitude, ST_Y(p.location) AS latitude
         FROM posts p
-        WHERE p.created_at >= NOW() - INTERVAL '24 HOURS'
+        WHERE p.created_at >= (NOW() AT TIME ZONE 'Asia/Seoul') - INTERVAL '24 HOURS'
           AND ST_DWithin(p.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
     """;
 
