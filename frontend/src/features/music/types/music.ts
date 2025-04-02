@@ -1,6 +1,6 @@
 export interface Music {
-  albumName: string
-  albumImageUrl: string
-  title: string
-  artistName: string
+  artistName: string | null
+  title: string | null
+  albumImageUrl: string | null
+  spotifyAlbumUrl: string | null
 }
