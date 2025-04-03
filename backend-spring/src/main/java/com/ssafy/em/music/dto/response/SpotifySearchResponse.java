@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record SpotifySearchResponse(
+        String musicId,
         String artistName,
         String title,
         String albumImageUrl,
@@ -19,8 +20,15 @@ public record SpotifySearchResponse(
                 .build();
     }
 
-    public static SpotifySearchResponse of(String artistName, String title, String spotifyUrl, String imageUrl) {
+    public static SpotifySearchResponse of(
+            String musicId,
+            String artistName,
+            String title,
+            String spotifyUrl,
+            String imageUrl
+    ) {
         return SpotifySearchResponse.builder()
+                .musicId(musicId)
                 .artistName(artistName)
                 .title(title)
                 .spotifyAlbumUrl(spotifyUrl)

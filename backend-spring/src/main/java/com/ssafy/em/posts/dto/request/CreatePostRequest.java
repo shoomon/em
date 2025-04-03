@@ -12,6 +12,7 @@ public record CreatePostRequest(
         String emotion,
 
         // 음악 관련
+        String musicId,
         String artistName,
         String title,
         String albumImageUrl,
