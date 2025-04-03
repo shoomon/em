@@ -132,7 +132,7 @@
 
 .react-calendar__tile.react-calendar__month-view__days__day {
   width: 100%;
-  height: 3rem;
+  height: 4rem;
 }
 .react-calendar__month-view__days {
   row-gap: 1rem;

@@ -3,9 +3,7 @@ import EmSection from "@/components/EmSection/EmSection"
 import EmotionCalendar from "@/features/history/components/EmotionCalendar"
 import { Suspense } from "react"
 
-interface CalendarPageProps {}
-
-const CalendarPage = ({}: CalendarPageProps) => {
+const CalendarPage = () => {
   return (
     <div>
       {/* <section className="p-4 flex flex-col gap-6 relative">
