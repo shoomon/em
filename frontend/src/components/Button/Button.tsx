@@ -12,8 +12,9 @@ const buttonVariants = cva(
         default: "bg-em-black text-white font-semibold  hover:bg-em-black/80",
         disabled: "bg-em-gray-sm text-em-gray focus:outline-none",
         outline: "bg-em-white border border-em-gray text-em-black",
-        ghost: "bg-transparent text-em-black",
-        destructive: "bg-em-marker text-white font-semibold hover:bg-em-marker/80",
+        ghost: "bg-transparent text-em-black hover:bg-em-gray-sm",
+        destructive:
+          "bg-em-marker text-white font-semibold hover:bg-em-marker/80",
       },
       shape: {
         default: "rounded-xl",
@@ -47,9 +48,22 @@ interface ButtonProps
   children?: ReactNode
 }
 
-const Button = ({ className, variant, shape, size, weight, children, ...props }: ButtonProps) => {
+const Button = ({
+  className,
+  variant,
+  shape,
+  size,
+  weight,
+  children,
+  ...props
+}: ButtonProps) => {
   return (
-    <button className={cn(buttonVariants({ variant, shape, size, weight }), className)} {...props}>
+    <button
+      className={cn(
+        buttonVariants({ variant, shape, size, weight }),
+        className,
+      )}
+      {...props}>
       {children}
     </button>
   )
