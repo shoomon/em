@@ -1,24 +1,35 @@
+import { useMemo } from "react"
 import { EMOTION_ITEMS } from "../../constants"
-import { EmotionEngNameType, EmotionPercentages } from "../../types/emotion"
+import { EmotionKorNameType, EmotionReportResponse } from "../../types/emotion"
 import EmotionCard from "../EmotionCard/EmotionCard"
 
 interface EmotionGridProps {
-  emotionPercentages: EmotionPercentages | undefined
+  emotionReport: EmotionReportResponse | undefined
+  mostEmotion: EmotionKorNameType | null
 }
 
-const EmotionGrid = ({ emotionPercentages }: EmotionGridProps) => {
+const EmotionGrid = ({ emotionReport, mostEmotion }: EmotionGridProps) => {
+  const sortedEmotionReport = useMemo(() => {
+    return EMOTION_ITEMS.sort((a, b) => {
+      return (
+        (emotionReport?.[b.engName] as number) -
+        (emotionReport?.[a.engName] as number)
+      )
+    })
+  }, [emotionReport])
+
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {EMOTION_ITEMS.map((emotion) => (
+      {sortedEmotionReport.map((emotion) => (
         <EmotionCard
           key={emotion.id}
           emotion={emotion}
-          percentage={
-            emotionPercentages?.[emotion.engName as EmotionEngNameType] ?? "0%"
-          }
+          count={emotionReport?.[emotion.engName] ?? 0}
+          isMostEmotion={emotion.korName === mostEmotion}
         />
       ))}
     </div>
   )
 }
+
 export default EmotionGrid
