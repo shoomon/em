@@ -6,6 +6,6 @@ import java.util.List;
 
 public record GetPlaylistResponse(
         List<SpotifySearchResponse> musicList,
-        LastMusicCursor lastCursor
+        LastMusicCursor meta
 ) {
 }
