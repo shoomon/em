@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import useTermAgreement from "@/features/settings/hooks/useTermAgreement"
 import { jwtDecode } from "jwt-decode"
 import { Navigate, Outlet } from "react-router-dom"
 
@@ -7,28 +6,17 @@ const ProtectedRoute = () => {
   // 토큰 조회
   const accessToken = localStorage.getItem("accessToken")
 
-  const { isError } = useQuery({
-    queryKey: ["isLoggedIn"],
-    queryFn: () => {
-      return axios.get("/user")
-    },
-    enabled: !!accessToken,
-    staleTime: 0, // 데이터를 캐시에 저장하지 않음
-    gcTime: 0, // 데이터를 캐시에 저장하지 않음
-  })
+  const { data: isTermsAgreed, isError } = useTermAgreement()
 
-  // 로그인 상태
-  // const { isLoggedIn, setIsLoggedIn } = useAuthStore()
-
-  // 1. 로그인 상태 확인
-  // useEffect(() => {
-  //   if (!accessToken && !isLoggedIn) {
-  //     setIsLoggedIn(false)
-  //   } else {
-  //     setIsLoggedIn(true)
-  //   }
-  //   console.log("로그인 상태 확인", isLoggedIn)
-  // }, [accessToken, isLoggedIn, setIsLoggedIn])
+  // const { isError } = useQuery({
+  //   queryKey: ["isLoggedIn"],
+  //   queryFn: () => {
+  //     return axios.get("/user")
+  //   },
+  //   enabled: !!accessToken,
+  //   staleTime: 0, // 데이터를 캐시에 저장하지 않음
+  //   gcTime: 0, // 데이터를 캐시에 저장하지 않음
+  // })
 
   let isTokenValid = false
 
@@ -40,6 +28,8 @@ const ProtectedRoute = () => {
   // 토큰이 없거나 유효하지 않으면 로그인 페이지로 리다이렉트
   if (!accessToken || !isTokenValid || isError) {
     return <Navigate to="/login" replace />
+  } else if (!isTermsAgreed) {
+    // return <Navigate to="/terms-agreement" replace />
   }
 
   return <Outlet />

@@ -17,7 +17,7 @@ const LoginSuccessPage = () => {
       navigate("/login", { replace: true })
     } finally {
       setTimeout(() => {
-        navigate("/", { replace: true })
+        navigate("/terms-agreement", { replace: true })
       }, 2000)
     }
   }, [accessToken, navigate])
