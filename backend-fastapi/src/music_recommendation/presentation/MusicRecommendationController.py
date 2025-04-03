@@ -1,9 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
-from src.music_recommendation.dto.request.AddSongRequest import AddSongRequest
-from src.music_recommendation.dto.request.EmotionCountRequest import EmotionCountRequest
-from src.music_recommendation.dto.request.EmotionUpdateRequest import EmotionUpdateRequest
+from pydantic import BaseModel
 from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
 from src.common.config.Emotions import EMOTIONS
 from src.music_recommendation.util.VectorUtil import VectorUtil
@@ -14,6 +12,21 @@ musicRecommendationController = APIRouter(
 )
 
 VECTOR_DIM = len(EMOTIONS)
+
+class AddSongRequest(BaseModel):
+    song_id: int
+    title: str
+    artistName: str
+    spotifyAlbumUrl: str
+    albumImageUrl: str
+    vector: list[float]
+
+class EmotionCountRequest(BaseModel):
+    emotion_counts: dict
+
+class EmotionUpdateRequest(BaseModel):
+    song_id: int
+    emotion: str
 
 @musicRecommendationController.post("/song")
 def add_song(req: AddSongRequest):
