@@ -5,7 +5,7 @@ import TermsOfServiceSection from "@/features/settings/components/TermsOfService
 
 const MyPage = () => {
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 mt-2">
       <section className="p-4 flex flex-col gap-6 relative">
         <UserProfileCard />
       </section>
