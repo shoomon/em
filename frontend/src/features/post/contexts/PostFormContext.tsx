@@ -82,8 +82,18 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   }
 
   // 음악 변경 시 호출
-  const handleMusicChange = (music: Music) => {
-    setFormData((prev) => ({ ...prev, ...music }))
+  const handleMusicChange = (music: Music | null) => {
+    if (music) {
+      setFormData((prev) => ({ ...prev, ...music }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        title: null,
+        artistName: null,
+        albumImageUrl: null,
+        spotifyAlbumUrl: null,
+      }))
+    }
   }
 
   // 폼 데이터 업데이트 이벤트

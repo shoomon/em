@@ -3,6 +3,7 @@ import MusicItem from "@/features/music/components/MusicItem"
 import MusicSkeleton from "@/features/music/components/MusicSkeleton"
 import useMusicSearch from "@/features/music/hooks/useMusicSearch"
 import { Music } from "@/features/music/types/music"
+import { StepForward } from "lucide-react"
 import { FormEvent, useRef } from "react"
 import MusicEmpty from "./MusicEmpty"
 
@@ -49,7 +50,7 @@ const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto ">
+      <div className="flex-1 overflow-y-auto">
         {isPending ? (
           Array.from({ length: 6 }).map((_, index) => (
             <MusicSkeleton key={index} />
@@ -59,8 +60,12 @@ const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
             <MusicItem
               key={index}
               music={item}
-              onClick={() => onSelect(item)}
-            />
+              className="border-b border-b-em-gray-md"
+              onClick={() => onSelect(item)}>
+              <button className="cursor-pointer shrink-0">
+                <StepForward className="stroke-em-gray size-5" />
+              </button>
+            </MusicItem>
           ))
         ) : (
           <MusicEmpty description="해당하는 음악이 없어요" />

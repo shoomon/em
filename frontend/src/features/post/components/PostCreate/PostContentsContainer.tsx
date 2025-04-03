@@ -5,7 +5,7 @@ import MusicItem from "@/features/music/components/MusicItem"
 import MusicSelector from "@/features/music/components/MusicSelector"
 import { Music } from "@/features/music/types/music"
 import useDrawer from "@/hooks/useDrawer"
-import { ListMusicIcon } from "lucide-react"
+import { CircleXIcon, ListMusicIcon } from "lucide-react"
 import { memo, useState } from "react"
 import { usePostForm } from "../../contexts/PostFormContext"
 
@@ -19,6 +19,12 @@ const PostContentsContainer = () => {
   const handleTextChange = (text: string) => {
     updateFormData("content", text)
   }
+
+  const handleMusicDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    handleMusicChange(null)
+  }
+
   return (
     <EmSection className="h-full">
       <EmSection.Header
@@ -27,7 +33,7 @@ const PostContentsContainer = () => {
       />
 
       <div
-        className={`flex items-center justify-center h-20 gap-2 border rounded-lg cursor-pointer border-em-gray-md ${formData.title ? "bg-em-white" : "bg-em-gray-sm/30  border-dashed"}`}
+        className={`flex items-center justify-center gap-2 border min-h-20 rounded-lg cursor-pointer border-em-gray-md ${formData.title ? "bg-em-white" : "bg-em-gray-sm/30  border-dashed"}`}
         onClick={() => setIsOpen(true)}>
         {formData.title ? (
           <MusicItem
@@ -37,8 +43,14 @@ const PostContentsContainer = () => {
               albumImageUrl: formData.albumImageUrl,
               spotifyAlbumUrl: formData.spotifyAlbumUrl,
             }}
-            readOnly={true}
-          />
+            onClick={handleMusicChange}>
+            <button
+              type="button"
+              className="cursor-pointer"
+              onClick={(e) => handleMusicDelete(e)}>
+              <CircleXIcon className="size-5 fill-em-gray stroke-em-gray-sm" />
+            </button>
+          </MusicItem>
         ) : (
           <>
             <ListMusicIcon className="stroke-em-black/30" />
