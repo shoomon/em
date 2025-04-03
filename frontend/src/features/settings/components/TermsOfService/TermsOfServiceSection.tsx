@@ -1,25 +1,23 @@
 import EmSection from "@/components/EmSection/EmSection"
-import SettingsMenuItem from "@/features/settings/components/SettingsMenu/SettingsMenuItem"
 import { BookOpenIcon } from "lucide-react"
+import { TermType } from "../../types/terms.type"
+import TermMenuItem from "./TermMenuItem"
 
 interface TermsOfServiceSectionProps {}
 
 const TermsOfServiceSection = ({}: TermsOfServiceSectionProps) => {
   const menuItems = [
     {
-      label: "이음 이용 약관",
-      icon: <BookOpenIcon className="size-full" />,
-      to: "/mypage/terms-of-service",
-    },
-    {
       label: "위치기반 서비스 이용 약관",
-      icon: <BookOpenIcon className="size-full" />,
-      to: "/mypage/terms-of-service",
+      type: TermType.LOCATION_BASED_SERVICE,
     },
     {
       label: "개인정보 처리 방침",
-      icon: <BookOpenIcon className="size-full" />,
-      to: "/mypage/privacy-policy",
+      type: TermType.PRIVACY_POLICY,
+    },
+    {
+      label: "마케팅 알림 수신 동의",
+      type: TermType.MARKETING_NOTIFICATION,
     },
   ]
   return (
@@ -35,7 +33,7 @@ const TermsOfServiceSection = ({}: TermsOfServiceSectionProps) => {
         />
         <ul className="flex flex-col gap-3 mt-2">
           {menuItems.map((item) => {
-            return <SettingsMenuItem key={item.label} settingsMenuItem={item} />
+            return <TermMenuItem key={item.label} settingsMenuItem={item} />
           })}
         </ul>
       </EmSection>
