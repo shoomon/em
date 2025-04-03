@@ -25,10 +25,10 @@ const usePlayList = ({ location }: UsePlayListProps) => {
         lastMusicCount: undefined,
       },
       getNextPageParam: (lastPage) => {
-        if (lastPage.lastCursor.hasNext) {
+        if (lastPage.meta.hasNext) {
           return {
-            lastMusicId: lastPage.lastCursor.lastMusicId ?? undefined,
-            lastMusicCount: lastPage.lastCursor.lastMusicCount ?? undefined,
+            lastMusicId: lastPage.meta.lastMusicId ?? undefined,
+            lastMusicCount: lastPage.meta.lastMusicCount ?? undefined,
           }
         }
 

@@ -7,7 +7,7 @@ export interface Music {
 
 export interface PlayListInfiniteData {
   damusicListta: Music[]
-  lastCursor: {
+  meta: {
     lastMusicId: number
     lastMusicCount: number
     hasNext: boolean
