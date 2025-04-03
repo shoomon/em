@@ -1,4 +1,5 @@
 import EmSection from "@/components/EmSection/EmSection"
+import LocationFixButton from "@/features/map/components/LocatonFixButton"
 import MapFixer from "@/features/map/components/MapFixer"
 import MapPinMarker from "@/features/map/components/MapPinMarker"
 import { LatLng } from "@/features/map/types/map"
@@ -50,7 +51,7 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
         setAddress(response.v2.address.jibunAddress)
       },
     )
-  }, [mapCenter])
+  }, [mapCenter, handleMapChange, address])
 
   // 지도 중앙 위치 변경 시 호출
   const handleDragEnd = (newCenter: LatLng, isOutOfRange: boolean) => {
@@ -73,9 +74,20 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
         />
         <div className="flex flex-col h-full gap-4 ">
           {/* 현재 위치 정보 */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 relative">
             <span className="font-semibold">현재 나의 위치</span>
             <span>{address}</span>
+            <LocationFixButton
+              className="right-0 bottom-0"
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition(({ coords }) => {
+                  const { latitude: lat, longitude: lng } = coords
+                  setInitLocation({ lat, lng })
+                  setMapCenter({ lat, lng })
+                  handleMapChange({ lat, lng }, address)
+                })
+              }}
+            />
           </div>
           {/* 지도 */}
           <div className="relative w-full h-full bg-em-gray-sm">
@@ -83,6 +95,7 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
               className="w-full h-full"
               onDragEnd={handleDragEnd}
               initLocation={initLocation}
+              mapCenter={mapCenter}
             />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+12px)] p-2 cursor-pointer border-neutral-200">
               <MapPinMarker />

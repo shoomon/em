@@ -235,7 +235,7 @@ const MapViewer = ({
       return
     }
 
-    mapRef.current.setCenter(
+    mapRef.current.panTo(
       new window.naver.maps.LatLng(location.lat, location.lng),
     )
   }
