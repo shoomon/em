@@ -1,20 +1,13 @@
 import EmSection from "@/components/EmSection/EmSection"
-import { BellIcon, LockIcon, UserIcon } from "lucide-react"
+import { BellIcon, SettingsIcon, UserIcon } from "lucide-react"
 import SettingsMenuItem from "./SettingsMenuItem"
 
-interface SettingsMenuListProps {}
-
-const SettingsMenuList = ({}: SettingsMenuListProps) => {
+const SettingsMenuList = () => {
   const menuItems = [
     {
       label: "계정 관리",
       icon: <UserIcon className="size-full" />,
       to: "/mypage/account",
-    },
-    {
-      label: "비밀번호 변경",
-      icon: <LockIcon className="size-full" />,
-      to: "/mypage/password",
     },
     {
       label: "알림 설정",
@@ -25,7 +18,14 @@ const SettingsMenuList = ({}: SettingsMenuListProps) => {
   return (
     <div className="p-4">
       <EmSection className="p-4" hasBorder hasRound>
-        <EmSection.Header title="내 설정" />
+        <EmSection.Header
+          title={
+            <div className="flex items-center gap-2">
+              <SettingsIcon className="size-4" />
+              <span>내 설정</span>
+            </div>
+          }
+        />
         <ul className="flex flex-col gap-3 mt-2">
           {menuItems.map((item) => {
             return <SettingsMenuItem key={item.label} settingsMenuItem={item} />

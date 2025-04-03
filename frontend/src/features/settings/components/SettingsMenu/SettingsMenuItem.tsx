@@ -11,17 +11,16 @@ interface SettingsMenuItemProps {
 }
 
 const SettingsMenuItem = ({ settingsMenuItem }: SettingsMenuItemProps) => {
-  const { label, icon, to } = settingsMenuItem
+  const { label, to } = settingsMenuItem
   return (
-    <li className="cursor-pointer flex items-center py-4 px-3 rounded-md justify-between transition hover:bg-em-gray">
+    <li className="cursor-pointer flex items-center py-4 px-3 rounded-md justify-between transition hover:bg-em-gray/30">
       <NavLink
         to={to}
         viewTransition
         className="flex items-center justify-center gap-2">
-        <span className="size-5">{icon}</span>
         <span>{label}</span>
       </NavLink>
-      <ChevronRightIcon className="w-4 h-4" />
+      <ChevronRightIcon className="size-4" />
     </li>
   )
 }

@@ -3,9 +3,7 @@ import EmSection from "@/components/EmSection/EmSection"
 import EmotionStatisticsSection from "@/features/emotion/components/Statistics/EmotionStatisticsSection"
 import { Suspense } from "react"
 
-interface EmotionReportPageProps {}
-
-const EmotionReportPage = ({}: EmotionReportPageProps) => {
+const EmotionReportPage = () => {
   return (
     <div>
       {/* <section className="p-4 flex flex-col gap-6 relative">

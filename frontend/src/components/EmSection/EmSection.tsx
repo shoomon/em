@@ -30,9 +30,9 @@ const EmSection = ({
 }
 
 interface SectionHeaderProps {
-  title?: string
-  description?: string
-  headerRight?: string
+  title?: string | ReactNode
+  description?: string | ReactNode
+  headerRight?: string | ReactNode
 }
 
 const EmSectionHeader = ({

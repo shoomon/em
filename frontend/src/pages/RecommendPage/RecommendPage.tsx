@@ -1,8 +1,6 @@
 import EmLoading from "@/components/EmLoading/EmLoading"
 
-interface RecommendPageProps {}
-
-const RecommendPage = ({}: RecommendPageProps) => {
+const RecommendPage = () => {
   return (
     <div className="h-[calc(100dvh-var(--navigation-bar-height)-var(--header-height))] ">
       <div className="h-full flex flex-col justify-center items-center">
