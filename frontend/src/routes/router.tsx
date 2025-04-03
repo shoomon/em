@@ -2,16 +2,19 @@ import { createBrowserRouter } from "react-router-dom"
 
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute"
 import BlankLayout from "@/layout/BlankLayout"
+import FullScreenLayout from "@/layout/FullScreenLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
+import CalendarPage from "@/pages/CalendarPage/CalendarPage"
+import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
-import { lazy } from "react"
-import CalendarPage from "@/pages/CalendarPage/CalendarPage"
-import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
 import RecommendPage from "@/pages/RecommendPage/RecommendPage"
+import TermPage from "@/pages/Term/TermPage"
+import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
+import { lazy } from "react"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -69,6 +72,15 @@ const router = createBrowserRouter([
         ],
       },
       {
+        element: <FullScreenLayout />,
+        children: [
+          {
+            path: "/terms/:type",
+            element: <TermPage />,
+          },
+        ],
+      },
+      {
         path: "*",
         element: <div>404 Not Found</div>,
       },
@@ -85,6 +97,10 @@ const router = createBrowserRouter([
       {
         path: "/login-success",
         element: <LoginSuccessPage />,
+      },
+      {
+        path: "/terms-agreement",
+        element: <TermsAgreementPage />,
       },
     ],
   },
