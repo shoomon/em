@@ -64,6 +64,7 @@ public class MusicService {
                     .toList();
 
             for (Track track : sortedTracks) {
+                String id = track.getId();
                 String title = track.getName();
                 AlbumSimplified album = track.getAlbum();
                 ArtistSimplified[] artists = album.getArtists();
@@ -82,7 +83,9 @@ public class MusicService {
                     albumExternalUrl = album.getExternalUrls().getExternalUrls().get("spotify");
                 }
 
-                musicList.add(SpotifySearchResponse.of(artistName, title, albumExternalUrl, imageUrl));
+                musicList.add(
+                        SpotifySearchResponse.of(id,artistName, title, albumExternalUrl, imageUrl)
+                );
             }
 
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {

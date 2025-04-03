@@ -421,6 +421,10 @@ public class PostService{
             return R * c; // 거리 (미터 단위)
     }
 
+    private boolean upsertMusicVector(){
+        return false;
+    }
+
     private Map<Integer, String> getAllEmotion(){
         List<Emotion> emotionList = emotionRepository.findAll();
 
