@@ -30,9 +30,9 @@ const EmSection = ({
 }
 
 interface SectionHeaderProps {
-  title?: string
-  description?: string
-  headerRight?: string
+  title?: string | ReactNode
+  description?: string | ReactNode
+  headerRight?: string | ReactNode
 }
 
 const EmSectionHeader = ({
@@ -44,7 +44,7 @@ const EmSectionHeader = ({
     <header className="flex flex-col gap-1 sm:gap-2">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
         {title && (
-          <h3 className="text-lg sm:text-xl font-bold tracking-tight text-em-black">
+          <h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-em-black">
             {title}
           </h3>
         )}

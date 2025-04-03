@@ -18,7 +18,7 @@ const StackHeader = memo(() => {
       }
     } else if (location.pathname === "/mypage/list") {
       // MyPostListPage에서는 마이페이지로 이동
-      navigate("/mypage", { viewTransition: true })
+      navigate("/calendar", { viewTransition: true })
     } else {
       // 기본적으로는 홈으로 이동
       navigate("/", { viewTransition: true })
