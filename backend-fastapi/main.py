@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from src.dummy.presentation.DummyController import dummyController
 from src.music_recommendation.presentation.MusicRecommendationController import musicRecommendationController
+from src.emotion_detection.presentation.EmotionDetectionController import emotionDetectionController
 app = FastAPI()
 app.include_router(dummyController)
 app.include_router(musicRecommendationController)
+app.include_router(emotionDetectionController)
 
 # ----------------------------- #
 # 초기화: 컬렉션 생성
