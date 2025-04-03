@@ -1,7 +1,13 @@
 import useMap from "@/features/map/hooks/useMap"
 import { Point } from "@/features/post/types/post"
 import usePostStore from "@/store/usePostStore"
-import React, { ReactNode, useEffect, useRef } from "react"
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from "react"
 import htmlClusterMarkers from "../constants"
 import { LatLng } from "../types/map"
 
@@ -10,6 +16,7 @@ interface MapViewerProps {
   location: LatLng
   points: Point[]
   className?: string
+  setIsStoppedWatching: Dispatch<SetStateAction<boolean>>
   children?: (focusOnMarker: () => void) => ReactNode
 }
 
@@ -18,6 +25,7 @@ const MapViewer = ({
   location,
   points,
   className,
+  setIsStoppedWatching,
   children,
 }: MapViewerProps) => {
   const { mapRef } = useMap({
@@ -118,15 +126,16 @@ const MapViewer = ({
           setType("cluster")
           setClusterGrid([
             {
-              lat: cluster._clusterBounds._ne._lat,
-              lng: cluster._clusterBounds._ne._lng,
-            },
-            {
               lat: cluster._clusterBounds._sw._lat,
               lng: cluster._clusterBounds._sw._lng,
             },
+            {
+              lat: cluster._clusterBounds._ne._lat,
+              lng: cluster._clusterBounds._ne._lng,
+            },
           ])
           setIsDrawerOpen(true)
+          setIsStoppedWatching(true)
         }
       })
     }
@@ -157,11 +166,11 @@ const MapViewer = ({
     }
 
     if (userMarkerRef.current) {
-      userMarkerRef.current.setVisible(true)
+      userMarkerRef.current.setVisible(isLocationPermissionGranted)
     }
 
     if (searchRangeRef.current) {
-      searchRangeRef.current.setVisible(true)
+      searchRangeRef.current.setVisible(isLocationPermissionGranted)
     }
   }, [isLocationPermissionGranted])
 
@@ -202,6 +211,7 @@ const MapViewer = ({
         setType("marker")
         setPostId(point.id)
         setIsDrawerOpen(true)
+        setIsStoppedWatching(true)
       })
       postMarkerRefs.current.push(marker)
     }
@@ -225,6 +235,7 @@ const MapViewer = ({
             },
           ])
           setIsDrawerOpen(true)
+          setIsStoppedWatching(true)
         }
       })
     }

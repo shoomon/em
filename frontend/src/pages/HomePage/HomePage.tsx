@@ -41,6 +41,7 @@ const HomePage = () => {
   }
   const handlePostSearch = () => {
     setIsDrawerOpen(true)
+    setIsStoppedWatching(true)
     setType("all")
   }
 
@@ -59,6 +60,7 @@ const HomePage = () => {
         isLocationPermissionGranted={isLocationPermissionGranted}
         location={currentLocation}
         lastFetchedLocation={lastFetchedLocation}
+        setIsStoppedWatching={setIsStoppedWatching}
       />
 
       <PostCreateButton onClick={handlePostCreate} />
@@ -66,7 +68,10 @@ const HomePage = () => {
 
       <EmDrawer
         open={isDrawerOpen}
-        onOpenChange={() => setIsDrawerOpen(!isDrawerOpen)}>
+        onOpenChange={() => {
+          setIsDrawerOpen(!isDrawerOpen)
+          setIsStoppedWatching(!isDrawerOpen)
+        }}>
         <div>
           <Tabs
             tabs={tabs}
