@@ -4,3 +4,12 @@ export interface Music {
   albumImageUrl: string | null
   spotifyAlbumUrl: string | null
 }
+
+export interface PlayListInfiniteData {
+  damusicListta: Music[]
+  meta: {
+    lastMusicId: number
+    lastMusicCount: number
+    hasNext: boolean
+  }
+}

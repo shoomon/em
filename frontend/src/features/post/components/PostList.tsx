@@ -84,7 +84,7 @@ const PostList = ({ location }: PostListProps) => {
                 <PostSkeleton key={index} />
               ))
             ) : (
-              <div ref={observerRef} />
+              <div ref={observerRef} className="h-1" />
             )}
           </>
         )}

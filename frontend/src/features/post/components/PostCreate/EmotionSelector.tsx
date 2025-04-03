@@ -21,11 +21,11 @@ const EmotionSelector = ({}: EmotionSelectorProps) => {
   return (
     <EmSection>
       <EmSection.Header
-        title="😇 감정 선택"
-        description="당신의 감정은 어떠신가요?"
+        title="😇 현재 감정을 선택해 주세요."
+        description="어떤 감정을 느끼고 계신지 알려주세요!"
       />
       <div className="space-y-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {EMOTION_ITEMS.map((emotion) => (
             <EmotionSelectItem
               key={emotion.engName}

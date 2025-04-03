@@ -1,14 +1,15 @@
-import { StepForward } from "lucide-react"
+import { ReactNode } from "react"
 import { Music } from "../types/music"
 
 interface MusicItemProps {
   music: Music
-  readOnly?: boolean
+  className?: string
+  children?: ReactNode
 
   onClick?: (music: Music) => void
 }
 
-const MusicItem = ({ music, readOnly = false, onClick }: MusicItemProps) => {
+const MusicItem = ({ music, className, children, onClick }: MusicItemProps) => {
   const { artistName, title, albumImageUrl } = music
 
   const handleClick = () => {
@@ -17,7 +18,7 @@ const MusicItem = ({ music, readOnly = false, onClick }: MusicItemProps) => {
 
   return (
     <div
-      className={`flex items-center w-full gap-2 p-3 ${!readOnly ? "border-b border-b-em-gray-md" : ""}`}
+      className={`flex items-center w-full gap-2 p-3 ${className}`}
       onClick={handleClick}>
       <img
         src={albumImageUrl || ""}
@@ -33,9 +34,7 @@ const MusicItem = ({ music, readOnly = false, onClick }: MusicItemProps) => {
           </p>
         </div>
 
-        {!readOnly && (
-          <StepForward className="cursor-pointer shrink-0 stroke-em-gray size-5" />
-        )}
+        {children}
       </div>
     </div>
   )

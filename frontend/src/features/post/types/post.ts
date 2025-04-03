@@ -70,6 +70,14 @@ export interface PostInfiniteData {
   }
 }
 
+export interface PlayListRequest {
+  lng: number
+  lat: number
+  rad?: number
+  lastMusicId: number
+  lastMusicCount: number
+}
+
 export enum PostCreateStep {
   Map = 1,
   Content = 2,
@@ -97,5 +105,5 @@ export interface PostFormActionType {
   updateFormData: (key: keyof PostCreateRequest, value: any) => void
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void
   isFormDataValid: (step: PostCreateStep) => boolean | undefined
-  handleMusicChange: (music: Music) => void
+  handleMusicChange: (music: Music | null) => void
 }
