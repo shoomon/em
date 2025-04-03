@@ -75,7 +75,6 @@ const PostConfirm = ({}: PostConfirmProps) => {
                   albumImageUrl: formData.albumImageUrl,
                   spotifyAlbumUrl: formData.spotifyAlbumUrl,
                 }}
-                readOnly={true}
               />
             ) : (
               <>
