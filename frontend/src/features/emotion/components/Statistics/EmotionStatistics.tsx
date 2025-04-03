@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion"
 import useEmotionReport from "../../hooks/useEmotionReport"
 import { EmotionKorNameType } from "../../types/emotion"
 import EmotionGrid from "../EmotionGrid/EmotionGrid"
@@ -14,25 +15,38 @@ const EmotionStatistics = ({ date }: EmotionStatisticsProps) => {
     useEmotionReport(date)
 
   return (
-    <div className="flex flex-col gap-6 h-full">
-      {mostEmotion ? (
-        <>
-          <EmotionStatisticsRadarChart
-            emotionItemsLabels={emotionItemsLabels}
-            datasets={datasets}
-          />
-          <EmotionStatisticsSummary
-            emotionName={mostEmotion as EmotionKorNameType}
-          />
-          <EmotionGrid
-            emotionReport={emotionReport}
-            mostEmotion={mostEmotion}
-          />
-        </>
-      ) : (
-        <EmotionStatisticsEmpty />
-      )}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={date.toISOString()}
+        className="w-full h-full overflow-hidden"
+        initial={{ opacity: 0, transform: "translateY(-10px)" }}
+        animate={{ opacity: 1, transform: "translateY(0px)" }}
+        exit={{ opacity: 0, transform: "translateY(10px)" }}
+        transition={{
+          duration: 0.2,
+          ease: "easeInOut",
+        }}>
+        <div className="flex flex-col gap-6 h-full">
+          {mostEmotion ? (
+            <>
+              <EmotionStatisticsRadarChart
+                emotionItemsLabels={emotionItemsLabels}
+                datasets={datasets}
+              />
+              <EmotionStatisticsSummary
+                emotionName={mostEmotion as EmotionKorNameType}
+              />
+              <EmotionGrid
+                emotionReport={emotionReport}
+                mostEmotion={mostEmotion}
+              />
+            </>
+          ) : (
+            <EmotionStatisticsEmpty />
+          )}
+        </div>
+      </motion.div>
+    </AnimatePresence>
   )
 }
 export default EmotionStatistics

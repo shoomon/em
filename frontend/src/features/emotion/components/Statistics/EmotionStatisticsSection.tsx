@@ -29,12 +29,12 @@ const EmotionStatisticsSection = () => {
 
   return (
     <EmSection className="pt-0 px-0 h-full flex-1">
-      <MonthNavigator onDateChange={dispatch} date={date} />
       <EmSection.Header
         title="🌟 나의 감정 리포트"
         description="이 달의 감정 통계를 확인할 수 있습니다."
         headerRight={`🗓️ 기간 : ${dateRange}`}
       />
+      <MonthNavigator onDateChange={dispatch} date={date} />
 
       <Suspense fallback={<EmLoading />}>
         <EmotionStatistics date={date} />
