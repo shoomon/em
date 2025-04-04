@@ -42,6 +42,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -67,12 +68,13 @@ public class PostService{
 
     private final PostJpaRepository postJpaRepository;
     private final PostReactionRepository postReactionRepository;
-    private final GeometryFactory geometryFactory = new GeometryFactory();
     private final UserRepository userRepository;
     private final EmotionRepository emotionRepository;
     private final AnimalRepository animalRepository;
     private final AnimalProfileRepository animalProfileRepository;
     private final MusicRepository musicRepository;
+    private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final WebClient webClient;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
@@ -152,13 +154,6 @@ public class PostService{
 
         // 3. 게시글 삭제
         postJpaRepository.delete(post);
-    }
-
-
-    //todo: MyPage -> getMyPostList
-    public List<PostDetailDto> getMyPostList(){
-//        List<Post> postList = postQueryDslRepository.getMyPostList();
-        return null;
     }
 
     public PostDetailDto getPost(int userId, int postId){
@@ -422,7 +417,8 @@ public class PostService{
     }
 
     private void upsertMusicVector(){
-
+        webClient.post()
+                .uri("/recommendation/upsert");
     }
 
     private Map<Integer, String> getAllEmotion(){
