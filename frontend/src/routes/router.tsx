@@ -4,14 +4,17 @@ import ProtectedRoute from "@/features/auth/components/ProtectedRoute"
 import BlankLayout from "@/layout/BlankLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
+import CalendarPage from "@/pages/CalendarPage/CalendarPage"
+import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
-import { lazy } from "react"
-import CalendarPage from "@/pages/CalendarPage/CalendarPage"
-import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
 import RecommendPage from "@/pages/RecommendPage/RecommendPage"
+import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
+import { lazy } from "react"
+import FullScreenLayout from "@/layout/FullScreenLayout"
+import TermPage from "@/pages/Term/TermPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -85,6 +88,19 @@ const router = createBrowserRouter([
       {
         path: "/login-success",
         element: <LoginSuccessPage />,
+      },
+      {
+        path: "/terms-agreement",
+        element: <TermsAgreementPage />,
+      },
+      {
+        element: <FullScreenLayout />,
+        children: [
+          {
+            path: "/terms/:type",
+            element: <TermPage />,
+          },
+        ],
       },
     ],
   },

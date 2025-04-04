@@ -13,15 +13,14 @@ interface SettingsMenuItemProps {
 const SettingsMenuItem = ({ settingsMenuItem }: SettingsMenuItemProps) => {
   const { label, to } = settingsMenuItem
   return (
-    <li className="cursor-pointer flex items-center py-4 px-3 rounded-md justify-between transition hover:bg-em-gray/30">
-      <NavLink
-        to={to}
-        viewTransition
-        className="flex items-center justify-center gap-2">
-        <span>{label}</span>
-      </NavLink>
+    <NavLink
+      to={to}
+      viewTransition
+      className="justify-between gap-2 cursor-pointer flex items-center py-4 px-3 rounded-md   transition hover:bg-em-gray/30">
+      <span>{label}</span>
+
       <ChevronRightIcon className="size-4" />
-    </li>
+    </NavLink>
   )
 }
 export default SettingsMenuItem
