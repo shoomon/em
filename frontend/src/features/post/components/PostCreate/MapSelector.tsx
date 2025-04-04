@@ -69,7 +69,7 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
     <div className="flex flex-col h-full gap-2">
       <EmSection>
         <EmSection.Header
-          title="🚩 위치를 확인해 주세요."
+          title="🚩 위치를 확인해 주세요"
           description="드래그를 통해 영역 안에서 상세 위치를 조정할 수 있어요!"
         />
         <div className="flex flex-col h-full gap-4 ">

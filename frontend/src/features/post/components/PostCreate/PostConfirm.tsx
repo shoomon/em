@@ -79,7 +79,7 @@ const PostConfirm = ({}: PostConfirmProps) => {
             ) : (
               <>
                 <ListMusicIcon className="stroke-em-black/30" />
-                <p className="text-em-black/30">등록된 음악이 없습니다.</p>
+                <p className="text-em-black/30">등록된 음악이 없어요</p>
               </>
             )}
           </div>
@@ -87,8 +87,8 @@ const PostConfirm = ({}: PostConfirmProps) => {
           <EmTextArea
             disabled
             textState={content}
-            placeholder="내용을 입력해주세요"
-            className=""
+            placeholder="입력된 내용이 없어요"
+            className="placeholder-em-black/30"
             isActiveCount={false}
           />
         </div>

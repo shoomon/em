@@ -45,8 +45,8 @@ const useGps = () => {
           newLocation.lat,
           newLocation.lng,
         )
-        // 20m 단위로 마지막 API 호출 위치를 갱신 => 주소 및 게시글 조회에 사용
-        if (distance >= 20) {
+        // 50m 단위로 마지막 API 호출 위치를 갱신 => 주소 및 게시글 조회에 사용
+        if (distance >= 50) {
           setLastFetchedLocation(newLocation)
         }
       },
@@ -85,7 +85,7 @@ const useGps = () => {
         watchPosition()
       },
       () => {
-        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요.")
+        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요")
         setIsLocationPermissionGranted(false)
       },
       {

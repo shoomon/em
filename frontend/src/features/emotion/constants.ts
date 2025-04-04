@@ -83,6 +83,17 @@ export const EMOTION_TEXT_COLOR_MAPPER: Record<string, string> = {
   SADNESS: "text-em-SADNESS",
 }
 
+export const EMOTION_BORDER_COLOR_MAPPER: Record<string, string> = {
+  JOY: "border-em-JOY",
+  ANTICIPATION: "border-em-ANTICIPATION",
+  TRUST: "border-em-TRUST",
+  SURPRISE: "border-em-SURPRISE",
+  DISGUST: "border-em-DISGUST",
+  FEAR: "border-em-FEAR",
+  ANGER: "border-em-ANGER",
+  SADNESS: "border-em-SADNESS",
+}
+
 export const REACTION_ICON_MAPPER: Record<string, string> = {
   joy: joyImage,
   sadness: sadnessImage,

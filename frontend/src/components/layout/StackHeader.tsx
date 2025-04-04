@@ -10,7 +10,7 @@ const StackHeader = memo(() => {
   const location = useLocation()
 
   const handleClick = () => {
-    // PostCreatePage에서만 확인 메시지 표시, 다른 페이지에서는 바로 뒤로가기
+    // PostCreatePage에서만 확인 게시글 표시, 다른 페이지에서는 바로 뒤로가기
     if (location.pathname === "/posts/create") {
       const shouldLeave = confirm("게시글 작성을 취소하시겠습니까?")
       if (shouldLeave) {

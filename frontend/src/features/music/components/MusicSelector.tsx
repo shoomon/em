@@ -35,7 +35,7 @@ const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-lg font-bold sm:text-xl text-em-black">
-            🎵 메시지에 음악 추가하기
+            🎵 게시글에 음악 추가하기
           </h1>
           <p className="text-sm sm:text-base text-em-black/60">
             지금 떠오르는 음악이 있나요?
@@ -44,7 +44,7 @@ const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
 
         <EmInput
           ref={inputRef}
-          placeholder="곡 이름을 입력해 주세요."
+          placeholder="곡 이름을 입력해 주세요"
           onSearch={handleSearch}
           onReset={handleReset}
         />
