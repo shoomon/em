@@ -57,3 +57,15 @@ export type EmotionReportResponse = {
 export type EmotionPercentages = {
   [key in EmotionEngNameType]: string
 }
+
+export interface EmotionAnalysisResponse {
+  label: EmotionEngNameType
+  confidence: number
+  all_probs: Record<EmotionEngNameType, number>
+}
+
+export interface CurseAnalysisResponse {
+  isCurse: boolean
+  confidence: number
+  allProbs: Record<"FALSE" | "TRUE", number>
+}
