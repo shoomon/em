@@ -91,25 +91,27 @@ const PostItem = ({
         </div>
       </div>
 
-      <div
-        ref={contentRef}
-        className={`relative px-2 mb-6 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
-        {content}
-        {isOverflow &&
-          (isExpanded ? (
-            <button
-              className="block w-full text-sm cursor-pointer text-neutral-500"
-              onClick={handleMoreView}>
-              접기
-            </button>
-          ) : (
-            <button
-              className="absolute flex justify-center items-end inset-0 cursor-pointer text-sm text-neutral-500 bg-[linear-gradient(to_bottom,rgba(253,253,253,0)_0%,rgba(253,253,253,1)_90%,rgba(253,253,253,1)_100%)]"
-              onClick={handleMoreView}>
-              더보기
-            </button>
-          ))}
-      </div>
+      {content && (
+        <div
+          ref={contentRef}
+          className={`relative px-2 mb-6 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
+          {content}
+          {isOverflow &&
+            (isExpanded ? (
+              <button
+                className="block w-full text-sm cursor-pointer text-neutral-500"
+                onClick={handleMoreView}>
+                접기
+              </button>
+            ) : (
+              <button
+                className="absolute flex justify-center items-end inset-0 cursor-pointer text-sm text-neutral-500 bg-[linear-gradient(to_bottom,rgba(253,253,253,0)_0%,rgba(253,253,253,1)_90%,rgba(253,253,253,1)_100%)]"
+                onClick={handleMoreView}>
+                더보기
+              </button>
+            ))}
+        </div>
+      )}
 
       {musicInfo && (
         <div className="flex items-center gap-1 px-2 py-1 border border-green-400 rounded-full w-fit max-w-2/3 bg-em-white">
