@@ -14,6 +14,7 @@
   --color-em-trust: #8eff98; /* 확신 */
   --color-em-surprise: #ffbf60; /* 당황 */
   --color-em-disgust: #888888; /* 혐오 */
+  --color-em-neutral: #888888; /* 무감정 */
   --color-em-fear: #a788ba; /* 공포 */
   --color-em-anger: #ff7676; /* 분노 */
   --color-em-sadness: #86b0ff; /* 슬픔 */
@@ -23,6 +24,7 @@
   --color-em-TRUST: #7edb86; /* 확신 */
   --color-em-SURPRISE: #ffb24d; /* 당황 */
   --color-em-DISGUST: #a0a0a0; /* 혐오 */
+  --color-em-NEUTRAL: #a0a0a0; /* 무감정 */
   --color-em-FEAR: #9a7fb3; /* 공포 */
   --color-em-ANGER: #ff6b6b; /* 분노 */
   --color-em-SADNESS: #7a9fe3; /* 슬픔 */
