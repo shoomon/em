@@ -28,7 +28,7 @@ const PostContentsContainer = () => {
   return (
     <EmSection className="h-full">
       <EmSection.Header
-        title="❤️ 속마음을 남겨 주세요."
+        title="❤️ 속마음을 남겨 주세요"
         description="글을 작성하고, 음악을 추가할 수 있어요!"
       />
 

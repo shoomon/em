@@ -7,7 +7,7 @@ const EmotionAnalysisError = ({}: EmotionAnalysisErrorProps) => {
         감정 분석에 문제가 발생했습니다 😭
       </span>
       <span className="text-em-black/60 text-sm">
-        아래에서 직접 감정을 선택해주세요.
+        아래에서 직접 감정을 선택해주세요
       </span>
     </div>
   )

@@ -85,7 +85,7 @@ const useGps = () => {
         watchPosition()
       },
       () => {
-        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요.")
+        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요")
         setIsLocationPermissionGranted(false)
       },
       {

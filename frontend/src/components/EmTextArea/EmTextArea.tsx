@@ -13,7 +13,7 @@ interface EmTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 const EmTextArea = ({
   className,
-  placeholder = "이곳에 텍스트를 입력해 주세요.",
+  placeholder = "이곳에 텍스트를 입력해 주세요",
   maxLength = 500,
   textState,
   onTextChange,

@@ -44,7 +44,7 @@ const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
 
         <EmInput
           ref={inputRef}
-          placeholder="곡 이름을 입력해 주세요."
+          placeholder="곡 이름을 입력해 주세요"
           onSearch={handleSearch}
           onReset={handleReset}
         />
