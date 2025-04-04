@@ -10,12 +10,13 @@ interface EmotionGridProps {
 
 const EmotionGrid = ({ emotionReport, mostEmotion }: EmotionGridProps) => {
   const sortedEmotionReport = useMemo(() => {
-    return EMOTION_ITEMS.sort((a, b) => {
-      return (
+    return EMOTION_ITEMS.filter(({ engName }) => {
+      return emotionReport?.[engName] !== undefined
+    }).sort(
+      (a, b) =>
         (emotionReport?.[b.engName] as number) -
-        (emotionReport?.[a.engName] as number)
-      )
-    })
+        (emotionReport?.[a.engName] as number),
+    )
   }, [emotionReport])
 
   return (

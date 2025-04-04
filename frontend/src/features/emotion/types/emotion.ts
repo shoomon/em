@@ -5,9 +5,9 @@ export type EmotionEngNameType =
   | "SADNESS"
   | "FEAR"
   | "NEUTRAL"
-// | "TRUST"
-// | "ANTICIPATION"
-// | "DISGUST"
+  | "TRUST"
+  | "ANTICIPATION"
+  | "DISGUST"
 
 export type EmotionKorNameType =
   | "분노"
@@ -15,10 +15,10 @@ export type EmotionKorNameType =
   | "기쁨"
   | "슬픔"
   | "공포"
-  | "무감정"
-// | "확신"
-// | "기대"
-// | "혐오"
+  | "덤덤"
+  | "확신"
+  | "기대"
+  | "혐오"
 
 export enum EmotionMapping {
   분노 = "ANGER",
@@ -26,10 +26,10 @@ export enum EmotionMapping {
   기쁨 = "JOY",
   슬픔 = "SADNESS",
   공포 = "FEAR",
-  무감정 = "NEUTRAL",
-  // 기대 = "ANTICIPATION",
-  // 확신 = "TRUST",
-  // 혐오 = "DISGUST",
+  덤덤 = "NEUTRAL",
+  기대 = "ANTICIPATION",
+  확신 = "TRUST",
+  혐오 = "DISGUST",
 }
 
 export interface Emotion {

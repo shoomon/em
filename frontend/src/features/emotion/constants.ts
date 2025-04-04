@@ -50,10 +50,34 @@ export const EMOTION_ITEMS: EmotionItem[] = [
   {
     id: 6,
     engName: "NEUTRAL",
-    korName: "무감정",
+    korName: "덤덤",
     emoji: "😐",
     color: "bg-em-neutral hover:bg-em-neutral/80",
     emojiGif_url: "/assets/images/emotions/neutral.gif",
+  },
+  {
+    id: 7,
+    engName: "DISGUST",
+    korName: "혐오",
+    emoji: "🤢",
+    color: "bg-em-disgust hover:bg-em-disgust/80",
+    emojiGif_url: "/assets/images/emotions/disgust.gif",
+  },
+  {
+    id: 8,
+    engName: "ANTICIPATION",
+    korName: "기대",
+    emoji: "🤔",
+    color: "bg-em-anticipation hover:bg-em-anticipation/80",
+    emojiGif_url: "/assets/images/emotions/anticipation.gif",
+  },
+  {
+    id: 9,
+    engName: "TRUST",
+    korName: "확신",
+    emoji: "🤝",
+    color: "bg-em-trust hover:bg-em-trust/80",
+    emojiGif_url: "/assets/images/emotions/trust.gif",
   },
 ]
 
@@ -64,15 +88,21 @@ export const EMOTION_TEXT_COLOR_MAPPER: Record<EmotionEngNameType, string> = {
   ANGER: "text-em-ANGER",
   SADNESS: "text-em-SADNESS",
   NEUTRAL: "text-em-NEUTRAL",
+  DISGUST: "text-em-DISGUST",
+  ANTICIPATION: "text-em-ANTICIPATION",
+  TRUST: "text-em-TRUST",
 }
 
-export const EMOTION_BORDER_COLOR_MAPPER: Record<string, string> = {
+export const EMOTION_BORDER_COLOR_MAPPER: Record<EmotionEngNameType, string> = {
   JOY: "border-em-JOY",
   SURPRISE: "border-em-SURPRISE",
   FEAR: "border-em-FEAR",
   ANGER: "border-em-ANGER",
   SADNESS: "border-em-SADNESS",
   NEUTRAL: "border-em-NEUTRAL",
+  DISGUST: "border-em-DISGUST",
+  ANTICIPATION: "border-em-ANTICIPATION",
+  TRUST: "border-em-TRUST",
 }
 
 export const REACTION_ICON_MAPPER: Record<string, string> = {
