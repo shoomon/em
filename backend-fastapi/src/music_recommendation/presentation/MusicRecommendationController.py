@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 import numpy as np
+import uuid
 from qdrant_client.models import PointStruct, PointIdsList
 from pydantic import BaseModel
 from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
@@ -13,6 +14,7 @@ musicRecommendationController = APIRouter(
 
 VECTOR_DIM = len(EMOTIONS)
 
+#todo: key는 해시기반 UUID로 변환
 class UpsertSongRequest(BaseModel):
     key: str
     title: str
