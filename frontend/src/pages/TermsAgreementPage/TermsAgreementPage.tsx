@@ -3,8 +3,8 @@ import AgreementForm from "@/features/settings/components/TermsOfService/Agreeme
 import useTermAgreement from "@/features/settings/hooks/useTermAgreement"
 import { Navigate } from "react-router-dom"
 
+import image from "@/assets/dance_bear.png"
 import logo from "@/assets/em_logo.svg"
-import image from "@/assets/music_bear.png"
 const TermsAgreementPage = () => {
   const { data: isTermsAgreed } = useTermAgreement()
 
@@ -20,13 +20,15 @@ const TermsAgreementPage = () => {
           <EmSection.Header
             title={
               <div className="flex flex-col items-start gap-2">
-                <span>환영합니다!</span>
-                <span>아래 약관에 동의하시면</span>
-                <span>서비스를 이용할 수 있어요</span>
+                <span className="text-xl">환영합니다!</span>
+                <div className="flex flex-col text-em-black/60 text-base items-start text-md">
+                  <span>아래 약관에 동의하시면</span>
+                  <span>서비스를 이용할 수 있어요</span>
+                </div>
               </div>
             }
           />
-          <img src={image} alt="logo" className="w-20" />
+          <img src={image} alt="logo" className="w-26" />
         </div>
         <AgreementForm />
       </EmSection>

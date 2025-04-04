@@ -29,7 +29,7 @@ const ProtectedRoute = () => {
   if (!accessToken || !isTokenValid || isError) {
     return <Navigate to="/login" replace />
   } else if (!isTermsAgreed) {
-    return <Navigate to="/terms-agreement" replace />
+    // return <Navigate to="/terms-agreement" replace />
   }
 
   return <Outlet />
