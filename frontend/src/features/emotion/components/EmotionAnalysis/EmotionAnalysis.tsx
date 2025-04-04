@@ -1,5 +1,8 @@
 import { EMOTION_ITEMS } from "../../constants"
-import { EmotionAnalysisResponse } from "../../types/emotion"
+import {
+  EmotionAnalysisResponse,
+  EmotionStatisticsData,
+} from "../../types/emotion"
 import EmotionSelectItem from "../EmotionSelectItem"
 
 interface EmotionAnalysisProps {
@@ -11,12 +14,10 @@ const EmotionAnalysis = ({ data }: EmotionAnalysisProps) => {
     ANGER: 35,
     SURPRISE: 50,
     JOY: 85,
-    TRUST: 65,
     SADNESS: 25,
     FEAR: 15,
-    ANTICIPATION: 75,
-    DISGUST: 20,
-  }
+    NEUTRAL: 75,
+  } as EmotionStatisticsData
 
   console.log(data)
 

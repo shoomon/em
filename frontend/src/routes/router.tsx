@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute"
 import BlankLayout from "@/layout/BlankLayout"
+import FullScreenLayout from "@/layout/FullScreenLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
 import CalendarPage from "@/pages/CalendarPage/CalendarPage"
@@ -12,10 +13,9 @@ import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 import RecommendPage from "@/pages/RecommendPage/RecommendPage"
+import TermPage from "@/pages/Term/TermPage"
 import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
 import { lazy } from "react"
-import FullScreenLayout from "@/layout/FullScreenLayout"
-import TermPage from "@/pages/Term/TermPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -102,6 +102,10 @@ const router = createBrowserRouter([
             element: <TermPage />,
           },
         ],
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

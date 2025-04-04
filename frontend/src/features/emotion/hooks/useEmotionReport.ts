@@ -63,11 +63,12 @@ const useEmotionReport = (date: Date) => {
       ANGER: "0%",
       SURPRISE: "0%",
       JOY: "0%",
-      TRUST: "0%",
       SADNESS: "0%",
       FEAR: "0%",
-      ANTICIPATION: "0%",
+      NEUTRAL: "0%",
       DISGUST: "0%",
+      ANTICIPATION: "0%",
+      TRUST: "0%",
     }
 
     if (!emotionReport) return percentages

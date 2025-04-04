@@ -1,3 +1,4 @@
+import { EmotionEngNameType } from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
 import { Music } from "@/features/music/types/music"
 import { FormEvent } from "react"
@@ -37,7 +38,7 @@ export interface Post {
   isAuthor: boolean
   nickname: string
   imageUrl: string
-  emotion: string
+  emotion: EmotionEngNameType
   content: string
   lng: number
   lat: number
