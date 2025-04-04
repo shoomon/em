@@ -16,7 +16,6 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequ
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -58,12 +57,7 @@ public class MusicService {
             Paging<Track> searchResult = searchTrackRequest.execute();
             Track[] tracks = searchResult.getItems();
 
-            // popularity 기준 내림차순 정렬 (값이 높을수록 인기)
-            List<Track> sortedTracks = Arrays.stream(tracks)
-//                    .sorted(Comparator.comparingInt(Track::getPopularity).reversed())
-                    .toList();
-
-            for (Track track : sortedTracks) {
+            for (Track track : tracks) {
                 String id = track.getId();
                 String title = track.getName();
                 AlbumSimplified album = track.getAlbum();
@@ -77,14 +71,14 @@ public class MusicService {
                     imageUrl = images[2].getUrl();
                 }
 
-                // album의 externalUrls에서 Spotify URL 추출
-                String albumExternalUrl = "NO_URL";
-                if (album.getExternalUrls() != null && album.getExternalUrls().getExternalUrls() != null) {
-                    albumExternalUrl = album.getExternalUrls().getExternalUrls().get("spotify");
+                // track의 externalUrls에서 Spotify URL 추출
+                String trackExternalUrl = "NO_URL";
+                if (track.getExternalUrls() != null && track.getExternalUrls().getExternalUrls() != null) {
+                    trackExternalUrl = track.getExternalUrls().getExternalUrls().get("spotify");
                 }
 
                 musicList.add(
-                        SpotifySearchResponse.of(id,artistName, title, albumExternalUrl, imageUrl)
+                        SpotifySearchResponse.of(id,artistName, title, trackExternalUrl, imageUrl)
                 );
             }
 
