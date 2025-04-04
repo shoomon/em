@@ -62,7 +62,7 @@ const MapViewer = ({
       })
     }
 
-    // 유저 주위 메시지 탐색 범위 생성
+    // 유저 주위 게시글 탐색 범위 생성
     if (!searchRangeRef.current) {
       searchRangeRef.current = new window.naver.maps.Circle({
         map: mapRef.current,

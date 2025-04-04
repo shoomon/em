@@ -76,7 +76,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
     onSuccess: () => {
       refetch()
       queryClient.refetchQueries({ queryKey: ["points"], exact: false })
-      alert("해당 메시지가 삭제 되었습니다.")
+      alert("해당 게시글이 삭제 되었습니다.")
     },
   })
 

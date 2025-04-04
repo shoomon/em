@@ -1,4 +1,7 @@
-import { EMOTION_TEXT_COLOR_MAPPER } from "@/features/emotion/constants"
+import {
+  EMOTION_BORDER_COLOR_MAPPER,
+  EMOTION_TEXT_COLOR_MAPPER,
+} from "@/features/emotion/constants"
 import ReactionButton from "@/features/post/components/ReactionButton"
 import useReaction from "@/features/post/hooks/useReaction"
 import { Post, ReactionType } from "@/features/post/types/post"
@@ -56,38 +59,41 @@ const PostItem = ({
   return (
     <div className={`flex flex-col gap-3 p-4 bg-em-white`}>
       <div className="flex justify-between">
-        <div className="flex items-center gap-1">
-          <MapPinIcon className="size-5 stroke-red-500" />
-          <p className="text-sm font-semibold">{address}</p>
-        </div>
-
-        <p className="text-sm text-em-gray">{getRelativeTime(createdAt)}</p>
-      </div>
-
-      <div className="flex justify-between">
         <div className="flex items-center gap-2">
-          <img
-            src={imageUrl}
-            alt="프로필 사진"
-            className="rounded-full size-8"
-          />
-          <p className={`font-semibold ${EMOTION_TEXT_COLOR_MAPPER[emotion]}`}>
-            {nickname}
-          </p>
+          <div
+            className={`font-semibold border ${EMOTION_BORDER_COLOR_MAPPER[emotion]} rounded-full p-0.5`}>
+            <img src={imageUrl || ""} alt="" className="object-cover size-8" />
+          </div>
+
+          <div>
+            <p
+              className={`font-semibold ${EMOTION_TEXT_COLOR_MAPPER[emotion]}`}>
+              {nickname}
+            </p>
+
+            <div className="flex items-center gap-0.5">
+              <MapPinIcon className="size-3 stroke-em-black/80" />
+              <p className="text-xs font-semibol text-em-black/80">{address}</p>
+            </div>
+          </div>
         </div>
 
-        {isAuthor && (
-          <button
-            className="self-start text-sm cursor-pointer text-rose-400"
-            onClick={onDelete}>
-            삭제
-          </button>
-        )}
+        <div className="text-end">
+          <p className="text-sm text-em-gray">{getRelativeTime(createdAt)}</p>
+
+          {isAuthor && (
+            <button
+              className="self-start text-sm cursor-pointer text-rose-400"
+              onClick={onDelete}>
+              삭제
+            </button>
+          )}
+        </div>
       </div>
 
       <div
         ref={contentRef}
-        className={`relative px-2 mb-10 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
+        className={`relative px-2 mb-6 overflow-hidden break-all whitespace-pre-wrap ${isExpanded ? "max-h-fit" : "max-h-32 line-clamp-5"}`}>
         {content}
         {isOverflow &&
           (isExpanded ? (

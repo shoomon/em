@@ -32,7 +32,7 @@ const PlayList = ({ location }: PlayListProps) => {
           <MusicSkeleton key={index} />
         ))
       ) : isEmpty ? (
-        <MusicEmpty description="메시지에 등록된 음악이 없어요" />
+        <MusicEmpty description="게시글에 등록된 음악이 없어요" />
       ) : (
         <>
           {data.pages.map((page: any) =>
