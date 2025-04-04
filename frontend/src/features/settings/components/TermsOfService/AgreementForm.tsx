@@ -9,6 +9,7 @@ import AgreementCheckedItem from "./AgreementCheckedItem"
 
 const AgreementForm = () => {
   const { data: terms } = useGetTermsQuery()
+
   const { mutateAsync: updateTermAgreement } = useUpdateTerm()
 
   const navigate = useNavigate()
@@ -87,16 +88,18 @@ const AgreementForm = () => {
             </div>
           </div>
           <div className="flex flex-col gap-8">
-            {terms?.map((term) => {
-              return (
-                <AgreementCheckedItem
-                  isChecked={isChecked}
-                  onChecked={handleChecked}
-                  key={term.termId}
-                  term={term}
-                />
-              )
-            })}
+            {terms
+              ?.sort((a, b) => a.termId - b.termId)
+              ?.map((term) => {
+                return (
+                  <AgreementCheckedItem
+                    isChecked={isChecked}
+                    onChecked={handleChecked}
+                    key={term.termId}
+                    term={term}
+                  />
+                )
+              })}
           </div>
         </div>
       </section>

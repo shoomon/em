@@ -22,7 +22,7 @@ const TermsAgreementPage = () => {
               <div className="flex flex-col items-start gap-2">
                 <span>환영합니다!</span>
                 <span>아래 약관에 동의하시면</span>
-                <span>서비스를 이용할 수 있습니다.</span>
+                <span>서비스를 이용할 수 있어요</span>
               </div>
             }
           />
