@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AnimalRepository extends JpaRepository<Animal, Integer> {
 
-    @Query(value = "SELECT * FROM animals ORDER BY random() LIMIT 1", nativeQuery = true)
-    Animal findRandomAnimal();
+    @Query(value = "SELECT * FROM animals WHERE is_active = true ORDER BY random() LIMIT 1", nativeQuery = true)
+    Animal findRandomAnimalByIsActiveTrue();
 }
