@@ -13,48 +13,23 @@ musicRecommendationController = APIRouter(
 
 VECTOR_DIM = len(EMOTIONS)
 
-class AddSongRequest(BaseModel):
+class UpsertSongRequest(BaseModel):
     key: str
     title: str
     artistName: str
     spotifyAlbumUrl: str
     albumImageUrl: str
-    vector: list[float]
+    emotion: str
 
 class EmotionCountRequest(BaseModel):
     emotion_counts: dict
-
-class EmotionUpdateRequest(BaseModel):
-    key: str
-    emotion: str
-
-@musicRecommendationController.post("/song")
-def add_song(req: AddSongRequest):
-    if len(req.vector) != VECTOR_DIM:
-        raise HTTPException(status_code=400, detail="벡터 차원이 맞지 않습니다.")
-
-    qdrantClient.upsert(
-        collection_name=COLLECTION_NAME,
-        points=[PointStruct(
-            id=req.key,
-            vector=req.vector,
-            payload={
-                "title": req.title,
-                "artistName": req.artistName,
-                "spotifyAlbumUrl": req.spotifyAlbumUrl,
-                "albumImageUrl": req.albumImageUrl,
-                "update_count": 1
-            }
-        )]
-    )
-    return {"message": f"등록 완료: {req.title}"}
 
 @musicRecommendationController.delete("/song/{key}")
 def delete_song(key: str):
     try:
         result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[key])
         if not result:
-            raise HTTPException(status_code=404, detail=f"key={key}가 존재하지 않습니다.")
+            raise HTTPException(status_code=404, detail="음악을 찾을 수 없습니다.")
 
         qdrantClient.delete(
             collection_name=COLLECTION_NAME,
@@ -64,8 +39,8 @@ def delete_song(key: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@musicRecommendationController.post("/update")
-def apply_user_emotion(req: EmotionUpdateRequest):
+@musicRecommendationController.post("/upsert")
+def upsert_song(req: UpsertSongRequest):
     if req.emotion not in EMOTIONS:
         raise HTTPException(status_code=400, detail="유효하지 않은 감정입니다.")
 
@@ -73,7 +48,9 @@ def apply_user_emotion(req: EmotionUpdateRequest):
     result = qdrantClient.retrieve(COLLECTION_NAME, [req.key], with_vectors=True)
 
     if not result:
-        raise HTTPException(status_code=404, detail="노래를 찾을 수 없습니다.")
+        vector = VectorUtil.smooth_one_hot(emotion_index, len(result), 0.02)
+        add_song(req,vector)
+        return
 
     old_vector = np.array(result[0].vector)
     count = result[0].payload.get("update_count", 1)
@@ -145,3 +122,23 @@ def recommend_music(req: EmotionCountRequest):
             for res in results
         ]
     }
+
+def add_song(req: UpsertSongRequest, vector):
+    if len(vector) != VECTOR_DIM:
+        raise HTTPException(status_code=400, detail="벡터 차원이 맞지 않습니다.")
+
+    qdrantClient.upsert(
+        collection_name=COLLECTION_NAME,
+        points=[PointStruct(
+            id=req.key,
+            vector=vector,
+            payload={
+                "title": req.title,
+                "artistName": req.artistName,
+                "spotifyAlbumUrl": req.spotifyAlbumUrl,
+                "albumImageUrl": req.albumImageUrl,
+                "update_count": 1
+            }
+        )]
+    )
+    return {"message": f"등록 완료: {req.title}"}
