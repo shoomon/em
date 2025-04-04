@@ -6,9 +6,15 @@ interface MapFixerProps {
   className?: string
   onDragEnd?: (newCenter: LatLng, isOutOfRange: boolean) => void
   initLocation?: LatLng | null
+  mapCenter: LatLng | null
 }
 
-const MapFixer = ({ className, onDragEnd, initLocation }: MapFixerProps) => {
+const MapFixer = ({
+  className,
+  onDragEnd,
+  initLocation,
+  mapCenter,
+}: MapFixerProps) => {
   const { mapRef } = useMap({
     initLocation,
     config: {
@@ -92,6 +98,12 @@ const MapFixer = ({ className, onDragEnd, initLocation }: MapFixerProps) => {
       }
     }
   }, [initLocation, handleDragEnd])
+
+  useEffect(() => {
+    if (mapRef.current && mapCenter) {
+      mapRef.current.panTo(new naver.maps.LatLng(mapCenter.lat, mapCenter.lng))
+    }
+  }, [mapCenter])
 
   return <div id="map" className={className} />
 }

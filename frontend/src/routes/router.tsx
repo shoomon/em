@@ -12,7 +12,10 @@ import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 import RecommendPage from "@/pages/RecommendPage/RecommendPage"
+import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
 import { lazy } from "react"
+import FullScreenLayout from "@/layout/FullScreenLayout"
+import TermPage from "@/pages/Term/TermPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -38,10 +41,6 @@ const router = createBrowserRouter([
             element: <RecommendPage />,
           },
           {
-            path: "/calendar",
-            element: <CalendarPage />,
-          },
-          {
             path: "/emotion-report",
             element: <EmotionReportPage />,
           },
@@ -53,6 +52,10 @@ const router = createBrowserRouter([
           {
             path: "/mypage",
             element: <MyPage />,
+          },
+          {
+            path: "/calendar",
+            element: <CalendarPage />,
           },
         ],
       },
@@ -86,6 +89,19 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <NotFoundPage />,
+      },
+      {
+        path: "/terms-agreement",
+        element: <TermsAgreementPage />,
+      },
+      {
+        element: <FullScreenLayout />,
+        children: [
+          {
+            path: "/terms/:type",
+            element: <TermPage />,
+          },
+        ],
       },
     ],
   },
