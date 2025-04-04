@@ -48,9 +48,11 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
@@ -320,23 +322,29 @@ public class PostService{
     }
 
     public GetMonthlyEmotionResponse getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
-        List<Object[]> emotionCount = postJpaRepository.getMonthlyEmotionCount(userId, yearMonth);
+        // 1. 쿼리 실행
+        List<Object[]> rawCounts = postJpaRepository.getMonthlyEmotionCount(userId, yearMonth);
 
-        Map<Integer, String> emotions = getAllEmotion();
+        // 2. active 감정 목록 (Map: id -> name) 조회
+        Map<Integer, String> activeEmotions = getAllEmotion();
+        // active 감정의 이름만 Set으로 만듦
+        Set<String> activeEmotionNames = new HashSet<>(activeEmotions.values());
 
-        Map<String, Integer> monthlyEmotionCount = emotionCount.stream()
-                .collect(Collectors.toMap(
-                        row -> (String)row[0],
-                        row -> ((Number)row[1]).intValue()
-                ));
-
-        for(int emotion : emotions.keySet()){
-            String emo = emotions.get(emotion);
-
-            if(monthlyEmotionCount.containsKey(emo)) continue;
-
-            monthlyEmotionCount.put(emo, 0);
+        // 3. 쿼리 결과 중 active 감정에 해당하는 건만 집계
+        Map<String, Integer> monthlyEmotionCount = new HashMap<>();
+        for (Object[] row : rawCounts) {
+            String emotionName = (String) row[0];
+            int count = ((Number) row[1]).intValue();
+            if (activeEmotionNames.contains(emotionName)) {
+                monthlyEmotionCount.put(emotionName, count);
+            }
         }
+
+        // 4. active 감정 중 쿼리 결과에 없는 감정은 0으로 채움
+        for (String emo : activeEmotionNames) {
+            monthlyEmotionCount.putIfAbsent(emo, 0);
+        }
+
         return new GetMonthlyEmotionResponse(monthlyEmotionCount);
     }
 
