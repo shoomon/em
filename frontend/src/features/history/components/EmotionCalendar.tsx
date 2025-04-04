@@ -91,18 +91,16 @@ const EmotionCalendar = () => {
           const textColorClass = getWeekdayColorClass(date)
 
           return (
-            <>
-              {emotion && (
-                <div
-                  className={`react-calendar__emotion-dot ${emotionBgClass}`}
-                />
-              )}
+            <div className="flex flex-col items-center justify-center gap-y-1 w-full h-full">
               <abbr
                 title={date.toDateString()}
                 className={`no-underline relative z-10 ${textColorClass}`}>
                 {date.getDate()}
               </abbr>
-            </>
+              <div
+                  className={`react-calendar__emotion-dot ${emotionBgClass}`}
+              />
+            </div>
           )
         }}
         tileClassName={({ date, view }) => {
