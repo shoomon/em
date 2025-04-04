@@ -428,7 +428,7 @@ public class PostService{
     }
 
     private Map<Integer, String> getAllEmotion(){
-        List<Emotion> emotionList = emotionRepository.findAll();
+        List<Emotion> emotionList = emotionRepository.findByIsActiveTrueOrderByIdAsc();
 
         return emotionList.stream()
                 .collect(Collectors.toMap(Emotion::getId, Emotion::getName));
