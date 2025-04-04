@@ -1,11 +1,22 @@
+from functools import lru_cache
+
+from fastapi import Depends
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import torch.nn.functional as F
 import pickle
 
+from src.core.Settings import getSettings
+
+settings = getSettings()
+
+@lru_cache(maxsize=None)
+def getEmotionDetectionService():
+    return EmotionDetectionService(settings.EMOTION_MODEL_NAME)
+
 class EmotionDetectionService:
     def __init__(self, model_path: str):
-        with open(model_path + "/label_encoder.pkl", "rb") as f:
+        with open(settings.EMOTION_LABELS_PATH, "rb") as f:
             data = pickle.load(f)
             self.label_list = data.classes_.tolist()
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)

@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from src.emotion_detection.application.EmotionDetectionService import EmotionDetectionService
-from src.emotion_detection.dependancy.EmotionDetectionDeps import getEmotionDetectionService
+from src.emotion_detection.application.EmotionDetectionService import EmotionDetectionService, getEmotionDetectionService
 
 emotionDetectionController = APIRouter(
     prefix="/detection/emotion",
