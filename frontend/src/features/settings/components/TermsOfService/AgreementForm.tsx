@@ -86,7 +86,7 @@ const AgreementForm = () => {
               <span>전체 동의</span>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-8">
             {terms?.map((term) => {
               return (
                 <AgreementCheckedItem
