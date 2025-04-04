@@ -9,6 +9,7 @@ import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
 import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import MyPostListPage from "@/pages/MyPage/MyPostListPage"
+import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
 import RecommendPage from "@/pages/RecommendPage/RecommendPage"
 import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
@@ -71,10 +72,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "*",
-        element: <div>404 Not Found</div>,
-      },
     ],
   },
 
@@ -88,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: "/login-success",
         element: <LoginSuccessPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
       {
         path: "/terms-agreement",
