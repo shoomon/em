@@ -1,12 +1,17 @@
 import Button from "@/components/Button/Button"
 import { Square, SquareCheckBig } from "lucide-react"
 import { useState, type FormEvent } from "react"
+import { useNavigate } from "react-router-dom"
 import useGetTermsQuery from "../../hooks/useGetTermsQuery"
-import { TermType } from "../../types/terms.type"
+import useUpdateTerm from "../../hooks/useUpdateTerm"
+import { TermType, UpdateTermKey } from "../../types/terms.type"
 import AgreementCheckedItem from "./AgreementCheckedItem"
 
 const AgreementForm = () => {
   const { data: terms } = useGetTermsQuery()
+  const { mutateAsync: updateTermAgreement } = useUpdateTerm()
+
+  const navigate = useNavigate()
 
   const [isAllChecked, setIsAllChecked] = useState(false)
   const [isChecked, setIsChecked] = useState<Record<TermType, boolean>>({
@@ -24,17 +29,21 @@ const AgreementForm = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const updateList = Object.entries(isChecked).filter(
-      ([_, isChecked]) => isChecked,
-    )
+    try {
+      const { isTermsAgreed } = await updateTermAgreement({
+        [UpdateTermKey.PRIVACY_POLICY]: isChecked[TermType.PRIVACY_POLICY],
+        [UpdateTermKey.LOCATION_BASED_SERVICE]:
+          isChecked[TermType.LOCATION_BASED_SERVICE],
+        [UpdateTermKey.MARKETING_NOTIFICATION]:
+          isChecked[TermType.MARKETING_NOTIFICATION],
+      })
 
-    console.log(updateList)
-
-    // await Promise.all(
-    //   updateList.map(([type, isChecked]) =>
-    //     updateTermAgreement(+type, isChecked),
-    //   ),
-    // )
+      if (isTermsAgreed) {
+        navigate("/", { replace: true })
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleChecked = (type: TermType | "all") => {

@@ -20,7 +20,6 @@ const TermPage = () => {
   return (
     <div className="h-100vh w-full flex flex-col">
       <EmSection>
-        <EmSection.Header title={title} />
         <ReactMarkdown>{content}</ReactMarkdown>
       </EmSection>
     </div>

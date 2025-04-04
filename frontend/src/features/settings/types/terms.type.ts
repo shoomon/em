@@ -5,6 +5,12 @@ export enum TermType {
   // TERMS_OF_SERVICE = 4,
 }
 
+export enum UpdateTermKey {
+  PRIVACY_POLICY = "isPersonalInfoConsented",
+  LOCATION_BASED_SERVICE = "isLocationInfoConsented",
+  MARKETING_NOTIFICATION = "isAllowingMarketing",
+}
+
 export interface Term {
   termId: number
   title: string
@@ -16,3 +22,13 @@ export type TermTypeKey =
   | "LOCATION_BASED_SERVICE"
   | "MARKETING_NOTIFICATION"
 // | "TERMS_OF_SERVICE"
+
+export interface IsTermsAgreedResponse {
+  isTermsAgreed: boolean
+}
+
+export interface UpdateTermAgreementRequest {
+  [UpdateTermKey.PRIVACY_POLICY]: boolean
+  [UpdateTermKey.LOCATION_BASED_SERVICE]: boolean
+  [UpdateTermKey.MARKETING_NOTIFICATION]: boolean
+}
