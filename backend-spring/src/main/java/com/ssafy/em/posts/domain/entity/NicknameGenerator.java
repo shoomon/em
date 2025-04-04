@@ -15,7 +15,8 @@ public enum NicknameGenerator {
     SADNESS(Arrays.asList("슬퍼하는 ", "눈물짓는 ", "우울해하는 ")),
     ANTICIPATION(Arrays.asList("기대에 부푼 ", "설레는 ", "간절히 바라는 ")),
     FEAR(Arrays.asList("공포에 떠는 ", "겁에 질린 ", "오싹해하는 ")),
-    DISGUST(Arrays.asList("혐오스러워하는 ", "구역질나는 ", "역겨워하는 "));
+    DISGUST(Arrays.asList("혐오스러워하는 ", "구역질나는 ", "역겨워하는 ")),
+    NEUTRAL(Arrays.asList("평온한 ", "차분한 ", "담담한 "));
 
     private final List<String> expressions;
 

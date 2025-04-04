@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface EmotionRepository extends JpaRepository<Emotion, Integer> {
 
-    Optional<Emotion> findByName(String name);
+    Optional<Emotion> findByNameAndIsActiveTrue(String name);
 }

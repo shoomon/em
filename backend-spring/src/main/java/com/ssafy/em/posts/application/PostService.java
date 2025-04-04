@@ -31,6 +31,7 @@ import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
+import com.ssafy.em.posts.exception.PostException;
 import com.ssafy.em.user.domain.UserRepository;
 import com.ssafy.em.user.domain.entity.User;
 import com.ssafy.em.user.exception.UserErrorCode;
@@ -80,11 +81,11 @@ public class PostService{
                 .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
 
         // 1. 동물, 감정, 프로필 조회
-        Animal randomAnimal = animalRepository.findRandomAnimal();
-        Emotion emotion = emotionRepository.findByName(request.emotion())
+        Animal randomAnimal = animalRepository.findRandomAnimalByIsActiveTrue();
+        Emotion emotion = emotionRepository.findByNameAndIsActiveTrue(request.emotion())
                 .orElseThrow(() -> new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
 
-        AnimalProfile animalProfile = animalProfileRepository.findByAnimal_IdAndEmotion_Id(randomAnimal.getId(), emotion.getId())
+        AnimalProfile animalProfile = animalProfileRepository.findByAnimal_IdAndEmotion_IdAndIsActiveTrue(randomAnimal.getId(), emotion.getId())
                 .orElseThrow(() -> new AnimalProfileException.AnimalProfileNotFoundException(AnimalProfileErrorCode.NOT_FOUND));
 
         // 2. 닉네임 생성
@@ -137,6 +138,11 @@ public class PostService{
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
 
         if(post.getUser().getId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
+
+        // 게시글이 속한 동물 프로필이 활성 상태인지 확인
+        if (!post.getAnimalProfile().isActive()) {
+            throw new PostException.PostBadRequestException(PostErrorCode.POST_BADREQUEST);
+        }
 
         // 1. 게시글 관련 공감 삭제
         postReactionRepository.deleteByPostId(postId);
