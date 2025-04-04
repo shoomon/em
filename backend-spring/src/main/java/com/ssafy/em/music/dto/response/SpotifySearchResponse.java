@@ -9,14 +9,14 @@ public record SpotifySearchResponse(
         String artistName,
         String title,
         String albumImageUrl,
-        String spotifyAlbumUrl
+        String spotifyTrackUrl
 ) {
     public static SpotifySearchResponse from(Music music) {
         return SpotifySearchResponse.builder()
                 .artistName(music.getArtistName())
                 .title(music.getTitle())
                 .albumImageUrl(music.getAlbumImageUrl())
-                .spotifyAlbumUrl(music.getSpotifyAlbumUrl())
+                .spotifyTrackUrl(music.getSpotifyTrackUrl())
                 .build();
     }
 
@@ -31,7 +31,7 @@ public record SpotifySearchResponse(
                 .musicId(musicId)
                 .artistName(artistName)
                 .title(title)
-                .spotifyAlbumUrl(spotifyUrl)
+                .spotifyTrackUrl(spotifyUrl)
                 .albumImageUrl(imageUrl)
                 .build();
     }

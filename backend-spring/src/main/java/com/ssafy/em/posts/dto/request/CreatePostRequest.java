@@ -16,6 +16,6 @@ public record CreatePostRequest(
         String artistName,
         String title,
         String albumImageUrl,
-        String spotifyAlbumUrl
+        String spotifyTrackUrl
 ) {
 }

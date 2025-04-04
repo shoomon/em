@@ -112,7 +112,7 @@ public class PostService{
                         .artistName(request.artistName())
                         .title(request.title())
                         .albumImageUrl(request.albumImageUrl())
-                        .spotifyAlbumUrl(request.spotifyAlbumUrl())
+                        .spotifyTrackUrl(request.spotifyTrackUrl())
                         .build();
 
                 musicRepository.save(music);
@@ -394,7 +394,7 @@ public class PostService{
         return request.artistName() != null && !request.artistName().isBlank()
                 && request.title() != null && !request.title().isBlank()
                 && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
-                && request.spotifyAlbumUrl() != null && !request.spotifyAlbumUrl().isBlank();
+                && request.spotifyTrackUrl() != null && !request.spotifyTrackUrl().isBlank();
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {

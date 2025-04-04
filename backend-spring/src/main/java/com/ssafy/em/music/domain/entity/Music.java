@@ -34,17 +34,17 @@ public class Music {
     private String albumImageUrl;
 
     @Column(name = "spotify_album_url", nullable = false, columnDefinition = "text")
-    private String spotifyAlbumUrl;
+    private String spotifyTrackUrl;
 
     @Column(name = "music_count", nullable = false, columnDefinition = "integer default 1")
     private int musicCount;
 
     @Builder
-    public Music(String artistName, String title, String albumImageUrl, String spotifyAlbumUrl) {
+    public Music(String artistName, String title, String albumImageUrl, String spotifyTrackUrl) {
         this.artistName = artistName;
         this.title = title;
         this.albumImageUrl = albumImageUrl;
-        this.spotifyAlbumUrl = spotifyAlbumUrl;
+        this.spotifyTrackUrl = spotifyTrackUrl;
         this.musicCount = 1;
     }
 
