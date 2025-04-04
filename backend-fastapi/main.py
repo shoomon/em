@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.core.startUpEvent import startUpEvent
+from src.curse_detection.presentation.CurseDetectionController import curseDetectionController
 from src.dummy.presentation.DummyController import dummyController
 from src.music_recommendation.presentation.MusicRecommendationController import musicRecommendationController
 from src.emotion_detection.presentation.EmotionDetectionController import emotionDetectionController
@@ -9,3 +10,4 @@ app.add_event_handler("startup", startUpEvent)
 app.include_router(dummyController)
 app.include_router(musicRecommendationController)
 app.include_router(emotionDetectionController)
+app.include_router(curseDetectionController)
