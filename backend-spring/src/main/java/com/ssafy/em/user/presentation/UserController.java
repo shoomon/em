@@ -43,7 +43,7 @@ public class UserController implements UserControllerDocs {
     @GetMapping("/terms/health")
     @Override
     public ResponseEntity<TermAgreementResponse> healthCheckTerms(@LoginRequired int loginId) {
-        TermAgreementResponse response = userService.checkTermAgreement(1);
+        TermAgreementResponse response = userService.checkTermAgreement(loginId);
         return ResponseEntity.ok(response);
     }
 }
