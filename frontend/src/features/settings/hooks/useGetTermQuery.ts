@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import { fetchTerm } from "../api/term"
+import { fetchTerm } from "../api/termApi"
 import { Term } from "../types/terms.type"
 
 const useGetTermQuery = (id: number): UseQueryResult<Term> => {
