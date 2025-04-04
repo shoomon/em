@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Calendar as ReactCalendar } from "react-calendar"
 import "react-calendar/dist/Calendar.css"
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 import { fetchEmotionCalendar } from "../api/emotionCalendarApi"
 import { getWeekdayColorClass } from "../utils/getCalendarColor"
 import { getEmotionColorClass } from "../utils/getEmotionColor"
@@ -12,7 +12,10 @@ interface EmotionCalendarProps {
   onSelectDate: (date: string) => void
 }
 
-const EmotionCalendar = ({ selectedDate, onSelectDate }: EmotionCalendarProps) => {
+const EmotionCalendar = ({
+  selectedDate,
+  onSelectDate,
+}: EmotionCalendarProps) => {
   // const navigate = useNavigate()
   const today = useMemo(() => new Date(), [])
 
@@ -99,7 +102,7 @@ const EmotionCalendar = ({ selectedDate, onSelectDate }: EmotionCalendarProps) =
                 {date.getDate()}
               </abbr>
               <div
-                  className={`react-calendar__emotion-dot ${emotionBgClass}`}
+                className={`react-calendar__emotion-dot ${emotionBgClass}`}
               />
             </div>
           )
@@ -116,7 +119,7 @@ const EmotionCalendar = ({ selectedDate, onSelectDate }: EmotionCalendarProps) =
               // selectedYear === currentYear &&
               // selectedMonth === currentMonth
               date.getFullYear() === selected.getFullYear() &&
-      date.getMonth() === selected.getMonth()
+              date.getMonth() === selected.getMonth()
             ) {
               return "react-calendar__tile--active !text-em-black"
             }
