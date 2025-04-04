@@ -7,24 +7,24 @@ import { getWeekdayColorClass } from "../utils/getCalendarColor"
 import { getEmotionColorClass } from "../utils/getEmotionColor"
 import "./EmotionCalendar.css"
 
-const EmotionCalendar = () => {
-  const navigate = useNavigate()
+interface EmotionCalendarProps {
+  selectedDate: string
+  onSelectDate: (date: string) => void
+}
+
+const EmotionCalendar = ({ selectedDate, onSelectDate }: EmotionCalendarProps) => {
+  // const navigate = useNavigate()
   const today = useMemo(() => new Date(), [])
 
   const [calendarView, setCalendarView] = useState<
     "month" | "year" | "decade" | "century"
   >("month")
 
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const saved = sessionStorage.getItem("selectedDate")
-    return saved ? new Date(saved) : today
-  })
-
   const [emotionData, setEmotionData] = useState<Record<string, string>>({})
 
   const [activeMonth, setActiveMonth] = useState(() => {
-    const saved = sessionStorage.getItem("activeMonth")
-    if (saved) return saved
+    // const saved = sessionStorage.getItem("activeMonth")
+    // if (saved) return saved
 
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, "0")
@@ -43,19 +43,20 @@ const EmotionCalendar = () => {
 
     fetchData()
 
-    sessionStorage.setItem("activeMonth", activeMonth)
+    // sessionStorage.setItem("activeMonth", activeMonth)
   }, [activeMonth])
 
   const handleDateClick = (date: Date) => {
-    setSelectedDate(date)
+    // setSelectedDate(date)
 
     // KST로 보정한 날짜를 YYYY-MM-DD 형식으로 저장
     const localOffset = date.getTimezoneOffset() * 60000
     const localDate = new Date(date.getTime() - localOffset)
     const formatted = localDate.toISOString().split("T")[0]
 
-    sessionStorage.setItem("selectedDate", formatted)
-    navigate("/mypage/list", { viewTransition: true })
+    onSelectDate(formatted)
+    // sessionStorage.setItem("selectedDate", formatted)
+    // navigate("/mypage/list", { viewTransition: true })
   }
 
   return (
@@ -105,14 +106,17 @@ const EmotionCalendar = () => {
         }}
         tileClassName={({ date, view }) => {
           if (view === "year") {
-            const selectedYear = selectedDate.getFullYear()
-            const selectedMonth = selectedDate.getMonth()
-            const currentYear = date.getFullYear()
-            const currentMonth = date.getMonth()
+            const selected = new Date(selectedDate)
+            // const selectedYear = selectedDate.getFullYear()
+            // const selectedMonth = selectedDate.getMonth()
+            // const currentYear = date.getFullYear()
+            // const currentMonth = date.getMonth()
 
             if (
-              selectedYear === currentYear &&
-              selectedMonth === currentMonth
+              // selectedYear === currentYear &&
+              // selectedMonth === currentMonth
+              date.getFullYear() === selected.getFullYear() &&
+      date.getMonth() === selected.getMonth()
             ) {
               return "react-calendar__tile--active !text-em-black"
             }
