@@ -40,10 +40,6 @@ const router = createBrowserRouter([
             element: <RecommendPage />,
           },
           {
-            path: "/calendar",
-            element: <CalendarPage />,
-          },
-          {
             path: "/emotion-report",
             element: <EmotionReportPage />,
           },
@@ -55,6 +51,10 @@ const router = createBrowserRouter([
           {
             path: "/mypage",
             element: <MyPage />,
+          },
+          {
+            path: "/calendar",
+            element: <CalendarPage />,
           },
         ],
       },
