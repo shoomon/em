@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @theme {
+  --breakpoint-xs: 30rem;
+
   --color-em-black: #333333;
   --color-em-white: #fdfdfd;
   --color-em-gray-sm: #f4f4f4;
