@@ -98,6 +98,8 @@ const router = createBrowserRouter([
             element: <TermPage />,
           },
         ],
+      },
+      {
         path: "*",
         element: <NotFoundPage />,
       },
