@@ -1,5 +1,7 @@
 import MusicChartSection from "@/features/recommend/components/MusicChartSection"
 import MusicRecommendSection from "@/features/recommend/components/MusicRecommendSection"
+import RecommendIntroAnimation from "@/features/recommend/components/RecommendIntroAnimation"
+import { useState } from "react"
 
 const dummyData = [
   {
@@ -76,10 +78,15 @@ const dummyData = [
 ]
 
 const RecommendPage = () => {
+  const [isIntroPlaying, setIsIntroPlaying] = useState(true)
+
   return (
     <div>
       <MusicRecommendSection musicList={dummyData} />
       <MusicChartSection musicList={dummyData} />
+      {isIntroPlaying && (
+        <RecommendIntroAnimation onComplete={() => setIsIntroPlaying(false)} />
+      )}
     </div>
   )
 }
