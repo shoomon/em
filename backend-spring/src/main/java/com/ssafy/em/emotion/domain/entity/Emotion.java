@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Emotion {
 
+    private static final boolean DEFAULT_ACTIVE = true;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -36,9 +38,16 @@ public class Emotion {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+
+    @Column(name = "expired_at")
+    private LocalDateTime expiredAt;
+
     @Builder
     public Emotion(String name, String korName) {
         this.name = name;
         this.korName = korName;
+        this.isActive = DEFAULT_ACTIVE;
     }
 }
