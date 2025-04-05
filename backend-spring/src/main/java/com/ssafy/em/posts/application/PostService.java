@@ -27,6 +27,7 @@ import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.request.UpsertSongRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
@@ -131,6 +132,15 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
+
+        upsertMusicVector(UpsertSongRequest.to(
+                request.musicId(),
+                request.title(),
+                request.artistName(),
+                request.spotifyAlbumUrl(),
+                request.albumImageUrl(),
+                request.emotion()
+        ));
     }
 
     @Transactional
@@ -416,9 +426,13 @@ public class PostService{
             return R * c; // 거리 (미터 단위)
     }
 
-    private void upsertMusicVector(){
+    private void upsertMusicVector(UpsertSongRequest req){
         webClient.post()
-                .uri("/recommendation/upsert");
+                .uri("/recommendation/upsert")
+                .bodyValue(req)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .subscribe(); //비동기 실행
     }
 
     private Map<Integer, String> getAllEmotion(){
