@@ -3,77 +3,58 @@ import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
 from pydantic import BaseModel
 from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
+import uuid
 from src.common.EmotionLabels import EMOTIONS
 from src.music_recommendation.util.VectorUtil import VectorUtil
+from src.common.config import QdrantConfig
 
 musicRecommendationController = APIRouter(
     prefix="/recommendation",
     tags=["recommendation"]
 )
 
-VECTOR_DIM = len(EMOTIONS)
+VECTOR_DIM = QdrantConfig.VECTOR_DIM
 
-class AddSongRequest(BaseModel):
+class UpsertSongRequest(BaseModel):
     key: str
     title: str
     artistName: str
     spotifyAlbumUrl: str
     albumImageUrl: str
-    vector: list[float]
+    emotion: str
 
 class EmotionCountRequest(BaseModel):
     emotion_counts: dict
 
-class EmotionUpdateRequest(BaseModel):
-    key: str
-    emotion: str
-
-@musicRecommendationController.post("/song")
-def add_song(req: AddSongRequest):
-    if len(req.vector) != VECTOR_DIM:
-        raise HTTPException(status_code=400, detail="벡터 차원이 맞지 않습니다.")
-
-    qdrantClient.upsert(
-        collection_name=COLLECTION_NAME,
-        points=[PointStruct(
-            id=req.key,
-            vector=req.vector,
-            payload={
-                "title": req.title,
-                "artistName": req.artistName,
-                "spotifyAlbumUrl": req.spotifyAlbumUrl,
-                "albumImageUrl": req.albumImageUrl,
-                "update_count": 1
-            }
-        )]
-    )
-    return {"message": f"등록 완료: {req.title}"}
-
 @musicRecommendationController.delete("/song/{key}")
 def delete_song(key: str):
+    point_id = get_point_id_from_key(key)
     try:
-        result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[key])
+        result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[point_id])
         if not result:
-            raise HTTPException(status_code=404, detail=f"key={key}가 존재하지 않습니다.")
+            raise HTTPException(status_code=404, detail="음악을 찾을 수 없습니다.")
 
         qdrantClient.delete(
             collection_name=COLLECTION_NAME,
-            points_selector=PointIdsList(points=[key])
+            points_selector=PointIdsList(points=[point_id])
         )
         return {"message": f"key={key} 삭제 완료"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@musicRecommendationController.post("/update")
-def apply_user_emotion(req: EmotionUpdateRequest):
+@musicRecommendationController.post("/upsert")
+def upsert_song(req: UpsertSongRequest):
     if req.emotion not in EMOTIONS:
         raise HTTPException(status_code=400, detail="유효하지 않은 감정입니다.")
 
+    point_id = get_point_id_from_key(req.key)
     emotion_index = EMOTIONS.index(req.emotion)
-    result = qdrantClient.retrieve(COLLECTION_NAME, [req.key], with_vectors=True)
+    result = qdrantClient.retrieve(COLLECTION_NAME, [point_id], with_vectors=True)
 
     if not result:
-        raise HTTPException(status_code=404, detail="노래를 찾을 수 없습니다.")
+        vector = VectorUtil.smooth_one_hot(emotion_index, VECTOR_DIM, 0.02)
+        add_song(req,vector)
+        return {"message": f"key={req.key} 등록 완료"}
 
     old_vector = np.array(result[0].vector)
     count = result[0].payload.get("update_count", 1)
@@ -82,7 +63,7 @@ def apply_user_emotion(req: EmotionUpdateRequest):
     qdrantClient.upsert(
         collection_name=COLLECTION_NAME,
         points=[PointStruct(
-            id=req.key,
+            id=point_id,
             vector=new_vector.tolist(),
             payload={
                 "title": result[0].payload["title"],
@@ -145,3 +126,28 @@ def recommend_music(req: EmotionCountRequest):
             for res in results
         ]
     }
+
+#private method
+def add_song(req: UpsertSongRequest, vector):
+    point_id = get_point_id_from_key(req.key)
+    if len(vector) != VECTOR_DIM:
+        raise HTTPException(status_code=400, detail="벡터 차원이 맞지 않습니다.")
+
+    qdrantClient.upsert(
+        collection_name=COLLECTION_NAME,
+        points=[PointStruct(
+            id=point_id,
+            vector=vector,
+            payload={
+                "title": req.title,
+                "artistName": req.artistName,
+                "spotifyAlbumUrl": req.spotifyAlbumUrl,
+                "albumImageUrl": req.albumImageUrl,
+                "update_count": 1
+            }
+        )]
+    )
+    return {"message": f"등록 완료: {req.title}"}
+
+def get_point_id_from_key(key: str):
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, key))
