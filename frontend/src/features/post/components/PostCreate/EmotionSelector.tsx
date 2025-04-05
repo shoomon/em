@@ -25,7 +25,7 @@ const EmotionSelector = ({}: EmotionSelectorProps) => {
         description="어떤 감정을 느끼고 계신지 알려주세요!"
       />
       <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 xs:grid-cols-4">
           {EMOTION_ITEMS.map((emotion) => (
             <EmotionSelectItem
               key={emotion.engName}
