@@ -16,7 +16,8 @@ musicRecommendationController = APIRouter(
     tags=["recommendation"]
 )
 
-logger = logging.getLogger("uvicorn.error")
+logger = logging.getLogger("uvicorn")
+logger.setLevel(logging.INFO)
 
 VECTOR_DIM = QdrantConfig.VECTOR_DIM
 
@@ -152,7 +153,7 @@ def add_song(req: UpsertSongRequest, vector):
             }
         )]
     )
-    logger.log(f"등록 완료: {req.title}")
+    logger.info(f"등록 완료: {req.title}")
 
 def get_point_id_from_key(key: str):
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, key))
