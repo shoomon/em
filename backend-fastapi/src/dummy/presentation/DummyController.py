@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException
+import json
+
+from fastapi import APIRouter, HTTPException, UploadFile, File
 import numpy as np
 from qdrant_client.models import PointStruct
 from src.common.EmotionLabels import EMOTIONS
 from src.common.config.QdrantConfig import COLLECTION_NAME, qdrantClient
+from src.music_recommendation.presentation.MusicRecommendationController import get_point_id_from_key
 
 dummyController = APIRouter(
     prefix="/dummy",
@@ -37,6 +40,34 @@ def insert_dummy_songs():
         )
 
     return {"message": "더미 음악 100개 등록 완료"}
+
+@dummyController.post("/upload-json")
+async def upload_json(file: UploadFile = File(...)):
+    contents = await file.read()
+    try:
+        songs = json.loads(contents)
+        points_data = songs["points"]
+        points = []
+
+        for song in points_data:
+            song_info = song["payload"]
+            song_id=get_point_id_from_key(song["id"])
+            points.append(PointStruct(
+                id=song_id,
+                vector=song["vector"],
+                payload={
+                    "title": song_info["title"],
+                    "artistName": song_info["artistName"],
+                    "spotifyAlbumUrl": song_info["spotifyAlbumUrl"],
+                    "albumImageUrl": song_info["albumImageUrl"],
+                    "update_count": song_info["update_count"]
+                }
+            ))
+
+        qdrantClient.upsert(collection_name=COLLECTION_NAME, points=points)
+        return {"message": f"{len(points)}곡 업로드 완료"}
+    except Exception as e:
+        return {"error": str(e)}
 
 @dummyController.get("/count")
 def get_dummy_count():

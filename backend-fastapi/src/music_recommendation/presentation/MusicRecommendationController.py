@@ -6,15 +6,15 @@ from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
 import uuid
 from src.common.EmotionLabels import EMOTIONS
 from src.music_recommendation.util.VectorUtil import VectorUtil
+from src.common.config import QdrantConfig
 
 musicRecommendationController = APIRouter(
     prefix="/recommendation",
     tags=["recommendation"]
 )
 
-VECTOR_DIM = len(EMOTIONS)
+VECTOR_DIM = QdrantConfig.VECTOR_DIM
 
-#todo: key는 해시기반 UUID로 변환
 class UpsertSongRequest(BaseModel):
     key: str
     title: str

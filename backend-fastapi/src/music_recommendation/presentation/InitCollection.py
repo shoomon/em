@@ -1,11 +1,17 @@
-from qdrant_client import QdrantClient
+from fastapi import APIRouter
 from qdrant_client.http.models import Distance, VectorParams
+from src.common.config import QdrantConfig
 
 # 설정
-COLLECTION_NAME = "music"
-VECTOR_DIM = 5  # 예: 감정 벡터 5차원
-qdrantClient = QdrantClient(host="localhost", port=6333)
+COLLECTION_NAME = QdrantConfig.COLLECTION_NAME
+VECTOR_DIM = QdrantConfig.VECTOR_DIM
+qdrantClient = QdrantConfig.qdrantClient
 
+initController = APIRouter(
+    prefix="/collection",
+    tags=["Init Collection"]
+)
+@initController.post("/init")
 def init_collection():
     # 1. 현재 컬렉션 목록 조회
     collections = qdrantClient.get_collections().collections
@@ -20,3 +26,8 @@ def init_collection():
         )
     else:
         print(f"컬렉션 '{COLLECTION_NAME}'이 이미 존재합니다.")
+
+@initController.delete("/delete")
+def delete_collection(name):
+    collections = qdrantClient.delete_collection(name)
+    return {f"컬렉션 '{name}'이 삭제되었습니다."}
