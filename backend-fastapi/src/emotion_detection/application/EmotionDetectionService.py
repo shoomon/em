@@ -16,9 +16,7 @@ def getEmotionDetectionService():
 
 class EmotionDetectionService:
     def __init__(self, model_path: str):
-        base_dir = "/Users/baeseungho/PycharmProjects/S12P21A407/backend-fastapi"  # 현재 파일 기준
-        file_path = os.path.join(base_dir, settings.EMOTION_LABELS_PATH)
-        with open(file_path, "rb") as f:
+        with open(settings.EMOTION_LABELS_PATH, "rb") as f:
             data = pickle.load(f)
             self.label_list = data.classes_.tolist()
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
