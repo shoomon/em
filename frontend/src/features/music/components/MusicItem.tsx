@@ -1,3 +1,4 @@
+import { cn } from "@/utils/cn"
 import { ReactNode } from "react"
 import { Music } from "../types/music"
 
@@ -18,12 +19,13 @@ const MusicItem = ({ music, className, children, onClick }: MusicItemProps) => {
 
   return (
     <div
-      className={`flex items-center w-full gap-2 p-3 ${className}`}
+      className={cn(`flex items-center w-full gap-2 p-3 ${className}`)}
       onClick={handleClick}>
       <img
         src={albumImageUrl || ""}
         alt=""
         className="object-cover rounded-lg size-12"
+        draggable={false}
       />
 
       <div className="flex items-center justify-between flex-1 gap-2">

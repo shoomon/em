@@ -16,9 +16,9 @@ const PlayList = ({ location }: PlayListProps) => {
     location,
   })
 
-  const handleClick = (music: Music) => {
-    if (music.spotifyAlbumUrl) {
-      window.open(music.spotifyAlbumUrl, "_blank")
+  const handleClickItem = (music: Music) => {
+    if (music.spotifyTrackUrl) {
+      window.open(music.spotifyTrackUrl, "_blank")
     }
   }
 
@@ -36,14 +36,14 @@ const PlayList = ({ location }: PlayListProps) => {
       ) : (
         <>
           {data.pages.map((page: any) =>
-            page.musicList.map((item: Music, index: number) => (
+            page.musicList.map((item: Music) => (
               <MusicItem
-                key={index}
+                key={item.musicId}
                 music={item}
                 className="border-b border-b-em-gray-md">
                 <button
                   className="cursor-pointer shrink-0"
-                  onClick={() => handleClick(item)}>
+                  onClick={() => handleClickItem(item)}>
                   <StepForward className="stroke-em-gray size-5" />
                 </button>
               </MusicItem>

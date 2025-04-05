@@ -40,10 +40,11 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     longitude: 0,
     emotion: "",
     address: "",
+    musicId: 0,
     title: null,
     artistName: null,
     albumImageUrl: null,
-    spotifyAlbumUrl: null,
+    spotifyTrackUrl: null,
   })
 
   // formData에 입력을 했는지 확인하는 함수
@@ -91,7 +92,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
         title: null,
         artistName: null,
         albumImageUrl: null,
-        spotifyAlbumUrl: null,
+        spotifyTrackUrl: null,
       }))
     }
   }

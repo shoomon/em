@@ -73,7 +73,7 @@ const PostConfirm = ({}: PostConfirmProps) => {
                   artistName: formData.artistName,
                   title: formData.title,
                   albumImageUrl: formData.albumImageUrl,
-                  spotifyAlbumUrl: formData.spotifyAlbumUrl,
+                  spotifyTrackUrl: formData.spotifyTrackUrl,
                 }}
               />
             ) : (

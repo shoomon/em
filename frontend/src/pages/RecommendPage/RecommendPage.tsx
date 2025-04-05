@@ -1,104 +1,85 @@
-import EmSection from "@/components/EmSection/EmSection"
-import Autoplay from "embla-carousel-autoplay"
-import useEmblaCarousel from "embla-carousel-react"
-import { useEffect, useState } from "react"
+import MusicChartSection from "@/features/recommend/components/MusicChartSection"
+import MusicRecommendSection from "@/features/recommend/components/MusicRecommendSection"
 
 const dummyData = [
-  "https://i.maniadb.com/images/album/732/732046_1_f.jpg",
-  "https://i.maniadb.com/images/album/747/747251_1_f.jpg",
-  "https://i.maniadb.com/images/album/758/758815_1_f.jpg",
-  "https://i.maniadb.com/images/album/767/767471_1_f.jpg",
-  "https://i.maniadb.com/images/album/930/930973_1_f.jpg",
-  "https://i.maniadb.com/images/album/763/763433_1_f.jpg",
-  "https://i.maniadb.com/images/album/996/996760_1_f.jpg",
-  "https://i.maniadb.com/images/album/1049/049251_1_f.jpg",
-  "https://i.maniadb.com/images/album/788/788923_1_f.jpg",
+  {
+    musicId: 1,
+    albumImageUrl: " https://i.maniadb.com/images/album/732/732046_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "사랑에 빠졌을 때",
+    artistName: "볼빨간사춘기",
+  },
+  {
+    musicId: 2,
+    albumImageUrl: "https://i.maniadb.com/images/album/747/747251_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "나의 사춘기에게",
+    artistName: "볼빨간사춘기",
+  },
+  {
+    musicId: 3,
+    albumImageUrl: "https://i.maniadb.com/images/album/758/758815_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "여행",
+    artistName: "볼빨간사춘기",
+  },
+  {
+    musicId: 4,
+    albumImageUrl: "https://i.maniadb.com/images/album/767/767471_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "Mermaid",
+    artistName: "볼빨간사춘기",
+  },
+  {
+    musicId: 5,
+    albumImageUrl: "https://i.maniadb.com/images/album/930/930973_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "Seoul",
+    artistName: "볼빨간사춘기",
+  },
+  {
+    musicId: 6,
+    albumImageUrl: "  https://i.maniadb.com/images/album/763/763433_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "왜 몰랐을까",
+    artistName: "로이킴",
+  },
+
+  {
+    musicId: 7,
+    albumImageUrl: "https://i.maniadb.com/images/album/996/996760_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "피차일반",
+    artistName: "음율",
+  },
+  {
+    musicId: 8,
+    albumImageUrl: "https://i.maniadb.com/images/album/1049/049251_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "고민중독",
+    artistName: "QWER",
+  },
+  {
+    musicId: 9,
+    albumImageUrl: "https://i.maniadb.com/images/album/788/788923_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "시작",
+    artistName: "가호",
+  },
+  {
+    musicId: 10,
+    albumImageUrl: "https://i.maniadb.com/images/album/788/788939_1_f.jpg",
+    spotifyTrackUrl: "",
+    title: "그때 그 아인",
+    artistName: "김필",
+  },
 ]
 
 const RecommendPage = () => {
-  const autoplay = Autoplay({ delay: 5000, stopOnInteraction: false })
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [autoplay])
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [scrollTo, setScrollTo] = useState<(index: number) => void>(
-    () => () => {},
-  )
-
-  useEffect(() => {
-    if (!emblaApi) {
-      return
-    }
-
-    const onSelect = () => {
-      setSelectedIndex(emblaApi.selectedScrollSnap())
-    }
-
-    setScrollTo(() => emblaApi.scrollTo)
-    emblaApi.on("select", onSelect)
-    onSelect()
-  }, [emblaApi])
-
   return (
-    <div className="h-[calc(100dvh-var(--navigation-bar-height)-var(--header-height))] ">
-      <EmSection>
-        <EmSection.Header
-          title={"🎶 회원님을 위한 뮤직"}
-          description={"회원님의 최근 감정을 반영하여 음악을 추천 드릴게요"}
-        />
-
-        <div ref={emblaRef} className="w-full overflow-hidden">
-          <div className="flex">
-            <div className="flex items-center justify-center flex-grow min-w-0 shrink-0 basis-full">
-              <div className="grid grid-cols-3 gap-2 size-60 xs:size-72">
-                {dummyData.map((item, index) => (
-                  <div className="overflow-hidden">
-                    <img
-                      key={index}
-                      src={item}
-                      className="object-cover rounded-lg cursor-pointer select-none bg-em-gray-md size-full"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center flex-grow min-w-0 shrink-0 basis-full">
-              <div className="grid grid-cols-3 gap-2 size-60 xs:size-72">
-                {dummyData.map((item, index) => (
-                  <img
-                    key={index}
-                    src={item}
-                    className="object-cover rounded-lg cursor-pointer select-none bg-em-gray-md size-full"
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center flex-grow min-w-0 shrink-0 basis-full">
-              <div className="grid grid-cols-3 gap-2 size-60 xs:size-72">
-                {dummyData.map((item, index) => (
-                  <img
-                    key={index}
-                    src={item}
-                    className="object-cover rounded-lg cursor-pointer select-none bg-em-gray-md size-full"
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-center gap-2">
-          {[0, 1, 2].map((index) => (
-            <button
-              key={index}
-              onClick={() => scrollTo(index)}
-              className={`size-3 rounded-full ${
-                index === selectedIndex ? "bg-em-black" : "bg-em-gray-md"
-              }`}
-            />
-          ))}
-        </div>
-      </EmSection>
+    <div>
+      <MusicRecommendSection musicList={dummyData} />
+      <MusicChartSection musicList={dummyData} />
     </div>
   )
 }

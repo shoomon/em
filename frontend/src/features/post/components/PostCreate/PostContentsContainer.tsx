@@ -41,7 +41,7 @@ const PostContentsContainer = () => {
               artistName: formData.artistName,
               title: formData.title,
               albumImageUrl: formData.albumImageUrl,
-              spotifyAlbumUrl: formData.spotifyAlbumUrl,
+              spotifyTrackUrl: formData.spotifyTrackUrl,
             }}
             onClick={handleMusicChange}>
             <button
