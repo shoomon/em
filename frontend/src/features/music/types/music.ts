@@ -1,8 +1,9 @@
 export interface Music {
+  musicId: number | null
   artistName: string | null
   title: string | null
   albumImageUrl: string | null
-  spotifyAlbumUrl: string | null
+  spotifyTrackUrl: string | null
 }
 
 export interface PlayListInfiniteData {
