@@ -10,7 +10,7 @@ const MyPostList = ({ postList }: MyPostListProps) => {
     <div className="flex flex-col overflow-y-auto h-full">
       <div className="flex flex-col flex-1 gap-4 bg-em-gray-sm">
         {postList.length === 0 ? (
-          <div className="flex flex-col gap-3 p-4 bg-em-white text-em-black text-center">
+          <div className="flex flex-col gap-3 rounded-lg p-4 bg-em-white text-em-black text-center">
             작성한 게시글이 없습니다.
           </div>
         ) : (
