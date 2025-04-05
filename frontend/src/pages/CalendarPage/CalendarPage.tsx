@@ -25,7 +25,7 @@ const CalendarPage = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 gap-6">
       {/* <section className="p-4 flex flex-col gap-6 relative">
         <UserProfileCard />
       </section> */}
