@@ -11,7 +11,7 @@ curseDetectionController = APIRouter(
 class DetectCurseRequest(BaseModel):
     text: str
 
-@curseDetectionController.post("/")
+@curseDetectionController.post()
 async def predict_emotion(
         request: DetectCurseRequest,
         service: CurseDetectionService = Depends(getCurseDetectionService)

@@ -11,7 +11,7 @@ emotionDetectionController = APIRouter(
 class PredictEmotionRequest(BaseModel):
     text: str
 
-@emotionDetectionController.post("/")
+@emotionDetectionController.post()
 async def predict_emotion(
         request: PredictEmotionRequest,
         service: EmotionDetectionService = Depends(getEmotionDetectionService)
