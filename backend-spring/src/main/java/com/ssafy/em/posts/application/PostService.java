@@ -57,6 +57,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.ssafy.em.posts.exception.PostErrorCode.POST_INVALID_MUSIC;
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
 import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
@@ -120,6 +121,18 @@ public class PostService{
 
                 musicRepository.save(music);
             }
+
+            if (request.musicId() == null || request.emotion() == null) {
+                throw new PostException.PostBadRequestException(POST_INVALID_MUSIC);
+            }
+            upsertMusicVector(UpsertSongRequest.to(
+                    request.musicId(),
+                    request.title(),
+                    request.artistName(),
+                    request.spotifyTrackUrl(),
+                    request.albumImageUrl(),
+                    request.emotion()
+            ));
         }
 
         // 5. Post 엔티티 생성
@@ -135,15 +148,6 @@ public class PostService{
                 .build();
 
         postJpaRepository.save(post);
-
-        upsertMusicVector(UpsertSongRequest.to(
-                request.musicId(),
-                request.title(),
-                request.artistName(),
-                request.spotifyAlbumUrl(),
-                request.albumImageUrl(),
-                request.emotion()
-        ));
     }
 
     @Transactional
@@ -397,9 +401,9 @@ public class PostService{
     private boolean isMusicInfoPresent(CreatePostRequest request) {
         // 예시: 모든 필드가 null이 아니고, 빈 문자열이 아니면 true
         return request.artistName() != null && !request.artistName().isBlank()
-                && request.title() != null && !request.title().isBlank()
-                && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
-                && request.spotifyTrackUrl() != null && !request.spotifyTrackUrl().isBlank();
+                && request.title() != null && !request.title().isBlank();
+//                && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
+//                && request.spotifyTrackUrl() != null && !request.spotifyTrackUrl().isBlank()
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {
@@ -445,7 +449,11 @@ public class PostService{
                 .uri("/recommendation/upsert")
                 .bodyValue(req)
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(String.class)
+//                .doOnSubscribe(s -> log.info("요청 시작"))
+//                .doOnNext(res -> log.info("응답: {}", res))
+//                .doOnError(e -> log.error("업서트 실패", e))
+//                .doFinally(sig -> log.info("요청 종료 signal = {}", sig))
                 .subscribe(); //비동기 실행
     }
 

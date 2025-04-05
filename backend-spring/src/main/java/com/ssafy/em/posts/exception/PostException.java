@@ -27,7 +27,7 @@ public class PostException {
     }
 
 
-    public static class PostNotFoundException  extends NotFoundException {
+    public static class PostNotFoundException extends NotFoundException {
         public PostNotFoundException(PostErrorCode errorCode) {
             super(new ErrorCode(errorCode.getCode(), errorCode.getMessage()));
         }

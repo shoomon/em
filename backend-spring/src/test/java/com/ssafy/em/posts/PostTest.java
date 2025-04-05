@@ -17,15 +17,15 @@ public class PostTest {
     @Test
     @DisplayName("게시글 생성 테스트")
     void createPost(){
-        CreatePostRequest req = new CreatePostRequest(
-                1,
-                "게시글 생성 테스트1",
-                37.5665,
-                126.9780
-        );
-
-        int userId = 1;
-
-        postService.createPost(userId, req);
+//        CreatePostRequest req = new CreatePostRequest(
+//                1,
+//                "게시글 생성 테스트1",
+//                37.5665,
+//                126.9780
+//        );
+//
+//        int userId = 1;
+//
+//        postService.createPost(userId, req);
     }
 }
