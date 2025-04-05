@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
@@ -19,8 +21,8 @@ class UpsertSongRequest(BaseModel):
     key: str
     title: str
     artistName: str
-    spotifyAlbumUrl: str
-    albumImageUrl: str
+    spotifyAlbumUrl: Optional[str]
+    albumImageUrl: Optional[str]
     emotion: str
 
 class EmotionCountRequest(BaseModel):
