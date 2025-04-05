@@ -13,10 +13,10 @@ def init_collection():
 
     # 2. 없으면 생성
     if COLLECTION_NAME not in existing_names:
-        print(f"✅ 컬렉션 '{COLLECTION_NAME}'이 없어서 새로 생성합니다.")
+        print(f"컬렉션 '{COLLECTION_NAME}'이 없어서 새로 생성합니다.")
         qdrantClient.create_collection(
             collection_name=COLLECTION_NAME,
             vectors_config=VectorParams(size=VECTOR_DIM, distance=Distance.COSINE)
         )
     else:
-        print(f"✅ 컬렉션 '{COLLECTION_NAME}' 이미 존재합니다.")
+        print(f"컬렉션 '{COLLECTION_NAME}'이 이미 존재합니다.")

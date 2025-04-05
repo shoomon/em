@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 import numpy as np
-import uuid
 from qdrant_client.models import PointStruct, PointIdsList
 from pydantic import BaseModel
 from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
+import uuid
 from src.common.EmotionLabels import EMOTIONS
 from src.music_recommendation.util.VectorUtil import VectorUtil
 
@@ -28,14 +28,15 @@ class EmotionCountRequest(BaseModel):
 
 @musicRecommendationController.delete("/song/{key}")
 def delete_song(key: str):
+    point_id = get_point_id_from_key(key)
     try:
-        result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[key])
+        result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[point_id])
         if not result:
             raise HTTPException(status_code=404, detail="음악을 찾을 수 없습니다.")
 
         qdrantClient.delete(
             collection_name=COLLECTION_NAME,
-            points_selector=PointIdsList(points=[key])
+            points_selector=PointIdsList(points=[point_id])
         )
         return {"message": f"key={key} 삭제 완료"}
     except Exception as e:
@@ -46,13 +47,14 @@ def upsert_song(req: UpsertSongRequest):
     if req.emotion not in EMOTIONS:
         raise HTTPException(status_code=400, detail="유효하지 않은 감정입니다.")
 
+    point_id = get_point_id_from_key(req.key)
     emotion_index = EMOTIONS.index(req.emotion)
-    result = qdrantClient.retrieve(COLLECTION_NAME, [req.key], with_vectors=True)
+    result = qdrantClient.retrieve(COLLECTION_NAME, [point_id], with_vectors=True)
 
     if not result:
-        vector = VectorUtil.smooth_one_hot(emotion_index, len(result), 0.02)
+        vector = VectorUtil.smooth_one_hot(emotion_index, VECTOR_DIM, 0.02)
         add_song(req,vector)
-        return
+        return {"message": f"key={req.key} 등록 완료"}
 
     old_vector = np.array(result[0].vector)
     count = result[0].payload.get("update_count", 1)
@@ -61,7 +63,7 @@ def upsert_song(req: UpsertSongRequest):
     qdrantClient.upsert(
         collection_name=COLLECTION_NAME,
         points=[PointStruct(
-            id=req.key,
+            id=point_id,
             vector=new_vector.tolist(),
             payload={
                 "title": result[0].payload["title"],
@@ -125,14 +127,16 @@ def recommend_music(req: EmotionCountRequest):
         ]
     }
 
+#private method
 def add_song(req: UpsertSongRequest, vector):
+    point_id = get_point_id_from_key(req.key)
     if len(vector) != VECTOR_DIM:
         raise HTTPException(status_code=400, detail="벡터 차원이 맞지 않습니다.")
 
     qdrantClient.upsert(
         collection_name=COLLECTION_NAME,
         points=[PointStruct(
-            id=req.key,
+            id=point_id,
             vector=vector,
             payload={
                 "title": req.title,
@@ -144,3 +148,6 @@ def add_song(req: UpsertSongRequest, vector):
         )]
     )
     return {"message": f"등록 완료: {req.title}"}
+
+def get_point_id_from_key(key: str):
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, key))
