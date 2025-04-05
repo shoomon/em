@@ -452,7 +452,7 @@ public class PostService{
                 .bodyToMono(String.class)
 //                .doOnSubscribe(s -> log.info("요청 시작"))
 //                .doOnNext(res -> log.info("응답: {}", res))
-//                .doOnError(e -> log.error("업서트 실패", e))
+                .doOnError(e -> log.error("업서트 실패", e))
 //                .doFinally(sig -> log.info("요청 종료 signal = {}", sig))
                 .subscribe(); //비동기 실행
     }
