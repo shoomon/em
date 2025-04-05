@@ -26,7 +26,7 @@ const EmotionStatistics = ({ date }: EmotionStatisticsProps) => {
           duration: 0.2,
           ease: "easeInOut",
         }}>
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-6 h-full px-1">
           {mostEmotion ? (
             <>
               <EmotionStatisticsRadarChart

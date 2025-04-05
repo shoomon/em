@@ -1,6 +1,6 @@
 import Button from "@/components/Button/Button"
-import { EmotionItem } from "../types/emotion"
 import { memo } from "react"
+import { EmotionItem } from "../types/emotion"
 
 interface EmotionSelectItemProps {
   onSelect?: (emotionId: string) => void
@@ -21,8 +21,8 @@ const EmotionSelectItem = ({
       onClick={() => onSelect?.(engName)}
       className={`rounded-lg p-4 w-full transition-all duration-200 flex flex-col items-center justify-center ${color} ${
         isSelected
-          ? "ring-2 ring-em-black/40 ring-offset-2 scale-102 font-bold"
-          : "hover:scale-102"
+          ? "ring-2 ring-em-black/50 ring-offset-2 scale-103 font-bold"
+          : "hover:scale-103"
       }`}>
       <img src={emojiGif_url} alt={korName} className="w-10 h-10" />
       <span className={`font-medium ${isSelected ? "text-em-primary" : ""}`}>
