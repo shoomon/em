@@ -81,7 +81,7 @@ const RecommendPage = () => {
   const [isIntroPlaying, setIsIntroPlaying] = useState(true)
 
   return (
-    <div>
+    <div className="relative">
       <MusicRecommendSection musicList={dummyData} />
       <MusicChartSection musicList={dummyData} />
       {isIntroPlaying && (
