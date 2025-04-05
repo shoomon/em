@@ -1,1 +1,1 @@
-EMOTIONS = ["기쁨", "슬픔", "분노", "두려움", "우울"]
+EMOTIONS = ["JOY", "ANGER", "NEUTRAL", "SURPRISE", "SADNESS", "FEAR"]

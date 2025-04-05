@@ -1,8 +1,6 @@
 import numpy as np
 
-
 class VectorUtil:
-
     @staticmethod
     def smooth_one_hot(index: int, size: int, smooth_value: float = 0.02):
         vec = np.full(size, smooth_value)
