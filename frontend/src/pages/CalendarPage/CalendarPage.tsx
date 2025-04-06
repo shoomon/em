@@ -3,6 +3,7 @@ import EmSection from "@/components/EmSection/EmSection"
 import EmotionCalendar from "@/features/history/components/EmotionCalendar"
 import MyPostList from "@/features/history/components/MyPostList"
 import { useMyPostsByDate } from "@/features/history/hooks/useMyPostsByDate"
+import { AnimatePresence, motion } from "framer-motion"
 import { Suspense, useState } from "react"
 
 const CalendarPage = () => {
@@ -14,7 +15,9 @@ const CalendarPage = () => {
     return `${year}-${month}-${day}`
   }
 
-  const [selectedDate, setSelectedDate] = useState<string>(formatToYMD(Date.now()))
+  const [selectedDate, setSelectedDate] = useState<string>(
+    formatToYMD(Date.now()),
+  )
 
   // const formattedDate = useMemo(() => formatDateToYMD(selectedDate), [selectedDate])
   const { postList, isLoading } = useMyPostsByDate(selectedDate)
@@ -33,27 +36,37 @@ const CalendarPage = () => {
         <EmSection.Header title="🗓️ 나의 감정 달력" />
         <Suspense fallback={<EmLoading />}>
           <div className="flex flex-col">
-            <EmotionCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate}/>
+            <EmotionCalendar
+              selectedDate={selectedDate}
+              onSelectDate={setSelectedDate}
+            />
           </div>
         </Suspense>
       </EmSection>
       {selectedDate && (
-      <div className="w-full flex-grow p-4 pt-0 bg-em-gray-md">
-        {isLoading ? (
-          <div className="h-40 bg-em-gray-md animate-pulse" />
-        ) : (
-          <div className="flex flex-col">
-
+        <div className="w-full flex-grow p-4 pt-0 bg-em-gray-md">
+          {isLoading ? (
+            <div className="h-40 bg-em-gray-md animate-pulse" />
+          ) : (
+            <div className="flex flex-col">
               <div>
                 <p className="py-4 pl-2 text-lg font-semibold text-em-black">
                   {formatDate(selectedDate)}
                 </p>
               </div>
-
-            <MyPostList postList={postList} />
-          </div>
-        )}
-      </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedDate}
+                  initial={{ opacity: 0, transform: "translateX(20px)" }}
+                  animate={{ opacity: 1, transform: "translateX(0px)" }}
+                  exit={{ opacity: 0, transform: "translateX(0px)" }}
+                  transition={{ duration: 0.2 }}>
+                  <MyPostList postList={postList} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
       )}
     </div>
   )
