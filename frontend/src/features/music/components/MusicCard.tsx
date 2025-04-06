@@ -3,21 +3,17 @@ import { Music } from "../types/music"
 interface MusicCardProps {
   music: Music
   className?: string
+
+  onClick?: () => void
 }
 
-const MusicCard = ({ music, className }: MusicCardProps) => {
+const MusicCard = ({ music, className, onClick }: MusicCardProps) => {
   const { albumImageUrl, artistName, title } = music
-
-  const handleClick = () => {
-    if (music.spotifyTrackUrl) {
-      window.open(music.spotifyTrackUrl, "_blank")
-    }
-  }
 
   return (
     <div
       className={`flex flex-col gap-1.5 shrink-0 cursor-pointer w-28 xs:w-32 ${className}`}
-      onClick={handleClick}>
+      onClick={onClick}>
       <div className="overflow-hidden rounded-lg size-full">
         <img
           src={albumImageUrl || ""}
