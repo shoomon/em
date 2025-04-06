@@ -41,16 +41,17 @@ const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
         return
       }
 
+      e.stopPropagation()
+
       // 닫기 버튼이 눌렸을 경우 종료
       if ((e.target as HTMLElement).closest("button")) {
         return
       }
 
+      e.preventDefault()
       draggingRef.current = true
       dragStartPositionRef.current = { x: e.clientX, y: e.clientY }
       oldPositionRef.current = { ...positionRef.current }
-      e.preventDefault()
-      e.stopPropagation()
       playerRef.current.setPointerCapture(e.pointerId)
     }
 
