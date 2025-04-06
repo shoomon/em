@@ -50,6 +50,7 @@ const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
       dragStartPositionRef.current = { x: e.clientX, y: e.clientY }
       oldPositionRef.current = { ...positionRef.current }
       e.preventDefault()
+      e.stopPropagation()
       playerRef.current.setPointerCapture(e.pointerId)
     }
 
