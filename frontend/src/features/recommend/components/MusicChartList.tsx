@@ -1,7 +1,9 @@
 import { EmotionEngNameType } from "@/features/emotion/types/emotion"
 import MusicItem from "@/features/music/components/MusicItem"
+import { YoutubeDispatchContext } from "@/features/music/contexts/YoutubeContext"
 import { Music } from "@/features/music/types/music"
 import { StepForward } from "lucide-react"
+import { useContext } from "react"
 
 interface MusicChartListProps {
   category: EmotionEngNameType
@@ -9,10 +11,10 @@ interface MusicChartListProps {
 }
 
 const MusicChartList = ({ musicList }: MusicChartListProps) => {
+  const setQuery = useContext(YoutubeDispatchContext)
+
   const handleClickItem = (music: Music) => {
-    if (music.spotifyTrackUrl) {
-      window.open(music.spotifyTrackUrl, "_blank")
-    }
+    setQuery?.(music.artistName + " " + music.title + " topic")
   }
 
   return (

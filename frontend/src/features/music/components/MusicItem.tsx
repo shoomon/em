@@ -7,20 +7,16 @@ interface MusicItemProps {
   className?: string
   children?: ReactNode
 
-  onClick?: (music: Music) => void
+  onClick?: () => void
 }
 
 const MusicItem = ({ music, className, children, onClick }: MusicItemProps) => {
   const { artistName, title, albumImageUrl } = music
 
-  const handleClick = () => {
-    onClick?.(music)
-  }
-
   return (
     <div
       className={cn(`flex items-center w-full gap-2 p-3 ${className}`)}
-      onClick={handleClick}>
+      onClick={onClick}>
       <img
         src={albumImageUrl || ""}
         alt=""

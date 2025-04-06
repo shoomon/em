@@ -1,0 +1,1 @@
+export const YOUTUBE_PLAYER_POSITION_OFFSET = 24

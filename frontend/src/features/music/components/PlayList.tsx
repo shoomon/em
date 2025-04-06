@@ -1,10 +1,11 @@
 import { LatLng } from "@/features/map/types/map"
-import { StepForward } from "lucide-react"
-import React from "react"
+import React, { useContext } from "react"
+import { YoutubeDispatchContext } from "../contexts/YoutubeContext"
 import usePlayList from "../hooks/usePlayList"
 import { Music } from "../types/music"
 import MusicEmpty from "./MusicEmpty"
 import MusicItem from "./MusicItem"
+import MusicPlayButton from "./MusicPlayButton"
 import MusicSkeleton from "./MusicSkeleton"
 
 interface PlayListProps {
@@ -15,11 +16,10 @@ const PlayList = ({ location }: PlayListProps) => {
   const { data, isPending, isFetchingNextPage, observerRef } = usePlayList({
     location,
   })
+  const setQuery = useContext(YoutubeDispatchContext)
 
   const handleClickItem = (music: Music) => {
-    if (music.spotifyTrackUrl) {
-      window.open(music.spotifyTrackUrl, "_blank")
-    }
+    setQuery?.(music.artistName + " " + music.title + " topic")
   }
 
   const isEmpty =
@@ -41,11 +41,7 @@ const PlayList = ({ location }: PlayListProps) => {
                 key={item.musicId}
                 music={item}
                 className="border-b border-b-em-gray-md">
-                <button
-                  className="cursor-pointer shrink-0"
-                  onClick={() => handleClickItem(item)}>
-                  <StepForward className="stroke-em-gray size-5" />
-                </button>
+                <MusicPlayButton onClick={() => handleClickItem(item)} />
               </MusicItem>
             )),
           )}

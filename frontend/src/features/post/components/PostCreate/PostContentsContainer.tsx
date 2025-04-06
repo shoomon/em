@@ -38,12 +38,15 @@ const PostContentsContainer = () => {
         {formData.title ? (
           <MusicItem
             music={{
-              artistName: formData.artistName,
-              title: formData.title,
-              albumImageUrl: formData.albumImageUrl,
-              spotifyTrackUrl: formData.spotifyTrackUrl,
+              ...formData,
+              musicId: null,
             }}
-            onClick={handleMusicChange}>
+            onClick={() =>
+              handleMusicChange({
+                ...formData,
+                musicId: null,
+              })
+            }>
             <button
               type="button"
               className="cursor-pointer"

@@ -1,7 +1,7 @@
 import EmSection from "@/components/EmSection/EmSection"
 import { Music } from "@/features/music/types/music"
 
-import MusicCardList from "./MusicCardList"
+import MusicCardList from "../../music/components/MusicCardList"
 import RecommendInfoPopover from "./RecommendInfoPopover"
 
 interface MusicRecommendSectionProps {
