@@ -401,9 +401,9 @@ public class PostService{
     private boolean isMusicInfoPresent(CreatePostRequest request) {
         // 예시: 모든 필드가 null이 아니고, 빈 문자열이 아니면 true
         return request.artistName() != null && !request.artistName().isBlank()
-                && request.title() != null && !request.title().isBlank();
-//                && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
-//                && request.spotifyTrackUrl() != null && !request.spotifyTrackUrl().isBlank()
+                && request.title() != null && !request.title().isBlank()
+                && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
+                && request.spotifyTrackUrl() != null && !request.spotifyTrackUrl().isBlank();
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {
@@ -450,10 +450,7 @@ public class PostService{
                 .bodyValue(req)
                 .retrieve()
                 .bodyToMono(String.class)
-//                .doOnSubscribe(s -> log.info("요청 시작"))
-//                .doOnNext(res -> log.info("응답: {}", res))
                 .doOnError(e -> log.error("업서트 실패", e))
-//                .doFinally(sig -> log.info("요청 종료 signal = {}", sig))
                 .subscribe(); //비동기 실행
     }
 
