@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion"
+import { useMemo } from "react"
 import useEmotionReport from "../../hooks/useEmotionReport"
 import { EmotionKorNameType } from "../../types/emotion"
 import EmotionGrid from "../EmotionGrid/EmotionGrid"
@@ -13,6 +14,12 @@ interface EmotionStatisticsProps {
 const EmotionStatistics = ({ date }: EmotionStatisticsProps) => {
   const { emotionItemsLabels, datasets, mostEmotion, emotionReport } =
     useEmotionReport(date)
+
+  const dateRange = useMemo(() => {
+    const startDate = new Date(date.getFullYear(), date.getMonth(), 1)
+    const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    return `${startDate.toLocaleDateString()} ~ ${endDate.toLocaleDateString()}`
+  }, [date])
 
   return (
     <AnimatePresence mode="wait">
@@ -29,6 +36,7 @@ const EmotionStatistics = ({ date }: EmotionStatisticsProps) => {
         <div className="flex flex-col gap-6 h-full px-1">
           {mostEmotion ? (
             <>
+              <span className="text-sm sm:text-left text-center text-em-black/50">{`🗓️ 기간 : ${dateRange}`}</span>
               <EmotionStatisticsRadarChart
                 emotionItemsLabels={emotionItemsLabels}
                 datasets={datasets}

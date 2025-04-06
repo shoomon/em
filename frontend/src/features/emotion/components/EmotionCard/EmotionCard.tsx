@@ -21,10 +21,10 @@ const EmotionCard = ({ emotion, count, isMostEmotion }: EmotionCardProps) => {
       whileHover={{ y: -3 }}>
       <div
         className={cn(
-          "w-10 h-10 rounded-full flex items-center justify-center ",
+          "size-9 rounded-full flex items-center justify-center ",
           color.split(" ")[0],
         )}>
-        <img src={emojiGif_url} alt={korName} className="w-10 h-10" />
+        <img src={emojiGif_url} alt={korName} className="size-full" />
       </div>
       <div className="flex-1 flex gap-2 items-center justify-between">
         <p className={`font-medium ${EMOTION_TEXT_COLOR_MAPPER[engName]}`}>
