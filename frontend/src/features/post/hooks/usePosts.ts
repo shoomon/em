@@ -63,6 +63,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
     },
     refetchOnWindowFocus: false,
     enabled: type !== "marker",
+    retry: 0,
   })
 
   // 게시글 삭제
