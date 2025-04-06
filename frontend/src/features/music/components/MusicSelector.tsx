@@ -3,9 +3,10 @@ import MusicItem from "@/features/music/components/MusicItem"
 import MusicSkeleton from "@/features/music/components/MusicSkeleton"
 import useMusicSearch from "@/features/music/hooks/useMusicSearch"
 import { Music } from "@/features/music/types/music"
-import { StepForward } from "lucide-react"
-import { FormEvent, useRef } from "react"
+import { FormEvent, useContext, useRef } from "react"
+import { YoutubeDispatchContext } from "../contexts/YoutubeContext"
 import MusicEmpty from "./MusicEmpty"
+import MusicPlayButton from "./MusicPlayButton"
 
 interface MusicSelectorProps {
   onSelect: (music: Music) => void
@@ -14,6 +15,11 @@ interface MusicSelectorProps {
 const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
   const { data, isPending, setKeyword } = useMusicSearch()
   const inputRef = useRef<HTMLInputElement>(null)
+  const setQuery = useContext(YoutubeDispatchContext)
+
+  const handleClickItem = (music: Music) => {
+    setQuery?.(music.artistName + " " + music.title + " topic")
+  }
 
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -62,9 +68,12 @@ const MusicSelector = ({ onSelect }: MusicSelectorProps) => {
               music={item}
               className="border-b border-b-em-gray-md"
               onClick={() => onSelect(item)}>
-              <button className="cursor-pointer shrink-0">
-                <StepForward className="stroke-em-gray size-5" />
-              </button>
+              <MusicPlayButton
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleClickItem(item)
+                }}
+              />
             </MusicItem>
           ))
         ) : (

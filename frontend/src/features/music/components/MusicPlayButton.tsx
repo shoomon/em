@@ -1,7 +1,7 @@
 import { StepForward } from "lucide-react"
 
 interface MusicPlayButtonProps {
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const MusicPlayButton = ({ onClick }: MusicPlayButtonProps) => {
