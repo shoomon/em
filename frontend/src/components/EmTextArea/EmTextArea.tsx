@@ -1,4 +1,4 @@
-import { ChangeEvent, TextareaHTMLAttributes, useRef } from "react"
+import { ChangeEvent, Ref, TextareaHTMLAttributes, useRef } from "react"
 
 import { cn } from "@/utils/cn"
 
@@ -8,7 +8,9 @@ interface EmTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number
   textState: string // 텍스트 상태 전달
   onTextChange?: (_text: string) => void // 텍스트 상태 변경
+  onFocusChange?: () => void // 텍스트 상태 변경
   isActiveCount?: boolean
+  ref?: Ref<HTMLTextAreaElement> | null
 }
 
 const EmTextArea = ({
@@ -17,7 +19,9 @@ const EmTextArea = ({
   maxLength = 500,
   textState,
   onTextChange,
+  onFocusChange,
   isActiveCount = true,
+  ref,
   ...props
 }: EmTextAreaProps) => {
   const countRef = useRef<HTMLSpanElement>(null)
@@ -39,11 +43,17 @@ const EmTextArea = ({
     // 텍스트 상태 변경
     onTextChange?.(value)
   }
+
   return (
-    <div className="w-full h-full bg-em-white flex flex-col gap-2 p-4 border border-em-gray-md rounded-xl">
+    <div
+      className={cn(
+        "w-full h-full bg-em-white flex flex-col gap-2 p-4 border border-em-gray-md rounded-xl",
+      )}>
       <textarea
+        ref={ref}
         value={textState}
         onChange={handleChange}
+        onFocus={onFocusChange}
         maxLength={maxLength}
         className={cn(
           "outline-none resize-none w-full h-full min-h-60",
