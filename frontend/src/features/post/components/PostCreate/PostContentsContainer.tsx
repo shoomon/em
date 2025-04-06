@@ -1,4 +1,4 @@
-import EmDrawer from "@/components/drawer/EmDrawer"
+import EmDrawer from "@/components/EmDrawer/EmDrawer"
 import EmSection from "@/components/EmSection/EmSection"
 import EmTextArea from "@/components/EmTextArea/EmTextArea"
 import MusicItem from "@/features/music/components/MusicItem"
