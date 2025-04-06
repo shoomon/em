@@ -1,7 +1,7 @@
 import {
   CalendarIcon,
   ChartPieIcon,
-  HomeIcon,
+  MessageSquareHeartIcon,
   MusicIcon,
   UserIcon,
 } from "lucide-react"
@@ -21,11 +21,16 @@ const MainNavigationBar = () => {
     () => [
       {
         id: 1,
-        name: "홈",
-        icon: <HomeIcon className="size-full" />,
+        name: "이음글",
+        icon: <MessageSquareHeartIcon className="size-full" />,
         path: "/",
       },
-
+      {
+        id: 2,
+        name: "이음악",
+        icon: <MusicIcon className="size-full" />,
+        path: "/recommend",
+      },
       {
         id: 3,
         name: "캘린더",
@@ -38,12 +43,7 @@ const MainNavigationBar = () => {
         icon: <ChartPieIcon className="size-full" />,
         path: "/emotion-report",
       },
-      {
-        id: 2,
-        name: "추천",
-        icon: <MusicIcon className="size-full" />,
-        path: "/recommend",
-      },
+
       {
         id: 5,
         name: "마이페이지",
