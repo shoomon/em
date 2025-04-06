@@ -1,3 +1,5 @@
+import useCurseAnalysis from "@/features/emotion/hooks/useCurseAnalysis"
+import { EmotionAnalysisResponse } from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
 import { Music } from "@/features/music/types/music"
 import {
@@ -28,7 +30,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const [_, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { createPostAsync, isPending } = usePostCreate()
-
+  const { mutateAsync: curseAnalysisAsync } = useCurseAnalysis()
   // 스탭 상태 관리
   const [currentStep, setCurrentStep] = useState<PostCreateStep>(
     PostCreateStep.Map,
@@ -45,6 +47,13 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     albumImageUrl: null,
     spotifyAlbumUrl: null,
   })
+
+  // 감정 분석 데이터 관리
+  const [emotionAnalysisData, setEmotionAnalysisData] =
+    useState<EmotionAnalysisResponse>()
+
+  // 비속어 여부 관리
+  const [isCurse, setIsCurse] = useState<boolean | undefined>(undefined)
 
   // formData에 입력을 했는지 확인하는 함수
   const isFormDataValid = useCallback(
@@ -63,9 +72,18 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     [formData],
   )
 
+  // 비속어 분석 이벤트
+  const handleCurseAnalysis = useCallback(async () => {
+    const { isCurse } = await curseAnalysisAsync(formData.content)
+    setIsCurse(isCurse)
+  }, [formData.content, curseAnalysisAsync])
+
   // 스탭 변경 이벤트
   const updateStep = useCallback(
     (step: PostCreateStep) => {
+      if (step === PostCreateStep.Emotion && isCurse === undefined) {
+        handleCurseAnalysis()
+      }
       setCurrentStep(step)
       setSearchParams({ step: step.toString() })
     },
@@ -99,9 +117,13 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   // 폼 데이터 업데이트 이벤트
   const updateFormData = useCallback(
     (key: keyof PostCreateRequest, value: any) => {
+      if (key === "content") {
+        setEmotionAnalysisData(undefined)
+        setIsCurse(undefined)
+      }
       setFormData({ ...formData, [key]: value })
     },
-    [formData],
+    [formData, setEmotionAnalysisData, setIsCurse, setFormData],
   )
 
   // 폼 제출 이벤트
@@ -127,6 +149,8 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     currentStep,
     formData,
     isSubmitPending: isPending,
+    emotionAnalysisData,
+    isCurse,
   }
   const postFormActionValue = {
     updateStep,
@@ -135,6 +159,8 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     handleSubmit,
     isFormDataValid,
     handleMusicChange,
+    setEmotionAnalysisData,
+    setIsCurse,
   }
 
   return (

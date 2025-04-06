@@ -3,9 +3,9 @@ import EmLoading from "@/components/EmLoading/EmLoading"
 import EmSection from "@/components/EmSection/EmSection"
 import EmotionAnalysis from "@/features/emotion/components/EmotionAnalysis/EmotionAnalysis"
 import useEmotionAnalysis from "@/features/emotion/hooks/useEmotionAnalysis"
-import { EmotionAnalysisResponse } from "@/features/emotion/types/emotion"
 import StepAnimateLayout from "@/layout/StepAnimateLayout"
-import { useState } from "react"
+import { useEffect } from "react"
+import { usePostForm } from "../../contexts/PostFormContext"
 import EmotionAnalysisError from "./EmotionAnalysisError"
 import EmotionSelector from "./EmotionSelector"
 
@@ -16,13 +16,19 @@ interface EmotionAnalysisContainerProps {
 const EmotionAnalysisContainer = ({
   content,
 }: EmotionAnalysisContainerProps) => {
-  const [data, setData] = useState<EmotionAnalysisResponse>()
+  const { emotionAnalysisData, setEmotionAnalysisData } = usePostForm()
   const { mutateAsync, isPending } = useEmotionAnalysis(content)
+
+  useEffect(() => {
+    if (content && !emotionAnalysisData) {
+      handleAnalysis()
+    }
+  }, [content, emotionAnalysisData])
 
   const handleAnalysis = async () => {
     try {
       const res = await mutateAsync()
-      setData(res)
+      setEmotionAnalysisData(res)
     } catch (error) {
       return <EmotionAnalysisError />
     }
@@ -32,11 +38,11 @@ const EmotionAnalysisContainer = ({
     <>
       {isPending ? (
         <div className="w-full h-full p-20 ">
-          <EmLoading description="감정 분석 중입니다..." />
+          <EmLoading description="AI가 감정을 분석 중입니다..." />
         </div>
-      ) : data ? (
+      ) : emotionAnalysisData ? (
         <StepAnimateLayout>
-          <EmotionAnalysis data={data} />
+          <EmotionAnalysis data={emotionAnalysisData} />
           <EmotionSelector />
         </StepAnimateLayout>
       ) : (
