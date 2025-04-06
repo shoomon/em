@@ -25,7 +25,7 @@ const CalendarPage = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col flex-1 gap-6">
       {/* <section className="p-4 flex flex-col gap-6 relative">
         <UserProfileCard />
       </section> */}
@@ -38,11 +38,11 @@ const CalendarPage = () => {
         </Suspense>
       </EmSection>
       {selectedDate && (
-      <div className="w-full p-4 pt-0 bg-em-gray-md">
+      <div className="w-full flex-grow p-4 pt-0 bg-em-gray-md">
         {isLoading ? (
           <div className="h-40 bg-em-gray-md animate-pulse" />
         ) : (
-          <div>
+          <div className="flex flex-col">
 
               <div>
                 <p className="py-4 pl-2 text-lg font-semibold text-em-black">
