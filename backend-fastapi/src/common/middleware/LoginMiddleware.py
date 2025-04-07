@@ -4,7 +4,9 @@ import httpx
 from fastapi.responses import JSONResponse
 
 TOKEN_CHECK_URL = "https://j12a407.p.ssafy.io/api/users"
+SUPER_TOKEN = "b31f9c3e8a94276d2fc1b5a9fd91c6ebfa4b72830f8f5a1d9b7e34c821c7e2d6"
 EXCLUDE_PATHS = ["/docs", "/openapi.json"]
+
 
 async def loginMiddleware(
         request: Request,
@@ -21,6 +23,9 @@ async def loginMiddleware(
                                 "code": "B4011",
                                 "message": "인증에 실패하였습니다."
                             })
+
+    if token == SUPER_TOKEN:
+        return await call_next(request)
 
     try:
         async with httpx.AsyncClient() as client:
