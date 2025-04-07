@@ -5,20 +5,28 @@ import BlankLayout from "@/layout/BlankLayout"
 import FullScreenLayout from "@/layout/FullScreenLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
-import CalendarPage from "@/pages/CalendarPage/CalendarPage"
-import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
-import LoginPage from "@/pages/LoginPage/LoginPage"
-import MyPostListPage from "@/pages/MyPage/MyPostListPage"
-import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage"
-import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
-import RecommendPage from "@/pages/RecommendPage/RecommendPage"
-import TermPage from "@/pages/Term/TermPage"
-import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
 import { lazy } from "react"
-import LoginSuccessPage from "@/pages/LoginSuccessPage/LoginSuccessPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
+const RecommendPage = lazy(() => import("@/pages/RecommendPage/RecommendPage"))
+const EmotionReportPage = lazy(
+  () => import("@/pages/EmotionReportPage/EmotionReportPage"),
+)
+const CalendarPage = lazy(() => import("@/pages/CalendarPage/CalendarPage"))
+const PostCreatePage = lazy(
+  () => import("@/pages/PostCreatePage/PostCreatePage"),
+)
+const MyPostListPage = lazy(() => import("@/pages/MyPage/MyPostListPage"))
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage/NotFoundPage"))
+const TermPage = lazy(() => import("@/pages/Term/TermPage"))
+const TermsAgreementPage = lazy(
+  () => import("@/pages/TermsAgreementPage/TermsAgreementPage"),
+)
+const LoginPage = lazy(() => import("@/pages/LoginPage/LoginPage"))
+const LoginSuccessPage = lazy(
+  () => import("@/pages/LoginSuccessPage/LoginSuccessPage"),
+)
 
 const router = createBrowserRouter([
   {
