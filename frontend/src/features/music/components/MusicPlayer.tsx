@@ -24,7 +24,7 @@ const MusicPlayer = ({ videoId, onClose }: MusicPlayerProps) => {
         <div className="flex items-center gap-1">
           <Music2Icon className="stroke-3 size-3 xs:size-4 stroke-em-white" />
           <p className="text-sm font-semibold xs:text-base text-em-white">
-            EM PLAYER
+            이음 플레이어
           </p>
         </div>
 
