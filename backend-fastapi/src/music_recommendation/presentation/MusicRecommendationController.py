@@ -1,5 +1,4 @@
 from typing import Optional
-
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
@@ -112,7 +111,25 @@ def get_data_list(offset: int=0, limit: int=100):
 def recommend_music(req: EmotionCountRequest):
     vec = np.array([req.emotionCounts.get(em, 0) for em in EMOTIONS], dtype=np.float32)
     if vec.sum() == 0:
-        raise HTTPException(status_code=400, detail="감정 통계가 비어 있습니다.")
+        random_vector = VectorUtil.get_random_vector()
+        random_result = qdrantClient.search(
+            collection_name=COLLECTION_NAME,
+            query_vector=random_vector,
+            limit=req.limit
+        )
+        return {
+            "recommendations": [
+                {
+                    "title": res.payload["title"],
+                    "artistName": res.payload["artistName"],
+                    "spotifyAlbumUrl": res.payload["spotifyAlbumUrl"],
+                    "albumImageUrl": res.payload["albumImageUrl"],
+                    "score": round(res.score, 3)
+                }
+                for res in random_result
+            ]
+        }
+
     normalized_vec = vec / vec.sum()
 
     results = qdrantClient.search(

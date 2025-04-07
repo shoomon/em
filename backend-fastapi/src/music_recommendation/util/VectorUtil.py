@@ -1,5 +1,8 @@
 import numpy as np
 
+from src.common.config.QdrantConfig import VECTOR_DIM
+
+
 class VectorUtil:
     @staticmethod
     def smooth_one_hot(index: int, size: int, smooth_value: float = 0.02):
@@ -13,3 +16,8 @@ class VectorUtil:
         alpha = 1 / (update_count + 1)
         updated = (1 - alpha) * np.array(old_vector) + alpha * user_vec
         return updated
+
+    @staticmethod
+    def get_random_vector():
+        random_vector = np.random.randn(VECTOR_DIM)
+        return random_vector / np.linalg.norm(random_vector)
