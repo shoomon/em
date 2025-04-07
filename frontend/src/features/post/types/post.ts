@@ -95,6 +95,7 @@ export interface PostCreateRequest extends Music {
   longitude: LatLng["lng"]
   emotion: string
   address: string
+  isSelected: boolean
 }
 
 export interface PostFormStateType {
@@ -114,4 +115,5 @@ export interface PostFormActionType {
   handleMusicChange: (music: Music | null) => void
   setEmotionAnalysisData: (emotionAnalysisData: EmotionAnalysisResponse) => void
   setIsCurse: (isCurse: boolean) => void
+  handleIsSelected: (isSelected: boolean) => void
 }
