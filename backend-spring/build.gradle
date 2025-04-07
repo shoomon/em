@@ -50,6 +50,8 @@ dependencies {
     // Hibernate-Spatial
     implementation 'org.hibernate.orm:hibernate-spatial:6.4.4.Final'
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     // Jts-Core
     implementation group: 'org.locationtech.jts', name: 'jts-core', version: '1.20.0'
 

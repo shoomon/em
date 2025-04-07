@@ -19,9 +19,11 @@ import com.ssafy.em.music.dto.response.GetPlaylistResponse;
 import com.ssafy.em.music.dto.response.SpotifySearchResponse;
 import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
+import com.ssafy.em.posts.domain.document.LogDocument;
 import com.ssafy.em.posts.domain.entity.NicknameGenerator;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
+import com.ssafy.em.posts.domain.repository.PostLogginRepository;
 import com.ssafy.em.posts.dto.LastReadDto;
 import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
@@ -78,11 +80,16 @@ public class PostService{
     private final AnimalRepository animalRepository;
     private final AnimalProfileRepository animalProfileRepository;
     private final MusicRepository musicRepository;
+    private final PostLogginRepository postLogginRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final WebClient webClient;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
+        if (request.isSelected()) {
+            postLogginRepository.save(new LogDocument(request.content(), request.emotion()));
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
 
