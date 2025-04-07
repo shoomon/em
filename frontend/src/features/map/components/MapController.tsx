@@ -1,12 +1,6 @@
 import PostRefetchButton from "@/features/post/components/PointRefetchButton"
 import usePoints from "@/features/post/hooks/usePoints"
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { Dispatch, SetStateAction, useRef, useState } from "react"
 import { LatLng } from "../types/map"
 import AddressDisplay from "./AddressDisplay"
 import LocationFixButton from "./LocatonFixButton"
@@ -32,33 +26,10 @@ const MapController = ({
     pointListRequest: lastFetchedLocation,
   })
 
-  useEffect(() => {
-    return () => {
-      if (refetchingRef.current) {
-        clearTimeout(refetchingRef.current)
-      }
-    }
-  }, [])
-
-  const handleRefetchButton = () => {
-    if (isRefetching) {
-      return
-    }
-
-    setIsRefetching(true)
-    refetch()
-    refetchingRef.current = setTimeout(() => {
-      setIsRefetching(false)
-    }, 5_000)
-  }
-
   return (
     <>
       <AddressDisplay location={lastFetchedLocation} />
-      <PostRefetchButton
-        disabled={isRefetching}
-        onClick={handleRefetchButton}
-      />
+      <PostRefetchButton onClick={() => refetch()} />
       <MapViewer
         className="h-full"
         isLocationPermissionGranted={isLocationPermissionGranted}
