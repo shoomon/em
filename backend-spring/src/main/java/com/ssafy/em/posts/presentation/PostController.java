@@ -8,7 +8,7 @@ import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
-import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
+import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPointListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.util.PostConstant;
@@ -138,12 +138,19 @@ public class PostController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<GetMonthlyEmotionResponse> getMonthlyEmotionCount(
+    public ResponseEntity<GetUserEmotionResponse> getMonthlyEmotionCount(
             @LoginRequired int userId,
             @RequestParam(name = "month") YearMonth yearMonth
     ){
-        GetMonthlyEmotionResponse response = postService
+        GetUserEmotionResponse response = postService
                 .getMonthlyEmotionCount(userId, yearMonth);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/recent-emotions")
+    public ResponseEntity<GetUserEmotionResponse> getUserEmotion(
+            @LoginRequired int userId
+    ){
+        return ResponseEntity.ok(postService.getUserEmotion(userId));
     }
 }
