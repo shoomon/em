@@ -8,9 +8,9 @@ import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
-import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPointListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
+import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.util.PostConstant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -152,5 +152,15 @@ public class PostController {
             @LoginRequired int userId
     ){
         return ResponseEntity.ok(postService.getUserEmotion(userId));
+    }
+
+    @GetMapping("/emotions")
+    public ResponseEntity<List<PostDetailDto>> getUserByEmotion(
+            @LoginRequired int userId,
+            @RequestParam(name = "month") YearMonth yearMonth,
+            @RequestParam(name = "emotion") String emotion
+    ) {
+        List<PostDetailDto> responses = postService.getUserByEmotion(userId, emotion, yearMonth);
+        return ResponseEntity.ok(responses);
     }
 }
