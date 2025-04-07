@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
 import uuid
 from src.common.EmotionLabels import EMOTIONS
+from src.music_recommendation.presentation.TaskHandler import task_queue
 from src.music_recommendation.util.VectorUtil import VectorUtil
 from src.common.config import QdrantConfig
 import logging
@@ -49,40 +50,9 @@ def delete_song(key: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @musicRecommendationController.post("/upsert")
-def upsert_song(req: UpsertSongRequest):
-    if req.emotion not in EMOTIONS:
-        raise HTTPException(status_code=400, detail="유효하지 않은 감정입니다.")
-
-    point_id = get_point_id_from_key(req.key)
-    emotion_index = EMOTIONS.index(req.emotion)
-    result = qdrantClient.retrieve(COLLECTION_NAME, [point_id], with_vectors=True)
-
-    if not result:
-        vector = VectorUtil.smooth_one_hot(emotion_index, VECTOR_DIM, 0.02)
-        add_song(req,vector)
-        logger.info(f"key={req.key} 등록 완료")
-        return
-
-    old_vector = np.array(result[0].vector)
-    count = result[0].payload.get("update_count", 1)
-    new_vector = VectorUtil.update_music_vector_by_emotion(old_vector, emotion_index, count)
-
-    qdrantClient.upsert(
-        collection_name=COLLECTION_NAME,
-        points=[PointStruct(
-            id=point_id,
-            vector=new_vector.tolist(),
-            payload={
-                "title": result[0].payload["title"],
-                "artistName": result[0].payload["artistName"],
-                "spotifyAlbumUrl": result[0].payload["spotifyAlbumUrl"],
-                "albumImageUrl": result[0].payload["albumImageUrl"],
-                "update_count": count + 1
-            }
-        )]
-    )
-    logger.info(f"감정 '{req.emotion}' 반영됨 → {result[0].payload['title']}")
-    return
+async def enqueue_upsert(req: UpsertSongRequest):
+    await task_queue.put(req)
+    logger.info(f"요청 등록 완료: {req}")
 
 @musicRecommendationController.get("/info")
 def get_data_list(offset: int=0, limit: int=100):
@@ -174,6 +144,41 @@ def add_song(req: UpsertSongRequest, vector):
         )]
     )
     logger.info(f"등록 완료: {req.title}")
+
+async def upsert_song(req: UpsertSongRequest):
+    if req.emotion not in EMOTIONS:
+        raise HTTPException(status_code=400, detail="유효하지 않은 감정입니다.")
+
+    point_id = get_point_id_from_key(req.key)
+    emotion_index = EMOTIONS.index(req.emotion)
+    result = qdrantClient.retrieve(COLLECTION_NAME, [point_id], with_vectors=True)
+
+    if not result:
+        vector = VectorUtil.smooth_one_hot(emotion_index, VECTOR_DIM, 0.02)
+        add_song(req,vector)
+        logger.info(f"key={req.key} 등록 완료")
+        return
+
+    old_vector = np.array(result[0].vector)
+    count = result[0].payload.get("update_count", 1)
+    new_vector = VectorUtil.update_music_vector_by_emotion(old_vector, emotion_index, count)
+
+    qdrantClient.upsert(
+        collection_name=COLLECTION_NAME,
+        points=[PointStruct(
+            id=point_id,
+            vector=new_vector.tolist(),
+            payload={
+                "title": result[0].payload["title"],
+                "artistName": result[0].payload["artistName"],
+                "spotifyAlbumUrl": result[0].payload["spotifyAlbumUrl"],
+                "albumImageUrl": result[0].payload["albumImageUrl"],
+                "update_count": count + 1
+            }
+        )]
+    )
+    logger.info(f"감정 '{req.emotion}' 반영됨 → {result[0].payload['title']}")
+    return
 
 def get_point_id_from_key(key: str):
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, key))
