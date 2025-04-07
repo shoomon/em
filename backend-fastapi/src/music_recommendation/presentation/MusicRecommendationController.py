@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
@@ -7,11 +9,15 @@ import uuid
 from src.common.EmotionLabels import EMOTIONS
 from src.music_recommendation.util.VectorUtil import VectorUtil
 from src.common.config import QdrantConfig
+import logging
 
 musicRecommendationController = APIRouter(
     prefix="/recommendation",
     tags=["recommendation"]
 )
+
+logger = logging.getLogger("uvicorn")
+logger.setLevel(logging.INFO)
 
 VECTOR_DIM = QdrantConfig.VECTOR_DIM
 
@@ -19,8 +25,8 @@ class UpsertSongRequest(BaseModel):
     key: str
     title: str
     artistName: str
-    spotifyAlbumUrl: str
-    albumImageUrl: str
+    spotifyAlbumUrl: Optional[str]
+    albumImageUrl: Optional[str]
     emotion: str
 
 class EmotionCountRequest(BaseModel):
@@ -38,7 +44,7 @@ def delete_song(key: str):
             collection_name=COLLECTION_NAME,
             points_selector=PointIdsList(points=[point_id])
         )
-        return {"message": f"key={key} 삭제 완료"}
+        logger.info(f"key={key} 삭제 완료")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -54,7 +60,7 @@ def upsert_song(req: UpsertSongRequest):
     if not result:
         vector = VectorUtil.smooth_one_hot(emotion_index, VECTOR_DIM, 0.02)
         add_song(req,vector)
-        return {"message": f"key={req.key} 등록 완료"}
+        logger.info(f"key={req.key} 등록 완료")
 
     old_vector = np.array(result[0].vector)
     count = result[0].payload.get("update_count", 1)
@@ -74,7 +80,7 @@ def upsert_song(req: UpsertSongRequest):
             }
         )]
     )
-    return {"message": f"감정 '{req.emotion}' 반영됨 → {result[0].payload['title']}"}
+    logger.info(f"감정 '{req.emotion}' 반영됨 → {result[0].payload['title']}")
 
 @musicRecommendationController.get("/info")
 def get_data_list(offset: int=0, limit: int=100):
@@ -147,7 +153,7 @@ def add_song(req: UpsertSongRequest, vector):
             }
         )]
     )
-    return {"message": f"등록 완료: {req.title}"}
+    logger.info(f"등록 완료: {req.title}")
 
 def get_point_id_from_key(key: str):
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, key))
