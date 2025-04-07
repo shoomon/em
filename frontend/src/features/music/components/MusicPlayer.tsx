@@ -1,7 +1,8 @@
-import { Music2Icon, XIcon } from "lucide-react"
+import { Music2Icon } from "lucide-react"
 import React, { useRef } from "react"
 import YouTube from "react-youtube"
 import useMusicPlayerDrag from "../hooks/useMusicPlayerDrag"
+import MusicPlayerCloseButton from "./MusicPlayerCloseButton"
 
 interface MusicPlayerProps {
   videoId: string
@@ -11,12 +12,12 @@ interface MusicPlayerProps {
 
 const MusicPlayer = ({ videoId, onClose }: MusicPlayerProps) => {
   const playerRef = useRef<HTMLDivElement>(null)
-  const position = useMusicPlayerDrag(playerRef)
+  const { isDragging, position } = useMusicPlayerDrag(playerRef)
 
   return (
     <div
       ref={playerRef}
-      className="fixed top-0 left-0 shadow-xl cursor-move pointer-events-auto z-130 touch-none"
+      className={`fixed top-0 left-0 shadow-xl cursor-move pointer-events-auto z-130 touch-none ${isDragging ? "" : "transition-transform ease-in-out duration-300"}`}
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}>
@@ -28,9 +29,7 @@ const MusicPlayer = ({ videoId, onClose }: MusicPlayerProps) => {
           </p>
         </div>
 
-        <button className="cursor-pointer" onMouseDown={onClose}>
-          <XIcon className="stroke-4 size-4 xs:size-5 stroke-em-white" />
-        </button>
+        <MusicPlayerCloseButton onClick={onClose} />
       </div>
 
       <YouTube
