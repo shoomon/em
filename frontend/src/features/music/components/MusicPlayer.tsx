@@ -34,15 +34,20 @@ const MusicPlayer = ({ videoId, onClose }: MusicPlayerProps) => {
 
       <YouTube
         key={videoId} // videoId prop이 변경되는 것만으로는 내부의 <iframe>요소가 리렌더링되지 않기 때문에 key값을 부여하여 강제로 리렌더링
-        className="w-52 xs:w-72 aspect-video"
+        className="w-52 xs:w-92 aspect-video"
         videoId={videoId}
         opts={{
           width: "100%",
           height: "100%",
           playerVars: {
+            autoplay: 1,
             rel: 0,
             modestbranding: 1,
           },
+        }}
+        onReady={(e) => {
+          e.target.unMute()
+          e.target.playVideo()
         }}
         onEnd={(e) => {
           e.target.stopVideo(0)
