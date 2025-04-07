@@ -48,23 +48,50 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      chunkSizeWarningLimit: 1000, // 경고 한계치를 1000KB로 설정
       rollupOptions: {
         output: {
           assetFileNames: "assets/[name].[ext]",
           chunkFileNames: "js/[name]-[hash].js",
-          manualChunks: {
-            vendor: [
-              //
-              "react",
-              "react-dom",
-              "react-router-dom",
-              "lucide-react",
-              "axios",
-              "framer-motion",
-              "tailwind-merge",
-              "tailwindcss",
-              "zustand",
-            ],
+          manualChunks(id) {
+            // node_modules를 vendor chunk로 분리
+            if (id.includes("node_modules")) {
+              // 큰 라이브러리들을 별도의 청크로 분리
+              if (id.includes("react")) {
+                return "vendor-react"
+              }
+              if (id.includes("react-dom")) {
+                return "vendor-react-dom"
+              }
+              if (id.includes("axios")) {
+                return "vendor-axios"
+              }
+              if (id.includes("tailwindcss")) {
+                return "vendor-tailwind"
+              }
+              return "vendor"
+            }
+
+            // 라우트 기반 코드 스플리팅
+            if (id.includes("/src/pages/")) {
+              const pageName = id.split("/src/pages/")[1].split("/")[0]
+              return `page-${pageName}`
+            }
+
+            // 공통 컴포넌트 분리
+            if (id.includes("/src/components/")) {
+              return "components"
+            }
+
+            // 상태 관리 관련 코드 분리
+            if (id.includes("/src/store/")) {
+              return "store"
+            }
+
+            // 유틸리티 함수 분리
+            if (id.includes("/src/utils/")) {
+              return "utils"
+            }
           },
         },
       },
