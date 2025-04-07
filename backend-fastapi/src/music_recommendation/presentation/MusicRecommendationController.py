@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException
 import numpy as np
 from qdrant_client.models import PointStruct, PointIdsList
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from src.common.config.QdrantConfig import qdrantClient, COLLECTION_NAME
 import uuid
 from src.common.EmotionLabels import EMOTIONS
@@ -30,7 +30,8 @@ class UpsertSongRequest(BaseModel):
     emotion: str
 
 class EmotionCountRequest(BaseModel):
-    emotion_counts: dict
+    emotionCounts: dict
+    limit: int = Field(default=20)
 
 @musicRecommendationController.delete("/song/{key}")
 def delete_song(key: str):
@@ -109,7 +110,7 @@ def get_data_list(offset: int=0, limit: int=100):
 
 @musicRecommendationController.post("/my")
 def recommend_music(req: EmotionCountRequest):
-    vec = np.array([req.emotion_counts.get(em, 0) for em in EMOTIONS], dtype=np.float32)
+    vec = np.array([req.emotionCounts.get(em, 0) for em in EMOTIONS], dtype=np.float32)
     if vec.sum() == 0:
         raise HTTPException(status_code=400, detail="감정 통계가 비어 있습니다.")
     normalized_vec = vec / vec.sum()
@@ -117,7 +118,7 @@ def recommend_music(req: EmotionCountRequest):
     results = qdrantClient.search(
         collection_name=COLLECTION_NAME,
         query_vector=normalized_vec.tolist(),
-        limit=20
+        limit=req.limit
     )
 
     return {
