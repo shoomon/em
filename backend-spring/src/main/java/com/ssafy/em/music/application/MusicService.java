@@ -64,11 +64,11 @@ public class MusicService {
                 ArtistSimplified[] artists = album.getArtists();
                 String artistName = (artists != null && artists.length > 0) ? artists[0].getName() : "Unknown Artist";
 
-                // 이미지 배열에서 3번째 이미지(높이 64)를 직접 선택
+                // 이미지 배열에서 2번째 이미지(높이 300)를 직접 선택
                 String imageUrl = "NO_IMAGE";
                 Image[] images = album.getImages();
                 if (images != null && images.length >= 3) {
-                    imageUrl = images[2].getUrl();
+                    imageUrl = images[1].getUrl();
                 }
 
                 // track의 externalUrls에서 Spotify URL 추출
