@@ -29,7 +29,7 @@ import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.request.UpsertSongRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
-import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
+import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import com.ssafy.em.posts.exception.PostException;
@@ -330,9 +330,9 @@ public class PostService{
         );
     }
 
-    public GetMonthlyEmotionResponse getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
+    public GetUserEmotionResponse getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
         // 1. 쿼리 실행
-        List<Object[]> rawCounts = postJpaRepository.getMonthlyEmotionCount(userId, yearMonth);
+        List<Object[]> rawCounts = postJpaRepository.getEmotionCount(userId, yearMonth);
 
         // 2. active 감정 목록 (Map: id -> name) 조회
         Map<Integer, String> activeEmotions = getAllEmotion();
@@ -354,7 +354,7 @@ public class PostService{
             monthlyEmotionCount.putIfAbsent(emo, 0);
         }
 
-        return new GetMonthlyEmotionResponse(monthlyEmotionCount);
+        return new GetUserEmotionResponse(monthlyEmotionCount);
     }
 
     /**
@@ -392,6 +392,31 @@ public class PostService{
         }
 
         return new GetPlaylistResponse(dtoList, newCursor);
+    }
+
+    /**
+     * 사용자의 최근 10개 게시글의 감정을 가져오는 메서드
+     * */
+    public GetUserEmotionResponse getUserEmotion(int userId) {
+        List<Object[]> rawCounts = postJpaRepository.getEmotionCount(userId, null);
+        Map<Integer, String> activeEmotions = getAllEmotion();
+
+        Set<String> activeEmotionNames = new HashSet<>(activeEmotions.values());
+
+        Map<String, Integer> userEmotionCount = new HashMap<>();
+        for (Object[] row : rawCounts) {
+            String emotionName = (String) row[0];
+            int count = ((Number) row[1]).intValue();
+            if (activeEmotionNames.contains(emotionName)) {
+                userEmotionCount.put(emotionName, count);
+            }
+        }
+
+        for (String emo : activeEmotionNames) {
+            userEmotionCount.putIfAbsent(emo, 0);
+        }
+
+        return new GetUserEmotionResponse(userEmotionCount);
     }
 
 
