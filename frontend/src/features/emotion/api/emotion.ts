@@ -25,7 +25,7 @@ export const fetchGetEmotionReport = async (
     params: { month },
   })
 
-  return response.data?.emotionCount
+  return response.data?.emotionCounts
 }
 
 // 감정 분석 조회
