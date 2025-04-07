@@ -22,7 +22,9 @@ const NotFoundPage = () => {
 
       <img src={emptyImage} alt="" className="self-end w-64 my-6" />
 
-      <Button className="font-bold" onClick={() => navigate("/")}>
+      <Button
+        className="font-bold"
+        onClick={() => navigate("/", { replace: true, viewTransition: true })}>
         홈으로 돌아가기
       </Button>
     </div>

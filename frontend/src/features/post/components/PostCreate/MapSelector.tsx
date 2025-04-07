@@ -77,17 +77,6 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
           <div className="flex flex-col gap-1 relative">
             <span className="font-semibold">현재 나의 위치</span>
             <span>{address}</span>
-            <LocationFixButton
-              className="right-0 bottom-0"
-              onClick={() => {
-                navigator.geolocation.getCurrentPosition(({ coords }) => {
-                  const { latitude: lat, longitude: lng } = coords
-                  setInitLocation({ lat, lng })
-                  setMapCenter({ lat, lng })
-                  handleMapChange({ lat, lng }, address)
-                })
-              }}
-            />
           </div>
           {/* 지도 */}
           <div className="relative w-full h-full bg-em-gray-sm">
@@ -100,6 +89,17 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[calc(50%+12px)] p-2 cursor-pointer border-neutral-200">
               <MapPinMarker />
             </div>
+            <LocationFixButton
+              className="right-4 bottom-8"
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition(({ coords }) => {
+                  const { latitude: lat, longitude: lng } = coords
+                  setInitLocation({ lat, lng })
+                  setMapCenter({ lat, lng })
+                  handleMapChange({ lat, lng }, address)
+                })
+              }}
+            />
           </div>
         </div>
       </EmSection>
