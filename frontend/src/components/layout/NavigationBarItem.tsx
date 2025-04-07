@@ -15,9 +15,9 @@ const NavigationBarItem = memo(({ data }: NavigationBarItemProps) => {
 
   const content = useMemo(
     () => (
-      <div className="flex flex-col items-center justify-center w-full gap-1">
-        <span className="size-5">{icon}</span>
-        <span className="text-xs">{name}</span>
+      <div className="flex flex-col items-center justify-center w-full gap-0.5">
+        <span className="size-6">{icon}</span>
+        <span className="text-xs font-semibold">{name}</span>
       </div>
     ),
     [icon, name],

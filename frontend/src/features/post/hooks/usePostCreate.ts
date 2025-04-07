@@ -11,6 +11,7 @@ const usePostCreate = () => {
     isSuccess,
   } = useMutation({
     mutationFn: (data: PostCreateRequest) => {
+      console.log(data)
       return fetchPostCreate(data)
     },
     onSuccess: () => {

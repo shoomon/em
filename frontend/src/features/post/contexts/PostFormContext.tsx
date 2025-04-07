@@ -41,11 +41,12 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     longitude: 0,
     emotion: "",
     address: "",
+    musicId: 0,
     isSelected: false,
     title: null,
     artistName: null,
     albumImageUrl: null,
-    spotifyAlbumUrl: null,
+    spotifyTrackUrl: null,
   })
 
   // 감정 분석 데이터 관리
@@ -105,7 +106,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
         title: null,
         artistName: null,
         albumImageUrl: null,
-        spotifyAlbumUrl: null,
+        spotifyTrackUrl: null,
       }))
     }
   }

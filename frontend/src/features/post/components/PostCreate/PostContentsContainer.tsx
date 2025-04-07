@@ -1,4 +1,4 @@
-import EmDrawer from "@/components/drawer/EmDrawer"
+import EmDrawer from "@/components/EmDrawer/EmDrawer"
 import EmSection from "@/components/EmSection/EmSection"
 import EmTextArea from "@/components/EmTextArea/EmTextArea"
 import MusicItem from "@/features/music/components/MusicItem"
@@ -46,12 +46,15 @@ const PostContentsContainer = () => {
         {formData.title ? (
           <MusicItem
             music={{
-              artistName: formData.artistName,
-              title: formData.title,
-              albumImageUrl: formData.albumImageUrl,
-              spotifyAlbumUrl: formData.spotifyAlbumUrl,
+              ...formData,
+              musicId: null,
             }}
-            onClick={handleMusicChange}>
+            onClick={() =>
+              handleMusicChange({
+                ...formData,
+                musicId: null,
+              })
+            }>
             <button
               type="button"
               className="cursor-pointer"

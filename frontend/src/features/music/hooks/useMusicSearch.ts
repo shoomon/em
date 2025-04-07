@@ -10,6 +10,7 @@ const useMusicSearch = () => {
     queryFn: () => fetchMusicSearch(keyword),
     staleTime: 1000 * 60 * 60 * 24,
     refetchOnWindowFocus: false,
+    retry: 0,
   })
 
   return { data, isPending, setKeyword }
