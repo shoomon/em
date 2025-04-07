@@ -20,7 +20,7 @@ const CalendarPage = () => {
   )
 
   // const formattedDate = useMemo(() => formatDateToYMD(selectedDate), [selectedDate])
-  const { postList, isLoading } = useMyPostsByDate(selectedDate)
+  const { postList, isLoading, mutation } = useMyPostsByDate(selectedDate)
 
   const formatDate = (date: string): string => {
     const [year, month, day] = date.split("-")
@@ -29,10 +29,10 @@ const CalendarPage = () => {
 
   return (
     <div className="flex flex-col flex-1 gap-6">
-      {/* <section className="p-4 flex flex-col gap-6 relative">
+      {/* <section className="relative flex flex-col gap-6 p-4">
         <UserProfileCard />
       </section> */}
-      <EmSection className="pb-0 gap-2">
+      <EmSection className="gap-2 pb-0">
         <EmSection.Header title="🗓️ 나의 감정 달력" />
         <Suspense fallback={<EmLoading />}>
           <div className="flex flex-col">
@@ -44,9 +44,9 @@ const CalendarPage = () => {
         </Suspense>
       </EmSection>
       {selectedDate && (
-        <div className="w-full flex-grow p-4 pt-0 bg-em-gray-md">
+        <div className="flex-grow w-full p-4 pt-0 bg-em-gray-md">
           {isLoading ? (
-            <div className="h-40 bg-em-gray-md animate-pulse" />
+            <div className="h-40 bg-em-gray-md animate-pulse rounded-xl" />
           ) : (
             <div className="flex flex-col">
               <div>
@@ -57,11 +57,14 @@ const CalendarPage = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedDate}
-                  initial={{ opacity: 0, transform: "translateX(20px)" }}
-                  animate={{ opacity: 1, transform: "translateX(0px)" }}
-                  exit={{ opacity: 0, transform: "translateX(0px)" }}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 0 }}
                   transition={{ duration: 0.2 }}>
-                  <MyPostList postList={postList} />
+                  <MyPostList
+                    postList={postList}
+                    onDeletePost={mutation.mutate}
+                  />
                 </motion.div>
               </AnimatePresence>
             </div>
