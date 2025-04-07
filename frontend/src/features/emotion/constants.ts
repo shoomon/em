@@ -5,6 +5,16 @@ import surpriseImage from "@/assets/surprise.svg"
 import trustImage from "@/assets/trust.svg"
 import { EmotionEngNameType, EmotionItem } from "./types/emotion"
 
+import angerGif from "@/assets/emotions/anger.gif"
+import anticipationGif from "@/assets/emotions/anticipation.gif"
+import disgustGif from "@/assets/emotions/disgust.gif"
+import fearGif from "@/assets/emotions/fear.gif"
+import joyGif from "@/assets/emotions/joy.gif"
+import neutralGif from "@/assets/emotions/neutral.gif"
+import sadnessGif from "@/assets/emotions/sadness.gif"
+import surpriseGif from "@/assets/emotions/surprise.gif"
+import trustGif from "@/assets/emotions/trust.gif"
+
 export const EMOTION_ITEMS: EmotionItem[] = [
   {
     id: 1,
@@ -12,7 +22,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "분노",
     emoji: "😠",
     color: "bg-em-anger hover:bg-em-anger/80",
-    emojiGif_url: "/assets/images/emotions/anger.gif",
+    emojiGif_url: angerGif,
   },
   {
     id: 2,
@@ -20,7 +30,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "당황",
     emoji: "😲",
     color: "bg-em-surprise hover:bg-em-surprise/80",
-    emojiGif_url: "/assets/images/emotions/surprise.gif",
+    emojiGif_url: surpriseGif,
   },
   {
     id: 3,
@@ -28,7 +38,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "기쁨",
     emoji: "😊",
     color: "bg-em-joy hover:bg-em-joy/80",
-    emojiGif_url: "/assets/images/emotions/joy.gif",
+    emojiGif_url: joyGif,
   },
 
   {
@@ -37,7 +47,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "슬픔",
     emoji: "😢",
     color: "bg-em-sadness hover:bg-em-sadness/80",
-    emojiGif_url: "/assets/images/emotions/sadness.gif",
+    emojiGif_url: sadnessGif,
   },
   {
     id: 5,
@@ -45,7 +55,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "공포",
     emoji: "😨",
     color: "bg-em-fear hover:bg-em-fear/80",
-    emojiGif_url: "/assets/images/emotions/fear.gif",
+    emojiGif_url: fearGif,
   },
   {
     id: 6,
@@ -53,7 +63,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "덤덤",
     emoji: "😐",
     color: "bg-em-neutral hover:bg-em-neutral/80",
-    emojiGif_url: "/assets/images/emotions/neutral.gif",
+    emojiGif_url: neutralGif,
   },
   {
     id: 7,
@@ -61,7 +71,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "혐오",
     emoji: "🤢",
     color: "bg-em-disgust hover:bg-em-disgust/80",
-    emojiGif_url: "/assets/images/emotions/disgust.gif",
+    emojiGif_url: disgustGif,
   },
   {
     id: 8,
@@ -69,7 +79,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "기대",
     emoji: "🤔",
     color: "bg-em-anticipation hover:bg-em-anticipation/80",
-    emojiGif_url: "/assets/images/emotions/anticipation.gif",
+    emojiGif_url: anticipationGif,
   },
   {
     id: 9,
@@ -77,7 +87,7 @@ export const EMOTION_ITEMS: EmotionItem[] = [
     korName: "확신",
     emoji: "🤝",
     color: "bg-em-trust hover:bg-em-trust/80",
-    emojiGif_url: "/assets/images/emotions/trust.gif",
+    emojiGif_url: trustGif,
   },
 ]
 
