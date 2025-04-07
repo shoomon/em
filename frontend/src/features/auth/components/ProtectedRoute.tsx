@@ -1,6 +1,6 @@
 import useTermAgreement from "@/features/settings/hooks/useTermAgreement"
 import { jwtDecode } from "jwt-decode"
-import { Outlet } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
 
 const ProtectedRoute = () => {
   // 토큰 조회
@@ -22,15 +22,20 @@ const ProtectedRoute = () => {
 
   // 2. JWT 토큰 검증 (일단 임시로 JWT 인지만 확인)
   if (accessToken) {
-    isTokenValid = jwtDecode(accessToken)
+    try {
+      jwtDecode(accessToken)
+      isTokenValid = true
+    } catch (error) {
+      isTokenValid = false
+    }
   }
 
   // 토큰이 없거나 유효하지 않으면 로그인 페이지로 리다이렉트
-  // if (!accessToken || !isTokenValid || isError) {
-  //   return <Navigate to="/login" replace />
-  // } else if (!isTermsAgreed) {
-  //   // return <Navigate to="/terms-agreement" replace />
-  // }
+  if (!accessToken || !isTokenValid || isError) {
+    return <Navigate to="/login" replace />
+  } else if (!isTermsAgreed) {
+    return <Navigate to="/terms-agreement" replace />
+  }
 
   return <Outlet />
 }
