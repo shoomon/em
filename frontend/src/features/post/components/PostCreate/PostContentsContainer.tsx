@@ -6,13 +6,15 @@ import MusicSelector from "@/features/music/components/MusicSelector"
 import { Music } from "@/features/music/types/music"
 import useDrawer from "@/hooks/useDrawer"
 import { CircleXIcon, ListMusicIcon } from "lucide-react"
-import { memo, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { usePostForm } from "../../contexts/PostFormContext"
 
 const PostContentsContainer = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { formData, handleMusicChange, updateFormData } = usePostForm()
   const { content: textState } = formData
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   useDrawer({ drawerKey: "PostContentsInput", isOpen, setIsOpen })
 
@@ -24,6 +26,12 @@ const PostContentsContainer = () => {
     e.stopPropagation()
     handleMusicChange(null)
   }
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.focus()
+    }
+  }, [])
 
   return (
     <EmSection className="h-full">
@@ -71,6 +79,7 @@ const PostContentsContainer = () => {
 
       <div className="h-full">
         <EmTextArea
+          ref={textAreaRef}
           placeholder="지금 어떤 생각을 하고 계신가요?"
           className="h-full placeholder-em-black/30"
           onTextChange={handleTextChange}

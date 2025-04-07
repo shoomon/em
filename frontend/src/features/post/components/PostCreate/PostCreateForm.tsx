@@ -7,6 +7,7 @@ import {
 } from "../../contexts/PostFormContext"
 import { PostCreateStep } from "../../types/post"
 import NextStepButtonSection from "../NextStepButtonSection"
+import CurseWarningBanner from "./CurseWarningBanner"
 import EmotionSelectorContainer from "./EmotionSelectorContainer"
 import MapSelector from "./MapSelector"
 import PostConfirm from "./PostConfirm"
@@ -44,6 +45,7 @@ const PostCreateForm = () => {
   return (
     <form className="w-full h-full" onSubmit={handleSubmit}>
       <div className="flex flex-col justify-start w-full h-full">
+        <CurseWarningBanner />
         {/* 현재 스탭 컴포넌트 */}
         <div className="flex basis-full">
           <StepAnimateLayout>{STEP_COMPONENTS[animatedStep]}</StepAnimateLayout>

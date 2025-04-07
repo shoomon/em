@@ -48,8 +48,6 @@ export type EmotionStatisticsData = {
   [key in EmotionEngNameType]: number
 }
 
-export interface EmotionAnalysisResponse {}
-
 export type EmotionReportResponse = {
   [key in EmotionEngNameType]: number
 }
