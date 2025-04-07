@@ -45,12 +45,6 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/api/, ""),
         },
-        "/youtube-api": {
-          target: "https://www.googleapis.com",
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/youtube-api/, ""),
-          secure: true,
-        },
       },
     },
     build: {

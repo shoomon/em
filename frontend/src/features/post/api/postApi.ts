@@ -43,3 +43,8 @@ export const fetchPostPlaylist = async (playListRequest: PlayListRequest) => {
   const response = await apiClient.get(`/posts/playlist?${queryString}`)
   return response.data
 }
+
+export const fetchRecentEmotions = async () => {
+  const response = await apiClient.get("/posts/recent-emotions")
+  return response.data
+}

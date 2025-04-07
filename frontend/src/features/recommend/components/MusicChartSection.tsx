@@ -3,16 +3,11 @@ import {
   EmotionKorNameType,
   EmotionMapping,
 } from "@/features/emotion/types/emotion"
-import { Music } from "@/features/music/types/music"
 import { useState } from "react"
 import MusicCategorySelector from "./MusicChartCategorySelector"
 import MusicChartList from "./MusicChartList"
 
-interface MusicChartSectionProps {
-  musicList: Music[]
-}
-
-const MusicChartSection = ({ musicList }: MusicChartSectionProps) => {
+const MusicChartSection = () => {
   const [selectedCategory, setSelectedCategory] =
     useState<EmotionKorNameType>("기쁨")
 
@@ -28,10 +23,7 @@ const MusicChartSection = ({ musicList }: MusicChartSectionProps) => {
           selectedCategory={selectedCategory}
           onSelect={setSelectedCategory}
         />
-        <MusicChartList
-          category={EmotionMapping[selectedCategory]}
-          musicList={musicList}
-        />
+        <MusicChartList category={EmotionMapping[selectedCategory]} />
       </div>
     </EmSection>
   )

@@ -39,12 +39,10 @@ const PostContentsContainer = () => {
           <MusicItem
             music={{
               ...formData,
-              musicId: null,
             }}
             onClick={() =>
               handleMusicChange({
                 ...formData,
-                musicId: null,
               })
             }>
             <button

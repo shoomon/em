@@ -1,14 +1,16 @@
-import MusicCard from "@/features/music/components/MusicCard"
 import { YoutubeDispatchContext } from "@/features/music/contexts/YoutubeContext"
-import { Music } from "@/features/music/types/music"
+import { Music, RecommendedMusic } from "@/features/music/types/music"
+import useRecommendationMusic from "@/hooks/useRecommendationMusic"
 import useEmblaCarousel from "embla-carousel-react"
 import { useContext } from "react"
+import MusicCard from "./MusicCard"
+import MusicCardSkeleton from "./MusicCardSkeleton"
 
-interface MusicCardListProps {
-  musicList: Music[]
-}
+const MusicCardList = () => {
+  const date = new Date()
+  date.setMonth(date.getMonth() - 1)
 
-const MusicCardList = ({ musicList }: MusicCardListProps) => {
+  const { data, isPending } = useRecommendationMusic()
   const [customMusicRef] = useEmblaCarousel({
     dragFree: true,
     containScroll: "keepSnaps",
@@ -16,20 +18,26 @@ const MusicCardList = ({ musicList }: MusicCardListProps) => {
   })
   const setQuery = useContext(YoutubeDispatchContext)
 
-  const handleClickItem = (music: Music) => {
+  const handleClickItem = (music: Music | RecommendedMusic) => {
     setQuery?.(music.artistName + " " + music.title + " topic")
   }
 
   return (
     <div ref={customMusicRef} className="-mx-5 overflow-hidden">
       <div className="flex gap-2 mx-5">
-        {musicList.map((item) => (
-          <MusicCard
-            key={item.musicId}
-            music={item}
-            onClick={() => handleClickItem(item)}
-          />
-        ))}
+        {isPending
+          ? Array.from({ length: 10 }).map((_, index) => (
+              <MusicCardSkeleton key={index} />
+            ))
+          : data?.recommendations.map(
+              (item: RecommendedMusic, index: number) => (
+                <MusicCard
+                  key={index}
+                  music={item}
+                  onClick={() => handleClickItem(item)}
+                />
+              ),
+            )}
       </div>
     </div>
   )
