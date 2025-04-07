@@ -11,14 +11,13 @@ const LoginSuccessPage = () => {
     try {
       if (accessToken) {
         localStorage.setItem("accessToken", accessToken)
+        setTimeout(() => {
+          navigate("/terms-agreement", { replace: true })
+        }, 1000)
       }
     } catch (error) {
       console.error("로그인 실패", error)
       navigate("/login", { replace: true })
-    } finally {
-      setTimeout(() => {
-        navigate("/terms-agreement", { replace: true })
-      }, 2000)
     }
   }, [accessToken, navigate])
 

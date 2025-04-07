@@ -8,7 +8,6 @@ import StackLayout from "@/layout/StackLayout"
 import CalendarPage from "@/pages/CalendarPage/CalendarPage"
 import EmotionReportPage from "@/pages/EmotionReportPage/EmotionReportPage"
 import LoginPage from "@/pages/LoginPage/LoginPage"
-import LoginSuccessPage from "@/pages/LoginSuccessPage/KakaoCallbackPage"
 import MyPostListPage from "@/pages/MyPage/MyPostListPage"
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage"
 import PostCreatePage from "@/pages/PostCreatePage/PostCreatePage"
@@ -16,6 +15,7 @@ import RecommendPage from "@/pages/RecommendPage/RecommendPage"
 import TermPage from "@/pages/Term/TermPage"
 import TermsAgreementPage from "@/pages/TermsAgreementPage/TermsAgreementPage"
 import { lazy } from "react"
+import LoginSuccessPage from "@/pages/LoginSuccessPage/LoginSuccessPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
