@@ -31,8 +31,8 @@ import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.request.UpsertSongRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
-import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
+import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
 import com.ssafy.em.posts.exception.PostException;
 import com.ssafy.em.user.domain.UserRepository;
@@ -49,6 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.HashMap;
@@ -424,6 +425,29 @@ public class PostService{
         }
 
         return new GetUserEmotionResponse(userEmotionCount);
+    }
+
+    public List<PostDetailDto> getUserByEmotion(int userId, String emotion, YearMonth yearMonth) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
+
+        LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime startOfNextMonth = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+
+        List<Post> postList = postJpaRepository.findPostsByUserIdAndEmotionAndMonth(userId, emotion, startOfMonth, startOfNextMonth);
+
+        return postList.stream()
+                .map(post -> {
+                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
+                    Optional<PostReaction> postReactionOptional = postReactionRepository.findByUserIdAndPostId(userId, post.getId());
+                    if (postReactionOptional.isPresent()) {
+                        PostReaction postReaction = postReactionOptional.get();
+                        EmotionInfo emotionInfo = new EmotionInfo(emotionCounts, postReaction.getEmotion().getName());
+                        return PostDetailDto.from(userId, post, emotionInfo);
+                    }
+                    return PostDetailDto.from(userId, post, emotionCounts);
+                })
+                .toList();
     }
 
 
