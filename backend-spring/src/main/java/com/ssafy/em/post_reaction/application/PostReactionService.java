@@ -40,7 +40,7 @@ public class PostReactionService {
                 .orElseThrow(() -> new PostNotFoundException(PostErrorCode.POST_NOTFOUND));
         Optional<PostReaction> optionalPostReaction = postReactionRepository.findByUserIdAndPostId(userId, postId);
         String emotionName = postReactionRequest.emotionName();
-        Emotion emotion = emotionRepository.findByNameAndIsActiveTrue(emotionName)
+        Emotion emotion = emotionRepository.findByName(emotionName)
                 .orElseThrow(() -> new EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
         if (optionalPostReaction.isPresent()) {
             PostReaction postReaction = optionalPostReaction.get();
