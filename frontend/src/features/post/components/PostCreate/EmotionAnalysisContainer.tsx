@@ -15,8 +15,13 @@ interface EmotionAnalysisContainerProps {
 const EmotionAnalysisContainer = ({
   content,
 }: EmotionAnalysisContainerProps) => {
-  const { emotionAnalysisData, setEmotionAnalysisData, isCurse, setIsCurse } =
-    usePostForm()
+  const {
+    emotionAnalysisData,
+    setEmotionAnalysisData,
+    isCurse,
+    setIsCurse,
+    handleIsSelected,
+  } = usePostForm()
   const { mutateAsync, isPending } = useEmotionAnalysis(content)
   const { mutateAsync: curseAnalysisAsync, isPending: isCursePending } =
     useCurseAnalysis()
@@ -31,6 +36,7 @@ const EmotionAnalysisContainer = ({
       } else {
         setIsCurse(false)
       }
+      handleIsSelected(false)
     } catch (error) {
       return <EmotionAnalysisError />
     }

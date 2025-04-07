@@ -12,13 +12,14 @@ interface EmotionSelectorProps {}
 
 const EmotionSelector = ({}: EmotionSelectorProps) => {
   const { formData } = usePostFormState()
-  const { updateFormData } = usePostFormAction()
+  const { updateFormData, handleIsSelected } = usePostFormAction()
   const { data: emotions } = useEmotions()
 
   const { emotion: emotionState } = formData
 
   const handleEmotionSelect = (emotionId: string) => {
     updateFormData("emotion", emotionId)
+    handleIsSelected(true)
   }
 
   const filteredEmotions = useMemo(() => {

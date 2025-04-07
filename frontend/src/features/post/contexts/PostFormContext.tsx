@@ -41,6 +41,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     longitude: 0,
     emotion: "",
     address: "",
+    isSelected: false,
     title: null,
     artistName: null,
     albumImageUrl: null,
@@ -53,6 +54,11 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
 
   // 비속어 여부 관리
   const [isCurse, setIsCurse] = useState<boolean | undefined>(undefined)
+
+  // 감정 직접 선택 여부 관리
+  const handleIsSelected = (isSelected: boolean) => {
+    setFormData((prev) => ({ ...prev, isSelected }))
+  }
 
   // formData에 입력을 했는지 확인하는 함수
   const isFormDataValid = useCallback(
@@ -105,16 +111,13 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   }
 
   // 폼 데이터 업데이트 이벤트
-  const updateFormData = useCallback(
-    (key: keyof PostCreateRequest, value: any) => {
-      if (key === "content") {
-        setEmotionAnalysisData(undefined)
-        setIsCurse(undefined)
-      }
-      setFormData({ ...formData, [key]: value })
-    },
-    [formData, setEmotionAnalysisData, setIsCurse, setFormData],
-  )
+  const updateFormData = (key: keyof PostCreateRequest, value: any) => {
+    if (key === "content") {
+      setEmotionAnalysisData(undefined)
+      setIsCurse(undefined)
+    }
+    setFormData((prev) => ({ ...prev, [key]: value }))
+  }
 
   // 폼 제출 이벤트
   const handleSubmit = useCallback(
@@ -151,6 +154,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     handleMusicChange,
     setEmotionAnalysisData,
     setIsCurse,
+    handleIsSelected,
   }
 
   return (
