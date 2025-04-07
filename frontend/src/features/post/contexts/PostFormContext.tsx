@@ -41,7 +41,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     longitude: 0,
     emotion: "",
     address: "",
-    musicId: 0,
+    musicId: null,
     isSelected: false,
     title: null,
     artistName: null,

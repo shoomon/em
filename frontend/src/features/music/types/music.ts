@@ -1,5 +1,5 @@
 export interface Music {
-  musicId: number | null
+  musicId: string | null
   artistName: string | null
   title: string | null
   albumImageUrl: string | null
@@ -19,7 +19,7 @@ export interface RecommendedMusicList {
 }
 
 export interface PlayListInfiniteData {
-  damusicListta: Music[]
+  musicList: Music[]
   meta: {
     lastMusicId: number
     lastMusicCount: number

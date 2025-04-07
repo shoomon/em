@@ -70,7 +70,11 @@ const PostConfirm = ({}: PostConfirmProps) => {
             {formData.title ? (
               <MusicItem
                 music={{
-                  ...formData,
+                  artistName: formData.artistName,
+                  title: formData.title,
+                  albumImageUrl: formData.albumImageUrl,
+                  spotifyTrackUrl: formData.spotifyTrackUrl,
+                  musicId: formData.musicId,
                 }}
               />
             ) : (
