@@ -27,6 +27,7 @@ import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.request.UpsertSongRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
 import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
@@ -43,6 +44,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -55,6 +57,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.ssafy.em.posts.exception.PostErrorCode.POST_INVALID_MUSIC;
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
 import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
@@ -70,12 +73,13 @@ public class PostService{
 
     private final PostJpaRepository postJpaRepository;
     private final PostReactionRepository postReactionRepository;
-    private final GeometryFactory geometryFactory = new GeometryFactory();
     private final UserRepository userRepository;
     private final EmotionRepository emotionRepository;
     private final AnimalRepository animalRepository;
     private final AnimalProfileRepository animalProfileRepository;
     private final MusicRepository musicRepository;
+    private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final WebClient webClient;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
@@ -117,6 +121,18 @@ public class PostService{
 
                 musicRepository.save(music);
             }
+
+            if (request.musicId() == null || request.emotion() == null) {
+                throw new PostException.PostBadRequestException(POST_INVALID_MUSIC);
+            }
+            upsertMusicVector(UpsertSongRequest.to(
+                    request.musicId(),
+                    request.title(),
+                    request.artistName(),
+                    request.spotifyTrackUrl(),
+                    request.albumImageUrl(),
+                    request.emotion()
+            ));
         }
 
         // 5. Post 엔티티 생성
@@ -160,13 +176,6 @@ public class PostService{
 
         // 3. 게시글 삭제
         postJpaRepository.delete(post);
-    }
-
-
-    //todo: MyPage -> getMyPostList
-    public List<PostDetailDto> getMyPostList(){
-//        List<Post> postList = postQueryDslRepository.getMyPostList();
-        return null;
     }
 
     public PostDetailDto getPost(int userId, int postId){
@@ -433,6 +442,16 @@ public class PostService{
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
             return R * c; // 거리 (미터 단위)
+    }
+
+    private void upsertMusicVector(UpsertSongRequest req){
+        webClient.post()
+                .uri("/recommendation/upsert")
+                .bodyValue(req)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnError(e -> log.error("업서트 실패", e))
+                .subscribe(); //비동기 실행
     }
 
     private Map<Integer, String> getAllEmotion(){
