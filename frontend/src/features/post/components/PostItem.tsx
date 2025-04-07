@@ -61,7 +61,7 @@ const PostItem = ({
       <div className="flex justify-between">
         <div className="flex items-center gap-2">
           <div
-            className={`font-semibold border ${EMOTION_BORDER_COLOR_MAPPER[emotion]} rounded-full p-0.5`}>
+            className={`font-semibold border-2 ${EMOTION_BORDER_COLOR_MAPPER[emotion]} rounded-full p-0.5`}>
             <img src={imageUrl || ""} alt="" className="object-cover size-8" />
           </div>
 
