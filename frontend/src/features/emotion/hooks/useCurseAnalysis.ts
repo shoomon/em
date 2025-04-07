@@ -1,9 +1,16 @@
 import { useMutation } from "@tanstack/react-query"
 import { fetchCurseAnalysis } from "../api/emotion"
 
-const useCurseAnalysis = (content: string) => {
+const useCurseAnalysis = () => {
   const mutate = useMutation({
-    mutationFn: () => fetchCurseAnalysis(content),
+    mutationFn: (content: string) => fetchCurseAnalysis(content),
+    onSuccess: async (data) => {
+      return data.isCurse
+    },
+    onError: (error) => {
+      console.error(error)
+      return false
+    },
   })
 
   return mutate

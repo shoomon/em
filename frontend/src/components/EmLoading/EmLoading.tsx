@@ -14,7 +14,7 @@ const EmLoading = ({ description, className }: EmLoadingProps) => {
         className,
       )}>
       <div className="flex flex-col items-center justify-center gap-4 w-full h-full">
-        <img src={logo} alt="로고" className="w-24 animate-bounce" />
+        <img src={logo} alt="로고" className="max-w-24 animate-bounce" />
         {description && <div className="text-base">{description}</div>}
       </div>
     </div>

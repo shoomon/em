@@ -94,11 +94,19 @@ const EmotionCalendar = ({
           const emotionBgClass = emotion ? getEmotionColorClass(emotion) : ""
           const textColorClass = getWeekdayColorClass(date)
 
+          const today = new Date()
+          const isToday =
+            date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth() &&
+            date.getDate() === today.getDate()
+
+          const todayFontClass = isToday ? "font-black text-[0.9rem]" : ""
+
           return (
             <div className="flex flex-col items-center justify-center gap-y-1 w-full h-full">
               <abbr
                 title={date.toDateString()}
-                className={`no-underline relative z-10 ${textColorClass}`}>
+                className={`no-underline relative z-10 ${textColorClass} ${todayFontClass}`}>
                 {date.getDate()}
               </abbr>
               <div

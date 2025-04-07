@@ -124,13 +124,19 @@
 .react-calendar__tile--active::before {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 38%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 30px;
-  height: 45px;
-  border: 1.5px solid var(--color-em-black);
-  border-radius: 20%;
+  width: 23px;
+  /* height: 45px; */
+  aspect-ratio: 1/1;
+  background-color: var(--color-em-black);
+  /* border: 1.5px solid var(--color-em-black); */
+  border-radius: 50%;
+}
+
+.react-calendar__tile--active abbr {
+  color: var(--color-em-white) !important;
 }
 
 /* hover 효과 */

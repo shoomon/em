@@ -1,4 +1,7 @@
-import { EmotionEngNameType } from "@/features/emotion/types/emotion"
+import {
+  EmotionAnalysisResponse,
+  EmotionEngNameType,
+} from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
 import { Music } from "@/features/music/types/music"
 import { FormEvent } from "react"
@@ -92,12 +95,15 @@ export interface PostCreateRequest extends Music {
   longitude: LatLng["lng"]
   emotion: string
   address: string
+  isSelected: boolean
 }
 
 export interface PostFormStateType {
   currentStep: PostCreateStep
   formData: PostCreateRequest
   isSubmitPending: boolean
+  emotionAnalysisData: EmotionAnalysisResponse | undefined
+  isCurse: boolean | undefined
 }
 
 export interface PostFormActionType {
@@ -107,4 +113,7 @@ export interface PostFormActionType {
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void
   isFormDataValid: (step: PostCreateStep) => boolean | undefined
   handleMusicChange: (music: Music | null) => void
+  setEmotionAnalysisData: (emotionAnalysisData: EmotionAnalysisResponse) => void
+  setIsCurse: (isCurse: boolean) => void
+  handleIsSelected: (isSelected: boolean) => void
 }
