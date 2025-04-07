@@ -33,7 +33,7 @@ public class Music {
     @Column(name = "album_image_url", nullable = false, columnDefinition = "text")
     private String albumImageUrl;
 
-    @Column(name = "spotify_album_url", nullable = false, columnDefinition = "text")
+    @Column(name = "spotify_track_url", nullable = false, columnDefinition = "text")
     private String spotifyTrackUrl;
 
     @Column(name = "music_count", nullable = false, columnDefinition = "integer default 1")
