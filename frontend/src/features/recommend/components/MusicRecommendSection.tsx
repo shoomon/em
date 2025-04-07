@@ -4,11 +4,7 @@ import { Music } from "@/features/music/types/music"
 import MusicCardList from "../../music/components/MusicCardList"
 import RecommendInfoPopover from "./RecommendInfoPopover"
 
-interface MusicRecommendSectionProps {
-  musicList: Music[]
-}
-
-const MusicRecommendSection = ({ musicList }: MusicRecommendSectionProps) => {
+const MusicRecommendSection = () => {
   return (
     <EmSection>
       <EmSection.Header
@@ -16,7 +12,7 @@ const MusicRecommendSection = ({ musicList }: MusicRecommendSectionProps) => {
         description={"최근 감정들을 반영하여 음악을 추천해 드릴게요"}
         headerRight={<RecommendInfoPopover />}
       />
-      <MusicCardList musicList={musicList} />
+      <MusicCardList />
     </EmSection>
   )
 }

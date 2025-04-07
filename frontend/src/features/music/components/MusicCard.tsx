@@ -1,7 +1,7 @@
-import { Music } from "../types/music"
+import { RecommendedMusic } from "../types/music"
 
 interface MusicCardProps {
-  music: Music
+  music: RecommendedMusic
   className?: string
 
   onClick?: () => void

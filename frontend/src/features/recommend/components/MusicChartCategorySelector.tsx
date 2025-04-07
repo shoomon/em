@@ -3,6 +3,7 @@ import {
   EmotionMapping,
 } from "@/features/emotion/types/emotion"
 import useEmblaCarousel from "embla-carousel-react"
+import MusicChartCategoryButtonButton from "./MusicChartCategoryButton"
 
 interface MusicCategorySelectorProps {
   selectedCategory: EmotionKorNameType
@@ -22,14 +23,20 @@ const MusicCategorySelector = ({
   return (
     <div ref={categoryMusicRef} className="-mx-5 overflow-hidden">
       <div className="flex gap-3 mx-5">
-        {Object.keys(EmotionMapping).map((item) => (
-          <button
-            key={item}
-            className={`cursor-pointer text-em-gray px-3 py-0.5 text-sm xs:text-base border rounded-full border-em-gray-md shrink-0 ${item === selectedCategory ? "bg-em-black text-em-white" : ""}`}
-            onClick={() => onSelect(item as EmotionKorNameType)}>
-            {item}
-          </button>
-        ))}
+        {Object.keys(EmotionMapping).map((item) => {
+          if (item === "기대" || item === "확신" || item === "혐오") {
+            return null
+          }
+
+          return (
+            <MusicChartCategoryButtonButton
+              key={item}
+              selected={item === selectedCategory}
+              label={item}
+              onClick={() => onSelect(item as EmotionKorNameType)}
+            />
+          )
+        })}
       </div>
     </div>
   )
