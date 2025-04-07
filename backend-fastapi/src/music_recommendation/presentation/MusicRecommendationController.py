@@ -61,6 +61,7 @@ def upsert_song(req: UpsertSongRequest):
         vector = VectorUtil.smooth_one_hot(emotion_index, VECTOR_DIM, 0.02)
         add_song(req,vector)
         logger.info(f"key={req.key} 등록 완료")
+        return
 
     old_vector = np.array(result[0].vector)
     count = result[0].payload.get("update_count", 1)
@@ -81,6 +82,7 @@ def upsert_song(req: UpsertSongRequest):
         )]
     )
     logger.info(f"감정 '{req.emotion}' 반영됨 → {result[0].payload['title']}")
+    return
 
 @musicRecommendationController.get("/info")
 def get_data_list(offset: int=0, limit: int=100):
