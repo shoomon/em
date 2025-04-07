@@ -5,14 +5,17 @@ import { Navigate } from "react-router-dom"
 
 import image from "@/assets/dance_bear.png"
 import logo from "@/assets/em_logo.svg"
+import EmLoading from "@/components/EmLoading/EmLoading"
 const TermsAgreementPage = () => {
-  const { data: isTermsAgreed } = useTermAgreement()
+  const { data: isTermsAgreed, isPending } = useTermAgreement()
 
-  if (isTermsAgreed) {
-    return <Navigate to="/" replace />
+  if (isPending) {
+    return <EmLoading className="w-full h-dvh" />
   }
 
-  return (
+  return !isPending && isTermsAgreed ? (
+    <Navigate to="/" replace />
+  ) : (
     <div className="h-dvh w-full flex flex-col">
       <EmSection className="h-full py-16">
         <img src={logo} alt="logo" className="w-20" />
