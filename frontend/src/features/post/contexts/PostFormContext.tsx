@@ -1,4 +1,3 @@
-import useCurseAnalysis from "@/features/emotion/hooks/useCurseAnalysis"
 import { EmotionAnalysisResponse } from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
 import { Music } from "@/features/music/types/music"
@@ -30,7 +29,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const [_, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { createPostAsync, isPending } = usePostCreate()
-  const { mutateAsync: curseAnalysisAsync } = useCurseAnalysis()
+
   // 스탭 상태 관리
   const [currentStep, setCurrentStep] = useState<PostCreateStep>(
     PostCreateStep.Map,
@@ -72,18 +71,9 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     [formData],
   )
 
-  // 비속어 분석 이벤트
-  const handleCurseAnalysis = useCallback(async () => {
-    const { isCurse } = await curseAnalysisAsync(formData.content)
-    setIsCurse(isCurse)
-  }, [formData.content, curseAnalysisAsync])
-
   // 스탭 변경 이벤트
   const updateStep = useCallback(
     (step: PostCreateStep) => {
-      if (step === PostCreateStep.Emotion && isCurse === undefined) {
-        handleCurseAnalysis()
-      }
       setCurrentStep(step)
       setSearchParams({ step: step.toString() })
     },

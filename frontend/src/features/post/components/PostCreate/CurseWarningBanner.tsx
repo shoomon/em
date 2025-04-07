@@ -14,8 +14,8 @@ const CurseWarningBanner = ({}: CurseWarningBannerProps) => {
   return (
     <>
       {isActive && (
-        <div className="w-full bg-em-anger text-center py-4 text-em-white">
-          ⚠️ 작성하신 글에는 비속어가 포함되어 있습니다.
+        <div className="w-full bg-em-anger font-light text-center py-3 text-em-white">
+          ⚠️ 글에 비속어가 포함되어 있을 수 있어요!
         </div>
       )}
     </>
