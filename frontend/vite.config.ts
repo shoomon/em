@@ -15,6 +15,12 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       compression({
         algorithm: "gzip",
+        compressionOptions: {
+          level: 9, // 최대 압축 수준
+        },
+      }),
+      compression({
+        algorithm: "brotliCompress",
       }),
       // VitePWA({
       //   registerType: "autoUpdate",
@@ -87,18 +93,28 @@ export default defineConfig(({ mode }) => {
               return "components"
             }
 
-            // 상태 관리 관련 코드 분리
-            if (id.includes("/src/store/")) {
-              return "store"
-            }
-
-            // 유틸리티 함수 분리
-            if (id.includes("/src/utils/")) {
-              return "utils"
+            // Feature 기반 코드 스플리팅
+            if (id.includes("/src/features/")) {
+              const featureName = id.split("/src/features/")[1].split("/")[0]
+              return `feature-${featureName}`
             }
           },
         },
       },
+      // 프로덕션 모드에서만 Terser 사용 (불필요한 코드 최소화)
+      minify: mode === "production" ? "terser" : false,
+      terserOptions: {
+        compress: {
+          drop_console: true, // 콘솔 로그 제거
+          drop_debugger: true, // 디버거 제거
+          pure_funcs: ["console.log", "console.info"], // 순수 함수 제거
+          passes: 2, // 최적화 패스 수
+        },
+        mangle: {
+          toplevel: true, // 최상위 변수 이름 축소
+        },
+      },
+      reportCompressedSize: true, // 압축 크기 리포트 활성화
     },
   }
 })
