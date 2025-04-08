@@ -17,25 +17,34 @@ const MapSelector = ({ setIsButtonDisabled }: MapSelectorProps) => {
   const [address, setAddress] = useState("") // 주소
   // 현재 위치 가져오기
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
-      // 현재 위치 설정
-      const { latitude: lat, longitude: lng } = coords
-      // setCurrentPosition({ lat, lng })
-      setInitLocation({ lat, lng })
-      setMapCenter({ lat, lng })
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        // 현재 위치 설정
+        const { latitude: lat, longitude: lng } = coords
+        // setCurrentPosition({ lat, lng })
+        setInitLocation({ lat, lng })
+        setMapCenter({ lat, lng })
 
-      // 주소 조회
-      naver.maps.Service.reverseGeocode(
-        {
-          coords: new naver.maps.LatLng(lat, lng),
-        },
-        (_, response: naver.maps.Service.ReverseGeocodeResponse) => {
-          const address = response.v2.address.jibunAddress
-          setAddress(address)
-          handleMapChange({ lat, lng }, address)
-        },
-      )
-    })
+        // 주소 조회
+        naver.maps.Service.reverseGeocode(
+          {
+            coords: new naver.maps.LatLng(lat, lng),
+          },
+          (_, response: naver.maps.Service.ReverseGeocodeResponse) => {
+            const address = response.v2.address.jibunAddress
+            setAddress(address)
+            handleMapChange({ lat, lng }, address)
+          },
+        )
+      },
+      (error) => {
+        console.error(error)
+      },
+      {
+        enableHighAccuracy: true, // 높은 정확도 사용
+        maximumAge: 0,
+      },
+    )
   }, [])
   // 주소 조회
   useEffect(() => {
