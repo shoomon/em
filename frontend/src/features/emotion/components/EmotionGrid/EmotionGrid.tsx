@@ -20,7 +20,7 @@ const EmotionGrid = ({ emotionReport, mostEmotion }: EmotionGridProps) => {
   }, [emotionReport])
 
   return (
-    <div className="grid grid-cols-2 gap-3 xs:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xs:grid-cols-3">
       {sortedEmotionReport.map((emotion) => (
         <EmotionCard
           key={emotion.id}
