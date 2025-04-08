@@ -25,15 +25,14 @@ class EmotionCountRequest(BaseModel):
 
 @musicRecommendationController.delete("/song/{key}")
 def delete_song(key: str):
-    point_id = get_point_id_from_key(key)
     try:
-        result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[point_id])
+        result = qdrantClient.retrieve(collection_name=COLLECTION_NAME, ids=[key])
         if not result:
             raise HTTPException(status_code=404, detail="음악을 찾을 수 없습니다.")
 
         qdrantClient.delete(
             collection_name=COLLECTION_NAME,
-            points_selector=PointIdsList(points=[point_id])
+            points_selector=PointIdsList(points=[key])
         )
         logger.info(f"key={key} 삭제 완료")
     except Exception as e:
