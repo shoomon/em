@@ -1,18 +1,26 @@
 import EmDrawer from "@/components/EmDrawer/EmDrawer"
 import EmSection from "@/components/EmSection/EmSection"
 import EmTextArea from "@/components/EmTextArea/EmTextArea"
+import MusicDeleteButton from "@/features/music/components/MusicDeleteButton"
 import MusicItem from "@/features/music/components/MusicItem"
 import MusicSelector from "@/features/music/components/MusicSelector"
 import { Music } from "@/features/music/types/music"
 import useDrawer from "@/hooks/useDrawer"
-import { CircleXIcon, ListMusicIcon } from "lucide-react"
+import { ListMusicIcon } from "lucide-react"
 import { memo, useEffect, useRef, useState } from "react"
 import { usePostForm } from "../../contexts/PostFormContext"
 
 const PostContentsContainer = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { formData, handleMusicChange, updateFormData } = usePostForm()
-  const { content: textState } = formData
+  const {
+    content: textState,
+    musicId,
+    title,
+    artistName,
+    spotifyTrackUrl,
+    albumImageUrl,
+  } = formData
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -33,6 +41,14 @@ const PostContentsContainer = () => {
     }
   }, [])
 
+  const musicData = {
+    musicId,
+    title,
+    artistName,
+    spotifyTrackUrl,
+    albumImageUrl,
+  }
+
   return (
     <EmSection className="h-full">
       <EmSection.Header
@@ -45,20 +61,9 @@ const PostContentsContainer = () => {
         onClick={() => setIsOpen(true)}>
         {formData.title ? (
           <MusicItem
-            music={{
-              ...formData,
-            }}
-            onClick={() =>
-              handleMusicChange({
-                ...formData,
-              })
-            }>
-            <button
-              type="button"
-              className="cursor-pointer"
-              onClick={(e) => handleMusicDelete(e)}>
-              <CircleXIcon className="size-5 fill-em-gray stroke-em-gray-sm" />
-            </button>
+            music={musicData}
+            onClick={() => handleMusicChange(musicData)}>
+            <MusicDeleteButton onClick={handleMusicDelete} />
           </MusicItem>
         ) : (
           <>
