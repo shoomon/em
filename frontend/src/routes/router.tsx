@@ -6,6 +6,7 @@ import FullScreenLayout from "@/layout/FullScreenLayout"
 import MainLayout from "@/layout/MainLayout"
 import StackLayout from "@/layout/StackLayout"
 import { lazy } from "react"
+import OnboardingPage from "@/pages/OnboardingPage/OnboardingPage"
 
 const HomePage = lazy(() => import("@/pages/HomePage/HomePage"))
 const MyPage = lazy(() => import("@/pages/MyPage/MyPage"))
@@ -36,12 +37,7 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           {
-            path: "/onboard",
-            element: <div>/</div>,
-          },
-          // 개발의 편의를 위해 온보딩 페이지 구현전까지 홈 페이지의 path를 /로 사용
-          {
-            path: "/",
+            path: "/main",
             element: <HomePage />,
           },
           {
@@ -86,6 +82,10 @@ const router = createBrowserRouter([
   {
     element: <BlankLayout />,
     children: [
+      {
+        path: "/",
+        element: <OnboardingPage />,
+      },
       {
         path: "/login",
         element: <LoginPage />,

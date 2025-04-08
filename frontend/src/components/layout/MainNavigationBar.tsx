@@ -23,7 +23,7 @@ const MainNavigationBar = () => {
         id: 1,
         name: "이음글",
         icon: <MessageSquareHeartIcon className="size-full" />,
-        path: "/",
+        path: "/main",
       },
       {
         id: 2,
