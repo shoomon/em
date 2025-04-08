@@ -2,7 +2,7 @@ import { YoutubeDispatchContext } from "@/features/music/contexts/YoutubeContext
 import { Music, RecommendedMusic } from "@/features/music/types/music"
 import useRecommendationMusic from "@/hooks/useRecommendationMusic"
 import useEmblaCarousel from "embla-carousel-react"
-import { useContext } from "react"
+import { Suspense, useContext } from "react"
 import MusicCard from "./MusicCard"
 import MusicCardSkeleton from "./MusicCardSkeleton"
 
@@ -31,11 +31,12 @@ const MusicCardList = () => {
             ))
           : data?.recommendations.map(
               (item: RecommendedMusic, index: number) => (
-                <MusicCard
-                  key={index}
-                  music={item}
-                  onClick={() => handleClickItem(item)}
-                />
+                <Suspense key={index} fallback={<MusicCardSkeleton />}>
+                  <MusicCard
+                    music={item}
+                    onClick={() => handleClickItem(item)}
+                  />
+                </Suspense>
               ),
             )}
       </div>

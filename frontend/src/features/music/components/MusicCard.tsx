@@ -14,12 +14,12 @@ const MusicCard = ({ music, className, onClick }: MusicCardProps) => {
     <div
       className={`flex flex-col gap-1.5 shrink-0 cursor-pointer w-28 xs:w-32 ${className}`}
       onClick={onClick}>
-      <div className="overflow-hidden rounded-lg size-full">
+      <div className="relative overflow-hidden rounded-lg aspect-square bg-em-gray/30">
         <img
           src={albumImageUrl || ""}
           alt=""
-          className="object-cover transition-transform duration-200 rounded-lg size-full hover:scale-105"
-          draggable={false}
+          className="absolute inset-0 object-cover object-center transition-transform duration-200 rounded-lg size-full hover:scale-105"
+          loading="lazy"
         />
       </div>
 
