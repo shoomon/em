@@ -11,7 +11,7 @@ from src.dummy.presentation.DummyController import dummyController
 from src.music_recommendation.presentation.InitCollection import initController
 from src.music_recommendation.presentation.MusicRecommendationController import musicRecommendationController
 from src.emotion_detection.presentation.EmotionDetectionController import emotionDetectionController
-from src.music_recommendation.presentation.TaskHandler import task_worker
+from src.music_recommendation.service.TaskHandler import task_worker
 
 app = FastAPI()
 app.add_event_handler("startup", startUpEvent)
