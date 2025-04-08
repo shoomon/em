@@ -17,9 +17,9 @@ const StepAnimateLayout = ({ children }: StepAnimateLayoutProps) => {
       <motion.div
         key={step}
         className="w-full h-full overflow-hidden"
-        initial={{ opacity: 0, transform: "translateX(30px)" }}
-        animate={{ opacity: 1, transform: "translateX(0px)" }}
-        exit={{ opacity: 0, transform: "translateX(-30px)" }}
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
         transition={{
           duration: 0.2,
           ease: "easeInOut",
