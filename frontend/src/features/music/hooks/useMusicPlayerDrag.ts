@@ -137,48 +137,56 @@ const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
       return
     }
 
-    const { x, y, width, height } = playerRef.current.getBoundingClientRect()
+    let { x, y, width, height } = playerRef.current.getBoundingClientRect()
+    x += width / 2
+    y += height / 2
+    const screenMid = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
     let newPosition = { ...positionRef.current }
-    newPosition.x =
-      x < window.innerWidth / 2
-        ? YOUTUBE_PLAYER_POSITION_OFFSET
-        : window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
-    newPosition.y =
-      y < window.innerHeight / 2
-        ? YOUTUBE_PLAYER_POSITION_OFFSET
-        : window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
 
-    setPosition(newPosition)
-    positionRef.current = newPosition
-    calculateQuadrant()
-  }
-
-  // 플레이어가 속한 사분면 구하기
-  const calculateQuadrant = () => {
-    if (!playerRef.current) {
-      return
-    }
-
-    const { x, y } = playerRef.current.getBoundingClientRect()
-    if (x < window.innerWidth / 2) {
+    // 플레이어가 속한 사분면 구하기
+    if (x < screenMid.x) {
       // 2사분면
-      if (y < window.innerHeight / 2) {
+      if (y < screenMid.y) {
+        newPosition.x = YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y = YOUTUBE_PLAYER_POSITION_OFFSET
         quadrantRef.current = 2
       }
       // 3사분면
       else {
+        newPosition.x = YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y =
+          window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
         quadrantRef.current = 3
       }
     } else {
       // 1사분면
-      if (y < window.innerHeight / 2) {
+      if (y < screenMid.y) {
+        newPosition.x =
+          window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y = YOUTUBE_PLAYER_POSITION_OFFSET
         quadrantRef.current = 1
       }
       // 4사분면
       else {
+        newPosition.x =
+          window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y =
+          window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
         quadrantRef.current = 4
       }
     }
+
+    setPosition(newPosition)
+    positionRef.current = newPosition
+    console.log(
+      "x:",
+      x,
+      "y:",
+      y,
+      "window:",
+      window.innerWidth / 2,
+      window.innerHeight / 2,
+    )
   }
 
   return { isDragging: draggingRef.current, position }
