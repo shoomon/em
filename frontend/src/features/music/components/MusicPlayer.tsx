@@ -17,7 +17,7 @@ const MusicPlayer = ({ videoId, onClose }: MusicPlayerProps) => {
   return (
     <div
       ref={playerRef}
-      className={`fixed top-0 left-0 shadow-xl cursor-move pointer-events-auto z-130 touch-none ${isDragging ? "" : "transition-transform ease-in-out duration-300"}`}
+      className={`fixed top-0 left-0 shadow-xl cursor-move pointer-events-auto z-130 touch-none ${isDragging ? "" : "transition-transform ease-in-out duration-500"}`}
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}>
