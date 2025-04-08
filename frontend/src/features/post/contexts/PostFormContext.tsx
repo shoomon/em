@@ -1,6 +1,7 @@
 import { EmotionAnalysisResponse } from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
 import { Music } from "@/features/music/types/music"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   createContext,
   FormEvent,
@@ -29,6 +30,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const [_, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { createPostAsync, isPending } = usePostCreate()
+  const queryClient = useQueryClient()
 
   // 스탭 상태 관리
   const [currentStep, setCurrentStep] = useState<PostCreateStep>(
@@ -129,6 +131,10 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
         await createPostAsync(formData)
         // 게시글 작성 성공 시 메인 페이지로 이동
         alert("게시글이 작성되었습니다.")
+        queryClient.refetchQueries({
+          queryKey: ["emotionReport"],
+          exact: false, // 정확히 일치하는 키가 없으면 모든 키를 참조
+        })
         navigate("/", { replace: true })
       } catch (error) {
         console.error(error)
