@@ -1,4 +1,4 @@
-import EmDrawer from "@/components/drawer/EmDrawer"
+import EmDrawer from "@/components/EmDrawer/EmDrawer"
 import Tabs from "@/components/Tabs/Tabs"
 import MapController from "@/features/map/components/MapController"
 import PlayList from "@/features/music/components/PlayList"
@@ -25,7 +25,9 @@ const HomePage = () => {
   } = useGps()
   const [currentTab, setCurrentTab] = useState<"posts" | "playlist">("posts")
   const { setType, isDrawerOpen, setIsDrawerOpen } = usePostStore()
-  const { isOpen, setIsOpen } = useDrawer({
+  const navigate = useNavigate()
+
+  useDrawer({
     drawerKey: "home",
     isOpen: isDrawerOpen,
     setIsOpen: (isDrawerOpen: boolean) => {
@@ -33,13 +35,13 @@ const HomePage = () => {
       setIsStoppedWatching(isDrawerOpen)
     },
   })
-  const navigate = useNavigate()
 
   const handlePostCreate = () => {
     navigate("/posts/create")
   }
   const handlePostSearch = () => {
-    setIsOpen(true)
+    setIsDrawerOpen(true)
+    setIsStoppedWatching(true)
     setType("all")
   }
 
@@ -58,12 +60,18 @@ const HomePage = () => {
         isLocationPermissionGranted={isLocationPermissionGranted}
         location={currentLocation}
         lastFetchedLocation={lastFetchedLocation}
+        setIsStoppedWatching={setIsStoppedWatching}
       />
 
       <PostCreateButton onClick={handlePostCreate} />
       <PostSearchButton onClick={handlePostSearch} />
 
-      <EmDrawer open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
+      <EmDrawer
+        open={isDrawerOpen}
+        onOpenChange={() => {
+          setIsDrawerOpen(!isDrawerOpen)
+          setIsStoppedWatching(!isDrawerOpen)
+        }}>
         <div>
           <Tabs
             tabs={tabs}

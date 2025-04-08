@@ -35,6 +35,7 @@ const useInfiniteScroll = <TData, TError = unknown>({
     queryFn,
     getNextPageParam,
     enabled,
+    retry: 0,
     ...queryOptions,
   })
 

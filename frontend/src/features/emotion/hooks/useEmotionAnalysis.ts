@@ -1,11 +1,18 @@
-import { useQuery } from "@tanstack/react-query"
-import { fetchGetEmotionAnalysis } from "../api/emotion"
+import { useMutation } from "@tanstack/react-query"
+import { fetchEmotionAnalysis } from "../api/emotion"
 
 const useEmotionAnalysis = (content: string) => {
-  return useQuery({
-    queryKey: ["emotionAnalysis", content],
-    queryFn: () => fetchGetEmotionAnalysis(),
+  const mutate = useMutation({
+    mutationFn: () => fetchEmotionAnalysis(content),
+    onSuccess: async (data) => {
+      return data
+    },
+    onError: (error) => {
+      console.log("실패", error)
+    },
   })
+
+  return mutate
 }
 
 export default useEmotionAnalysis

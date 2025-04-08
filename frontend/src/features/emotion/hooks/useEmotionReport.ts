@@ -10,13 +10,16 @@ import {
 } from "../types/emotion"
 import { engArrayToKorArray } from "../utils/emotionConverter"
 
-const useEmotionReport = () => {
+const useEmotionReport = (date: Date) => {
   const currentMonth = useMemo(() => {
-    const date = new Date()
     return date.toISOString().slice(0, 7)
-  }, [])
+  }, [date])
 
-  const { data: emotionReport } = useQuery<EmotionReportResponse>({
+  const {
+    data: emotionReport,
+    isPending,
+    isLoading,
+  } = useQuery<EmotionReportResponse>({
     queryKey: ["emotionReport", currentMonth],
     queryFn: () => fetchGetEmotionReport(currentMonth),
     staleTime: 1000 * 60 * 60 * 24, // 24시간
@@ -46,13 +49,13 @@ const useEmotionReport = () => {
   const totalEmotions = datasets.reduce((a, b) => a + b, 0)
 
   // 가장 많은 감정
-  const mostEmotion = () => {
+  const mostEmotion = useMemo(() => {
     const max = Math.max(...datasets)
     if (max === 0) return null
     return emotionItemsLabels.find(
       (e) => datasets[emotionItemsLabels.indexOf(e)] === max,
     )
-  }
+  }, [datasets, emotionItemsLabels])
 
   // 감정 퍼센테이지 데이터 추출
   const emotionPercentages: EmotionPercentages = useMemo(() => {
@@ -60,11 +63,12 @@ const useEmotionReport = () => {
       ANGER: "0%",
       SURPRISE: "0%",
       JOY: "0%",
-      TRUST: "0%",
       SADNESS: "0%",
       FEAR: "0%",
-      ANTICIPATION: "0%",
+      NEUTRAL: "0%",
       DISGUST: "0%",
+      ANTICIPATION: "0%",
+      TRUST: "0%",
     }
 
     if (!emotionReport) return percentages
@@ -97,6 +101,8 @@ const useEmotionReport = () => {
     datasets,
     emotionPercentages,
     mostEmotion,
+    isPending,
+    isLoading,
   }
 }
 

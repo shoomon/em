@@ -3,10 +3,10 @@ export const getRelativeTime = (dateString: string): string => {
   let past = new Date(dateString)
 
   // 배포 환경이라면, UTC+9로 변환
-  const isProd = process.env.NODE_ENV === "production"
-  if (isProd) {
-    past = new Date(past.getTime() + 9 * 60 * 60 * 1000)
-  }
+  // const isProd = process.env.NODE_ENV === "production"
+  // if (isProd) {
+  //   past = new Date(past.getTime() + 9 * 60 * 60 * 1000)
+  // }
 
   const diffMs = now.getTime() - past.getTime()
 

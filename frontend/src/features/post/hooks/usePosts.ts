@@ -1,8 +1,9 @@
 import { LatLng } from "@/features/map/types/map"
 import useInfiniteScroll from "@/hooks/useInfiniteScroll"
 import usePostStore from "@/store/usePostStore"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
-import { fetchPostList } from "../api/postApi"
+import { fetchPostDelete, fetchPostList } from "../api/postApi"
 import { PostListType } from "../types/post"
 
 interface UsePostsProps {
@@ -14,51 +15,71 @@ const usePosts = ({ type, location }: UsePostsProps) => {
   const [searchParams] = useSearchParams()
   const sortType = searchParams.get("sort") || "latest"
   const clusterGrid = usePostStore((state) => state.clusterGrid)
+  const queryClient = useQueryClient()
 
   const fetchFn = async (pageParam: any) => {
     const isCluster = type === "cluster"
+    const response = await fetchPostList({
+      ...location,
+      minLat: isCluster ? clusterGrid[0].lat : undefined,
+      minLng: isCluster ? clusterGrid[0].lng : undefined,
+      maxLat: isCluster ? clusterGrid[1].lat : undefined,
+      maxLng: isCluster ? clusterGrid[1].lng : undefined,
+      postId: pageParam.lastId,
+      dist: pageParam.lastDist,
+      emoCnt: pageParam.lastCnt,
+      sort: sortType,
+    })
 
-    try {
-      const response = await fetchPostList({
-        ...location,
-        minLat: isCluster ? clusterGrid[0].lat : undefined,
-        minLng: isCluster ? clusterGrid[0].lng : undefined,
-        maxLat: isCluster ? clusterGrid[1].lat : undefined,
-        maxLng: isCluster ? clusterGrid[1].lng : undefined,
-        postId: pageParam.lastId,
-        dist: pageParam.lastDist,
-        emoCnt: pageParam.lastCnt,
-        sort: sortType,
-      })
-      return response
-    } catch (error) {
-      console.error(error)
-    }
+    return response
   }
 
-  const { data, isLoading, isPending, isFetchingNextPage, observerRef } =
-    useInfiniteScroll({
-      queryKey: ["posts", location, type, clusterGrid, sortType],
-      queryFn: ({ pageParam }) => fetchFn(pageParam),
-      initialPageParam: {
-        lastId: 0,
-        lastDist: 0,
-        lastCnt: 0,
-      },
-      getNextPageParam: (lastPage) => {
-        if (lastPage.meta?.hasNext) {
-          return {
-            lastId: lastPage.meta.lastId ?? undefined,
-            lastDist: lastPage.meta.lastDist ?? undefined,
-            lastCnt: lastPage.meta.lastCnt ?? undefined,
-          }
+  // 게시글 조회
+  const {
+    data,
+    isLoading,
+    isPending,
+    isFetchingNextPage,
+    observerRef,
+    refetch,
+  } = useInfiniteScroll({
+    queryKey: ["posts", location, type, clusterGrid, sortType],
+    queryFn: ({ pageParam }) => fetchFn(pageParam),
+    initialPageParam: {
+      lastId: 0,
+      lastDist: 0,
+      lastCnt: 0,
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.meta.hasNext) {
+        return {
+          lastId: lastPage.meta.lastId ?? undefined,
+          lastDist: lastPage.meta.lastDist ?? undefined,
+          lastCnt: lastPage.meta.lastCnt ?? undefined,
         }
+      }
 
-        return undefined
-      },
-      refetchOnWindowFocus: false,
-      enabled: type !== "marker",
-    })
+      return undefined
+    },
+    refetchOnWindowFocus: false,
+    enabled: type !== "marker",
+    retry: 0,
+  })
+
+  // 게시글 삭제
+  const mutation = useMutation({
+    mutationFn: (postId: number) => fetchPostDelete(postId),
+    onMutate: () => {
+      if (!window.confirm("정말 삭제하시겠습니까?")) {
+        throw new Error()
+      }
+    },
+    onSuccess: () => {
+      refetch()
+      queryClient.refetchQueries({ queryKey: ["points"], exact: false })
+      alert("해당 게시글이 삭제 되었습니다.")
+    },
+  })
 
   return {
     data,
@@ -66,6 +87,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
     isPending,
     isFetchingNextPage,
     observerRef,
+    mutation,
   }
 }
 

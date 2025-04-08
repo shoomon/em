@@ -1,58 +1,96 @@
+import EmSection from "@/components/EmSection/EmSection"
+import { usePostFormAction } from "@/features/post/contexts/PostFormContext"
+import { cn } from "@/utils/cn"
+import { useEffect } from "react"
 import { EMOTION_ITEMS } from "../../constants"
-import { EmotionAnalysisResponse } from "../../types/emotion"
+import {
+  EmotionAnalysisResponse,
+  EmotionEngNameType,
+} from "../../types/emotion"
 import EmotionSelectItem from "../EmotionSelectItem"
 
 interface EmotionAnalysisProps {
-  data: EmotionAnalysisResponse
+  data: EmotionAnalysisResponse | undefined
 }
 
-const EmotionAnalysis = ({ data }: EmotionAnalysisProps) => {
-  const mockEmotionScores = {
-    ANGER: 35,
-    SURPRISE: 50,
-    JOY: 85,
-    TRUST: 65,
-    SADNESS: 25,
-    FEAR: 15,
-    ANTICIPATION: 75,
-    DISGUST: 20,
-  }
+const mockEmotionScores = {
+  label: "NEUTRAL",
+  confidence: 0.8,
+  all_probs: {
+    ANGER: 0.0,
+    SURPRISE: 0.2,
+    JOY: 0.0,
+    SADNESS: 0.0,
+    FEAR: 0.0,
+    NEUTRAL: 0.8,
+  },
+} as EmotionAnalysisResponse
 
-  console.log(data)
+const EmotionAnalysis = ({ data }: EmotionAnalysisProps) => {
+  const { updateFormData } = usePostFormAction()
 
   // Top 3 감정 추출
-  const topEmotions = Object.entries(mockEmotionScores)
-    .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+  const topEmotions = Object.entries(data?.all_probs ?? mockEmotionScores)
+    .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
-    .map(([emotion]) => emotion)
+    .map(([emotion]) => emotion) as EmotionEngNameType[]
+
+  const percentage = (value: number) => {
+    return `${(value * 100).toFixed(2)}%`
+  }
+
+  const handleEmotionSelect = (emotionId: string) => {
+    updateFormData("emotion", emotionId)
+  }
+
+  useEffect(() => {
+    if (data) {
+      updateFormData("emotion", data.label)
+    }
+  }, [data])
 
   return (
-    <div className="flex flex-col bg-white p-6 gap-5">
-      <h1 className="text-xl font-bold text-gray-800">💡 감정 분석 결과</h1>
+    <EmSection className="max-h-fit pb-0">
+      <EmSection.Header
+        title="💡 감정 분석 결과"
+        description="이전에 작성한 글을 바탕으로 분석한 결과예요"
+      />
 
-      <div className="mb-2">
-        <h2 className="text-md font-medium text-gray-600 mb-3">
-          🌟 주요 감정 🌟
-        </h2>
-        <div className="flex gap-3">
-          {topEmotions.map((emotionName) => {
-            const emotion = EMOTION_ITEMS.find((e) => e.engName === emotionName)
-            if (!emotion) return null
+      <div className="flex gap-3">
+        {topEmotions.map((emotionName) => {
+          const emotion = EMOTION_ITEMS.find((e) => e.engName === emotionName)
+          if (!emotion) return null
 
-            return (
-              <div className="flex flex-col items-center w-full gap-1">
+          const isMostEmotion = emotionName === data?.label
+
+          return (
+            <div
+              key={emotionName}
+              className="w-full flex flex-col items-center gap-2">
+              <div
+                className={cn(
+                  "w-full flex opacity-70 scale-95",
+                  isMostEmotion &&
+                    `ring-2 ring-em-black rounded-lg opacity-100 scale-105`,
+                )}>
                 <EmotionSelectItem
+                  onSelect={isMostEmotion ? handleEmotionSelect : undefined}
                   key={emotion.id}
                   emotion={emotion}
-                  onSelect={console.log}
                 />
-                <span>{"00%"}</span>
               </div>
-            )
-          })}
-        </div>
+              <span
+                className={cn(
+                  "text-em-gray",
+                  isMostEmotion && "text-em-black font-extrabold",
+                )}>
+                {percentage(data?.all_probs[emotionName] ?? 0)}
+              </span>
+            </div>
+          )
+        })}
       </div>
-    </div>
+    </EmSection>
   )
 }
 

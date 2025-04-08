@@ -1,4 +1,10 @@
+import {
+  EmotionAnalysisResponse,
+  EmotionEngNameType,
+} from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
+import { Music } from "@/features/music/types/music"
+import { FormEvent } from "react"
 
 export type PostListType = "all" | "cluster" | "marker"
 export type ReactionType = "joy" | "sadness" | "anger" | "surprise" | "trust"
@@ -35,10 +41,14 @@ export interface Post {
   isAuthor: boolean
   nickname: string
   imageUrl: string
-  emotion: string
+  emotion: EmotionEngNameType
   content: string
   lng: number
   lat: number
+  musicInfo: {
+    title: "string"
+    artistName: "string"
+  }
   emotionInfo: {
     selectedEmotion: string
     emotionCounts: {
@@ -64,6 +74,14 @@ export interface PostInfiniteData {
   }
 }
 
+export interface PlayListRequest {
+  lng: number
+  lat: number
+  rad?: number
+  lastMusicId: number
+  lastMusicCount: number
+}
+
 export enum PostCreateStep {
   Map = 1,
   Content = 2,
@@ -71,10 +89,31 @@ export enum PostCreateStep {
   Confirm = 4,
 }
 
-export interface PostCreateRequest {
+export interface PostCreateRequest extends Music {
   content: string
   latitude: LatLng["lat"]
   longitude: LatLng["lng"]
   emotion: string
   address: string
+  isSelected: boolean
+}
+
+export interface PostFormStateType {
+  currentStep: PostCreateStep
+  formData: PostCreateRequest
+  isSubmitPending: boolean
+  emotionAnalysisData: EmotionAnalysisResponse | undefined
+  isCurse: boolean | undefined
+}
+
+export interface PostFormActionType {
+  updateStep: (step: PostCreateStep) => void
+  handleMapChange: (map: LatLng, address: string) => void
+  updateFormData: (key: keyof PostCreateRequest, value: any) => void
+  handleSubmit: (e: FormEvent<HTMLFormElement>) => void
+  isFormDataValid: (step: PostCreateStep) => boolean | undefined
+  handleMusicChange: (music: Music | null) => void
+  setEmotionAnalysisData: (emotionAnalysisData: EmotionAnalysisResponse) => void
+  setIsCurse: (isCurse: boolean) => void
+  handleIsSelected: (isSelected: boolean) => void
 }

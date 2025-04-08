@@ -1,6 +1,7 @@
 import apiClient from "@/utils/http-common"
 import toQueryString from "@/utils/toQueryString"
 import {
+  PlayListRequest,
   PointListRequest,
   PostCreateRequest,
   PostListRequest,
@@ -35,4 +36,15 @@ export const fetchPointList = async (pointListRequest: PointListRequest) => {
 
 export const fetchPostReaction = (postId: number, emotionName: string) => {
   return apiClient.post(`/reactions/${postId}`, { emotionName })
+}
+
+export const fetchPostPlaylist = async (playListRequest: PlayListRequest) => {
+  const queryString = toQueryString({ ...playListRequest })
+  const response = await apiClient.get(`/posts/playlist?${queryString}`)
+  return response.data
+}
+
+export const fetchRecentEmotions = async () => {
+  const response = await apiClient.get("/posts/recent-emotions")
+  return response.data
 }

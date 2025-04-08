@@ -1,29 +1,44 @@
 import EmSection from "@/components/EmSection/EmSection"
 import EmotionSelectItem from "@/features/emotion/components/EmotionSelectItem"
 import { EMOTION_ITEMS } from "@/features/emotion/constants"
+import useEmotions from "@/features/emotion/hooks/useEmotions"
+import { useMemo } from "react"
+import {
+  usePostFormAction,
+  usePostFormState,
+} from "../../contexts/PostFormContext"
 
-interface EmotionSelectorProps {
-  onEmotionChange: (_emotion: string) => void
-  emotionState: string
-}
+interface EmotionSelectorProps {}
 
-const EmotionSelector = ({
-  onEmotionChange,
-  emotionState,
-}: EmotionSelectorProps) => {
+const EmotionSelector = ({}: EmotionSelectorProps) => {
+  const { formData } = usePostFormState()
+  const { updateFormData, handleIsSelected } = usePostFormAction()
+  const { data: emotions } = useEmotions()
+
+  const { emotion: emotionState } = formData
+
   const handleEmotionSelect = (emotionId: string) => {
-    onEmotionChange(emotionId)
+    updateFormData("emotion", emotionId)
+    handleIsSelected(true)
   }
+
+  const filteredEmotions = useMemo(() => {
+    return EMOTION_ITEMS?.filter(({ engName }) => {
+      return emotions?.find(
+        ({ engName: emotionEngName }) => emotionEngName === engName,
+      )
+    })
+  }, [emotions])
 
   return (
     <EmSection>
       <EmSection.Header
-        title="😇 감정 선택"
-        description="당신의 감정은 어떠신가요?"
+        title="😇 현재 감정을 선택해 주세요"
+        description="분석 결과가 맞지 않다면 원하는 감정을 선택해 주세요!"
       />
       <div className="space-y-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {EMOTION_ITEMS.map((emotion) => (
+        <div className="grid grid-cols-3 gap-3">
+          {filteredEmotions.map((emotion) => (
             <EmotionSelectItem
               key={emotion.engName}
               onSelect={handleEmotionSelect}

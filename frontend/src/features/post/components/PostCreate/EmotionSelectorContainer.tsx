@@ -1,47 +1,25 @@
+import { memo, useMemo } from "react"
+import { usePostFormState } from "../../contexts/PostFormContext"
+import EmotionAnalysisContainer from "./EmotionAnalysisContainer"
 import EmotionSelector from "./EmotionSelector"
 
-interface EmotionSelectorContainerProps {
-  content: string
-  onEmotionChange: (_emotion: string) => void
-  emotionState: string
-}
+interface EmotionSelectorContainerProps {}
 
-const EmotionSelectorContainer = ({
-  // content,
-  onEmotionChange,
-  emotionState,
-}: EmotionSelectorContainerProps) => {
-  // const { data, isLoading, isSuccess } = useEmotionAnalysis(content)
+const EmotionSelectorContainer = ({}: EmotionSelectorContainerProps) => {
+  const { formData } = usePostFormState()
 
-  // const loadingComponent = createPortal(
-  //   <EmLoading
-  //     className="text-em-white w-full h-full absolute z-50 top-0 left-0 bg-em-black/30"
-  //     description="작성한 글을 바탕으로 AI로 감정을 분석 중입니다..."
-  //   />,
-  //   document.body,
-  // )
+  const isOnlyMusic = useMemo(() => {
+    return formData.musicId && formData.content === ""
+  }, [formData])
+
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      {/* {isLoading ? (
-        loadingComponent
-      ) : isSuccess ? (
-        <EmotionAnalysis data={data} />
+      {isOnlyMusic ? (
+        <EmotionSelector />
       ) : (
-        <>
-          <EmotionAnalysisError />
-        </>
+        <EmotionAnalysisContainer content={formData.content} />
       )}
-      {!isLoading && (
-        <EmotionSelector
-          onEmotionChange={onEmotionChange}
-          emotionState={emotionState}
-        />
-      )} */}
-      <EmotionSelector
-        onEmotionChange={onEmotionChange}
-        emotionState={emotionState}
-      />
     </div>
   )
 }
-export default EmotionSelectorContainer
+export default memo(EmotionSelectorContainer)

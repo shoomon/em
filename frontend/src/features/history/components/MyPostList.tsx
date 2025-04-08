@@ -1,20 +1,35 @@
+import emptyImage from "@/assets/search_bear.png"
 import PostItem from "@/features/post/components/PostItem"
 import { Post } from "@/features/post/types/post"
 
 interface MyPostListProps {
   postList: Post[]
+
+  onDeletePost: (postId: number) => void
 }
 
-const MyPostList = ({ postList }: MyPostListProps) => {
+const MyPostList = ({ postList, onDeletePost }: MyPostListProps) => {
   return (
-    <div className="flex flex-col overflow-y-auto h-full">
-      <div className="flex flex-col flex-1 gap-4 bg-em-gray-sm">
+    <div className="flex flex-col h-full overflow-y-auto">
+      <div className="flex flex-col flex-1 gap-4">
         {postList.length === 0 ? (
-          <div className="flex flex-col gap-3 p-4 bg-em-white text-em-black text-center">
-            작성한 게시글이 없습니다.
+          <div className="flex flex-col gap-3 p-4 rounded-lg bg-em-gray-md">
+            <div className="text-[clamp(0.8rem,4vw,1.2rem)] text-em-black">
+              작성한 게시글이 없어요
+            </div>
+            <img src={emptyImage} alt="" className="self-end w-1/2 my-4" />
           </div>
         ) : (
-          postList.map((item) => <PostItem key={item.postId} {...item} />)
+          postList.map((item) => (
+            <PostItem
+              key={item.postId}
+              {...item}
+              className="rounded-xl"
+              onDelete={() => {
+                onDeletePost(item.postId)
+              }}
+            />
+          ))
         )}
       </div>
     </div>
