@@ -14,7 +14,7 @@ const LocationFixButton = ({ className, onClick }: LocationFixButtonProps) => {
       variant="outline"
       shape="circle"
       className={cn(
-        "absolute z-10 p-2 shadow-md bottom-24 right-4 hover:bg-em-gray-md",
+        "absolute z-10 p-2 shadow-md bottom-8 right-4 hover:bg-em-gray-md",
         className,
       )}
       onClick={onClick}>

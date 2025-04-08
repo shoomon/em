@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-em-black text-white font-semibold  hover:bg-em-black/80",
         disabled: "bg-em-gray-sm text-em-gray focus:outline-none",
-        outline: "bg-em-white border border-em-black/40 text-em-black",
+        outline: "bg-em-white border border-em-black/30 text-em-black",
         ghost: "bg-transparent text-em-black hover:bg-em-gray-sm",
         destructive:
           "bg-em-marker text-white font-semibold hover:bg-em-marker/80",

@@ -9,7 +9,7 @@ import MusicChartList from "./MusicChartList"
 
 const MusicChartSection = () => {
   const [selectedCategory, setSelectedCategory] =
-    useState<EmotionKorNameType>("기쁨")
+    useState<EmotionKorNameType>("분노")
 
   return (
     <EmSection>

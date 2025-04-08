@@ -4,10 +4,11 @@ import { YOUTUBE_PLAYER_POSITION_OFFSET } from "../constants"
 const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
   const draggingRef = useRef(false)
   const dragStartPositionRef = useRef({ x: 0, y: 0 })
-  const [position, setPosition] = useState({ x: 10, y: 0 })
+  const [position, setPosition] = useState({ x: 0, y: 0 })
   const positionRef = useRef({ x: 0, y: 0 }) // 이벤트 함수로 position을 사용할 경우, 클로져로 동작하여 그때 당시의 position(0, 0) 값만 갖게 되므로 참조(ref) 변수가 필요하다.
   const oldPositionRef = useRef({ x: 0, y: 0 })
   const animationFrameRef = useRef<number | null>(null)
+  const quadrantRef = useRef(4) // 사분면
 
   useEffect(() => {
     if (!playerRef.current) {
@@ -19,17 +20,30 @@ const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
         return
       }
 
-      const { right, bottom, width, height } =
-        playerRef.current.getBoundingClientRect()
+      const { width, height } = playerRef.current.getBoundingClientRect()
       let newPosition = { ...positionRef.current }
-      const offset = YOUTUBE_PLAYER_POSITION_OFFSET
 
-      if (right > window.innerWidth) {
-        newPosition.x = window.innerWidth - width - offset
-      }
-
-      if (bottom > window.innerHeight) {
-        newPosition.y = window.innerHeight - height - offset
+      switch (quadrantRef.current) {
+        case 1:
+          newPosition.x =
+            window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
+          newPosition.y = YOUTUBE_PLAYER_POSITION_OFFSET
+          break
+        case 2:
+          newPosition.x = YOUTUBE_PLAYER_POSITION_OFFSET
+          newPosition.y = YOUTUBE_PLAYER_POSITION_OFFSET
+          break
+        case 3:
+          newPosition.x = YOUTUBE_PLAYER_POSITION_OFFSET
+          newPosition.y =
+            window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
+          break
+        case 4:
+          newPosition.x =
+            window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
+          newPosition.y =
+            window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
+          break
       }
 
       setPosition(newPosition)
@@ -85,14 +99,14 @@ const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
       draggingRef.current = false
       playerRef.current.releasePointerCapture(e.pointerId)
       cancelAnimationFrame(animationFrameRef.current!)
+      snapToCorner()
     }
 
     // 초기 위치 설정
     const { width, height } = playerRef.current.getBoundingClientRect()
-    const offset = YOUTUBE_PLAYER_POSITION_OFFSET
     const initPosition = {
-      x: window.innerWidth - width - offset,
-      y: window.innerHeight - height - offset,
+      x: window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET,
+      y: window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET,
     }
     setPosition(initPosition)
     positionRef.current = initPosition
@@ -118,7 +132,64 @@ const useMusicPlayerDrag = (playerRef: RefObject<HTMLDivElement | null>) => {
     }
   }, [])
 
-  return position
+  const snapToCorner = () => {
+    if (!playerRef.current) {
+      return
+    }
+
+    let { x, y, width, height } = playerRef.current.getBoundingClientRect()
+    x += width / 2
+    y += height / 2
+    const screenMid = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    let newPosition = { ...positionRef.current }
+
+    // 플레이어가 속한 사분면 구하기
+    if (x < screenMid.x) {
+      // 2사분면
+      if (y < screenMid.y) {
+        newPosition.x = YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y = YOUTUBE_PLAYER_POSITION_OFFSET
+        quadrantRef.current = 2
+      }
+      // 3사분면
+      else {
+        newPosition.x = YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y =
+          window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
+        quadrantRef.current = 3
+      }
+    } else {
+      // 1사분면
+      if (y < screenMid.y) {
+        newPosition.x =
+          window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y = YOUTUBE_PLAYER_POSITION_OFFSET
+        quadrantRef.current = 1
+      }
+      // 4사분면
+      else {
+        newPosition.x =
+          window.innerWidth - width - YOUTUBE_PLAYER_POSITION_OFFSET
+        newPosition.y =
+          window.innerHeight - height - YOUTUBE_PLAYER_POSITION_OFFSET
+        quadrantRef.current = 4
+      }
+    }
+
+    setPosition(newPosition)
+    positionRef.current = newPosition
+    console.log(
+      "x:",
+      x,
+      "y:",
+      y,
+      "window:",
+      window.innerWidth / 2,
+      window.innerHeight / 2,
+    )
+  }
+
+  return { isDragging: draggingRef.current, position }
 }
 
 export default useMusicPlayerDrag
