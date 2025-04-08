@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import HTTPBearer
@@ -9,6 +11,8 @@ from src.dummy.presentation.DummyController import dummyController
 from src.music_recommendation.presentation.InitCollection import initController
 from src.music_recommendation.presentation.MusicRecommendationController import musicRecommendationController
 from src.emotion_detection.presentation.EmotionDetectionController import emotionDetectionController
+from src.music_recommendation.service.TaskHandler import task_worker
+
 app = FastAPI()
 app.add_event_handler("startup", startUpEvent)
 app.middleware("http")(loginMiddleware)
@@ -35,6 +39,10 @@ def custom_openapi():
             method.setdefault("security", []).append({"bearerAuth": []})
     app.openapi_schema = openapi_schema
     return openapi_schema
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(task_worker())
 
 app.openapi = custom_openapi
 app.include_router(dummyController)
