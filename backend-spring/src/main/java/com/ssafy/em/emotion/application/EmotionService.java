@@ -32,7 +32,7 @@ public class EmotionService {
     }
 
     public List<GetEmotionResponse> getList() {
-        List<Emotion> emotions = emotionRepository.findAll();
+        List<Emotion> emotions = emotionRepository.findByIsActiveTrueOrderByIdAsc();
 
         return emotions.stream()
                 .map(GetEmotionResponse::from)
@@ -40,7 +40,7 @@ public class EmotionService {
     }
 
     public GetEmotionResponse get(int emotionId) {
-        Emotion emotion = emotionRepository.findById(emotionId)
+        Emotion emotion = emotionRepository.findByIdAndIsActiveTrue(emotionId)
                 .orElseThrow(() -> new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
 
         return GetEmotionResponse.from(emotion);

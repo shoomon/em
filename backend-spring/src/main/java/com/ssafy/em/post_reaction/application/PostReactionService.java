@@ -3,24 +3,24 @@ package com.ssafy.em.post_reaction.application;
 import com.ssafy.em.emotion.domain.EmotionRepository;
 import com.ssafy.em.emotion.domain.entity.Emotion;
 import com.ssafy.em.emotion.exception.EmotionErrorCode;
-import static com.ssafy.em.emotion.exception.EmotionException.*;
 import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
 import com.ssafy.em.post_reaction.dto.request.PostReactionRequest;
 import com.ssafy.em.posts.domain.entity.Post;
-import com.ssafy.em.posts.domain.repository.PostCustomRepositoryImpl;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
 import com.ssafy.em.posts.exception.PostErrorCode;
-import static com.ssafy.em.posts.exception.PostException.*;
 import com.ssafy.em.user.domain.UserRepository;
 import com.ssafy.em.user.domain.entity.User;
 import com.ssafy.em.user.exception.UserErrorCode;
-import static com.ssafy.em.user.exception.UserException.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.ssafy.em.emotion.exception.EmotionException.EmotionNotFoundException;
+import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
+import static com.ssafy.em.user.exception.UserException.UserNotFoundException;
 
 @Service
 @Transactional(readOnly = true)

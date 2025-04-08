@@ -12,22 +12,29 @@ import com.ssafy.em.emotion.dto.EmotionInfo;
 import com.ssafy.em.emotion.dto.ReactionEmotions;
 import com.ssafy.em.emotion.exception.EmotionErrorCode;
 import com.ssafy.em.emotion.exception.EmotionException;
-import com.ssafy.em.music.domain.MusicRepository;
 import com.ssafy.em.music.domain.entity.Music;
+import com.ssafy.em.music.domain.repository.MusicRepository;
+import com.ssafy.em.music.dto.LastMusicCursor;
+import com.ssafy.em.music.dto.response.GetPlaylistResponse;
+import com.ssafy.em.music.dto.response.SpotifySearchResponse;
 import com.ssafy.em.post_reaction.domain.PostReaction;
 import com.ssafy.em.post_reaction.domain.PostReactionRepository;
+import com.ssafy.em.posts.domain.document.LogDocument;
 import com.ssafy.em.posts.domain.entity.NicknameGenerator;
 import com.ssafy.em.posts.domain.entity.Post;
 import com.ssafy.em.posts.domain.repository.PostJpaRepository;
+import com.ssafy.em.posts.domain.repository.PostLogginRepository;
 import com.ssafy.em.posts.dto.LastReadDto;
 import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
+import com.ssafy.em.posts.dto.request.UpsertSongRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
-import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
+import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.exception.PostErrorCode;
+import com.ssafy.em.posts.exception.PostException;
 import com.ssafy.em.user.domain.UserRepository;
 import com.ssafy.em.user.domain.entity.User;
 import com.ssafy.em.user.exception.UserErrorCode;
@@ -39,16 +46,21 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.ssafy.em.posts.exception.PostErrorCode.POST_INVALID_MUSIC;
 import static com.ssafy.em.posts.exception.PostException.PostForbiddenException;
 import static com.ssafy.em.posts.exception.PostException.PostNotFoundException;
 import static com.ssafy.em.posts.util.PostConstant.PAGE_SIZE;
@@ -60,26 +72,34 @@ import static com.ssafy.em.posts.util.PostConstant.RADIUS;
 @Slf4j
 public class PostService{
 
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private final PostJpaRepository postJpaRepository;
     private final PostReactionRepository postReactionRepository;
-    private final GeometryFactory geometryFactory = new GeometryFactory();
     private final UserRepository userRepository;
     private final EmotionRepository emotionRepository;
     private final AnimalRepository animalRepository;
     private final AnimalProfileRepository animalProfileRepository;
     private final MusicRepository musicRepository;
+    private final PostLogginRepository postLogginRepository;
+    private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final WebClient webClient;
 
     @Transactional
     public void createPost(int userId, CreatePostRequest request){
+        if (request.isSelected()) {
+            postLogginRepository.save(new LogDocument(request.content(), request.emotion()));
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
 
         // 1. 동물, 감정, 프로필 조회
-        Animal randomAnimal = animalRepository.findRandomAnimal();
-        Emotion emotion = emotionRepository.findByName(request.emotion())
+        Animal randomAnimal = animalRepository.findRandomAnimalByIsActiveTrue();
+        Emotion emotion = emotionRepository.findByNameAndIsActiveTrue(request.emotion())
                 .orElseThrow(() -> new EmotionException.EmotionNotFoundException(EmotionErrorCode.NOT_FOUND));
 
-        AnimalProfile animalProfile = animalProfileRepository.findByAnimal_IdAndEmotion_Id(randomAnimal.getId(), emotion.getId())
+        AnimalProfile animalProfile = animalProfileRepository.findByAnimal_IdAndEmotion_IdAndIsActiveTrue(randomAnimal.getId(), emotion.getId())
                 .orElseThrow(() -> new AnimalProfileException.AnimalProfileNotFoundException(AnimalProfileErrorCode.NOT_FOUND));
 
         // 2. 닉네임 생성
@@ -104,11 +124,23 @@ public class PostService{
                         .artistName(request.artistName())
                         .title(request.title())
                         .albumImageUrl(request.albumImageUrl())
-                        .spotifyAlbumUrl(request.spotifyAlbumUrl())
+                        .spotifyTrackUrl(request.spotifyTrackUrl())
                         .build();
 
                 musicRepository.save(music);
             }
+
+            if (request.musicId() == null || request.emotion() == null) {
+                throw new PostException.PostBadRequestException(POST_INVALID_MUSIC);
+            }
+            upsertMusicVector(UpsertSongRequest.to(
+                    request.musicId(),
+                    request.title(),
+                    request.artistName(),
+                    request.spotifyTrackUrl(),
+                    request.albumImageUrl(),
+                    request.emotion()
+            ));
         }
 
         // 5. Post 엔티티 생성
@@ -133,6 +165,11 @@ public class PostService{
 
         if(post.getUser().getId() != userId) throw new PostForbiddenException(PostErrorCode.POST_FORBIDDEN);
 
+        // 게시글이 속한 동물 프로필이 활성 상태인지 확인
+        if (!post.getAnimalProfile().isActive()) {
+            throw new PostException.PostBadRequestException(PostErrorCode.POST_BADREQUEST);
+        }
+
         // 1. 게시글 관련 공감 삭제
         postReactionRepository.deleteByPostId(postId);
 
@@ -147,13 +184,6 @@ public class PostService{
 
         // 3. 게시글 삭제
         postJpaRepository.delete(post);
-    }
-
-
-    //todo: MyPage -> getMyPostList
-    public List<PostDetailDto> getMyPostList(){
-//        List<Post> postList = postQueryDslRepository.getMyPostList();
-        return null;
     }
 
     public PostDetailDto getPost(int userId, int postId){
@@ -308,26 +338,118 @@ public class PostService{
         );
     }
 
-    public GetMonthlyEmotionResponse getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
-        List<Object[]> emotionCount = postJpaRepository.getMonthlyEmotionCount(userId, yearMonth);
+    public GetUserEmotionResponse getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
+        // 1. 쿼리 실행
+        List<Object[]> rawCounts = postJpaRepository.getEmotionCount(userId, yearMonth);
 
-        Map<Integer, String> emotions = getAllEmotion();
+        // 2. active 감정 목록 (Map: id -> name) 조회
+        Map<Integer, String> activeEmotions = getAllEmotion();
+        // active 감정의 이름만 Set으로 만듦
+        Set<String> activeEmotionNames = new HashSet<>(activeEmotions.values());
 
-        Map<String, Integer> monthlyEmotionCount = emotionCount.stream()
-                .collect(Collectors.toMap(
-                        row -> (String)row[0],
-                        row -> ((Number)row[1]).intValue()
-                ));
-
-        for(int emotion : emotions.keySet()){
-            String emo = emotions.get(emotion);
-
-            if(monthlyEmotionCount.containsKey(emo)) continue;
-
-            monthlyEmotionCount.put(emo, 0);
+        // 3. 쿼리 결과 중 active 감정에 해당하는 건만 집계
+        Map<String, Integer> monthlyEmotionCount = new HashMap<>();
+        for (Object[] row : rawCounts) {
+            String emotionName = (String) row[0];
+            int count = ((Number) row[1]).intValue();
+            if (activeEmotionNames.contains(emotionName)) {
+                monthlyEmotionCount.put(emotionName, count);
+            }
         }
-        return new GetMonthlyEmotionResponse(monthlyEmotionCount);
+
+        // 4. active 감정 중 쿼리 결과에 없는 감정은 0으로 채움
+        for (String emo : activeEmotionNames) {
+            monthlyEmotionCount.putIfAbsent(emo, 0);
+        }
+
+        return new GetUserEmotionResponse(monthlyEmotionCount);
     }
+
+    /**
+            * 현재 위치(longitude, latitude)와 반경(radius) 내에서 music 정보가 있는 Post들을 조회하고,
+     * Music의 music_count 내림차순, Music id 오름차순 기준으로 커서 기반 페이지네이션을 적용합니다.
+            * 페이지당 조회 건수는 pageSize 파라미터를 사용하며, 없으면 기본값 10을 사용합니다.
+            *
+            * @param longitude 기준 경도
+     * @param latitude 기준 위도
+     * @param radius 검색 반경 (미터 단위)
+     * @param cursor 이전 페이지의 마지막 커서 (없으면 null)
+     * @param pageSize 한 페이지당 조회할 Post 개수
+     * @return GetPlaylistResponse - 조회된 Post 리스트와 새 커서 정보
+     */
+    public GetPlaylistResponse getMusicPlaylist(double longitude, double latitude, int radius, LastMusicCursor cursor, int pageSize) {
+        int limit = (pageSize > 0) ? pageSize : DEFAULT_PAGE_SIZE;
+        List<Music> musicList = musicRepository.getMusicPlaylist(longitude, latitude, radius, cursor, limit);
+
+        boolean hasNext = musicList.size() > limit;
+        if (hasNext) {
+            musicList = musicList.subList(0, limit);
+        }
+
+        // SpotifySearchResponse DTO 리스트로 변환 (Music 테이블의 정보만 사용)
+        List<SpotifySearchResponse> dtoList = musicList.stream()
+                .map(SpotifySearchResponse::from)
+                .collect(Collectors.toList());
+
+        LastMusicCursor newCursor;
+        if (!musicList.isEmpty()) {
+            Music last = musicList.get(musicList.size() - 1);
+            newCursor = new LastMusicCursor(last.getId(), last.getMusicCount(), hasNext);
+        } else {
+            newCursor = new LastMusicCursor(0, 0, false);
+        }
+
+        return new GetPlaylistResponse(dtoList, newCursor);
+    }
+
+    /**
+     * 사용자의 최근 10개 게시글의 감정을 가져오는 메서드
+     * */
+    public GetUserEmotionResponse getUserEmotion(int userId) {
+        List<Object[]> rawCounts = postJpaRepository.getEmotionCount(userId, null);
+        Map<Integer, String> activeEmotions = getAllEmotion();
+
+        Set<String> activeEmotionNames = new HashSet<>(activeEmotions.values());
+
+        Map<String, Integer> userEmotionCount = new HashMap<>();
+        for (Object[] row : rawCounts) {
+            String emotionName = (String) row[0];
+            int count = ((Number) row[1]).intValue();
+            if (activeEmotionNames.contains(emotionName)) {
+                userEmotionCount.put(emotionName, count);
+            }
+        }
+
+        for (String emo : activeEmotionNames) {
+            userEmotionCount.putIfAbsent(emo, 0);
+        }
+
+        return new GetUserEmotionResponse(userEmotionCount);
+    }
+
+    public List<PostDetailDto> getUserByEmotion(int userId, String emotion, YearMonth yearMonth) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
+
+        LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime startOfNextMonth = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+
+        List<Post> postList = postJpaRepository.findPostsByUserIdAndEmotionAndMonth(userId, emotion, startOfMonth, startOfNextMonth);
+
+        return postList.stream()
+                .map(post -> {
+                    ReactionEmotions emotionCounts = getEmotionCounts(post.getId());
+                    Optional<PostReaction> postReactionOptional = postReactionRepository.findByUserIdAndPostId(userId, post.getId());
+                    if (postReactionOptional.isPresent()) {
+                        PostReaction postReaction = postReactionOptional.get();
+                        EmotionInfo emotionInfo = new EmotionInfo(emotionCounts, postReaction.getEmotion().getName());
+                        return PostDetailDto.from(userId, post, emotionInfo);
+                    }
+                    return PostDetailDto.from(userId, post, emotionCounts);
+                })
+                .toList();
+    }
+
 
     /**
      * 음악 관련 필드들이 모두 null/빈 문자열이 아닌지 확인하는 헬퍼 메서드
@@ -337,7 +459,7 @@ public class PostService{
         return request.artistName() != null && !request.artistName().isBlank()
                 && request.title() != null && !request.title().isBlank()
                 && request.albumImageUrl() != null && !request.albumImageUrl().isBlank()
-                && request.spotifyAlbumUrl() != null && !request.spotifyAlbumUrl().isBlank();
+                && request.spotifyTrackUrl() != null && !request.spotifyTrackUrl().isBlank();
     }
 
     private ReactionEmotions getEmotionCounts(int postId) {
@@ -378,8 +500,18 @@ public class PostService{
             return R * c; // 거리 (미터 단위)
     }
 
+    private void upsertMusicVector(UpsertSongRequest req){
+        webClient.post()
+                .uri("/recommendation/upsert")
+                .bodyValue(req)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnError(e -> log.error("업서트 실패", e))
+                .subscribe(); //비동기 실행
+    }
+
     private Map<Integer, String> getAllEmotion(){
-        List<Emotion> emotionList = emotionRepository.findAll();
+        List<Emotion> emotionList = emotionRepository.findByIsActiveTrueOrderByIdAsc();
 
         return emotionList.stream()
                 .collect(Collectors.toMap(Emotion::getId, Emotion::getName));

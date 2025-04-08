@@ -10,11 +10,13 @@ public record CreatePostRequest(
         double longitude,
         String address,
         String emotion,
+        boolean isSelected,
 
         // 음악 관련
+        String musicId,
         String artistName,
         String title,
         String albumImageUrl,
-        String spotifyAlbumUrl
+        String spotifyTrackUrl
 ) {
 }

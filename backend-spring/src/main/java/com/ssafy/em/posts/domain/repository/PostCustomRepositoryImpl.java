@@ -40,7 +40,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         StringBuilder baseQuery = new StringBuilder("""
         SELECT *
         FROM posts
-        WHERE created_at >= NOW() - INTERVAL '24 HOURS'
+        WHERE created_at >= (NOW() AT TIME ZONE 'Asia/Seoul') - INTERVAL '24 HOURS'
          AND ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
     """);
 
@@ -91,7 +91,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         String sql = """
         SELECT p.id, ST_X(p.location) AS longitude, ST_Y(p.location) AS latitude
         FROM posts p
-        WHERE p.created_at >= NOW() - INTERVAL '24 HOURS'
+        WHERE p.created_at >= (NOW() AT TIME ZONE 'Asia/Seoul') - INTERVAL '24 HOURS'
           AND ST_DWithin(p.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radius)
     """;
 
@@ -163,8 +163,12 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     @Override
-    public List<Object[]> getMonthlyEmotionCount(int userId, YearMonth yearMonth) {
-        String sql = """
+    public List<Object[]> getEmotionCount(int userId, YearMonth yearMonth) {
+        String sql;
+        Query query;
+
+        if(yearMonth != null){
+            sql = """
                 SELECT p.emotion, count(p.id) AS count
                 FROM posts p
                 WHERE p.user_id = :userId
@@ -173,14 +177,31 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 GROUP BY p.emotion
                 """;
 
-        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
-        LocalDateTime endDate = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+            LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
+            LocalDateTime endDate = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
 
-        return em.createNativeQuery(sql)
-                .setParameter("userId", userId)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
-                .getResultList();
+            query = em.createNativeQuery(sql)
+                    .setParameter("userId", userId)
+                    .setParameter("startDate", startDate)
+                    .setParameter("endDate", endDate);
+        }else{
+            sql = """
+                SELECT p.emotion, COUNT(p.id) AS count
+                FROM (
+                    SELECT p.*
+                    FROM posts p
+                    WHERE p.user_id = :userId
+                    ORDER BY p.created_at DESC
+                    LIMIT 10
+                ) p
+                GROUP BY p.emotion
+              """;
+
+            query = em.createNativeQuery(sql)
+                    .setParameter("userId", userId);
+        }
+
+        return query.getResultList();
     }
 
     private static String getSortCondition(String sortBy) {

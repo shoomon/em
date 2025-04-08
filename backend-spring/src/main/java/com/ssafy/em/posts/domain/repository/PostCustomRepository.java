@@ -42,7 +42,7 @@ public interface PostCustomRepository {
             int pageSize
     );
 
-    List<Object[]> getMonthlyEmotionCount(
+    List<Object[]> getEmotionCount(
             int userId,
             YearMonth yearMonth
     );

@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface AnimalProfileRepository extends JpaRepository<AnimalProfile, Integer> {
 
-    Optional<AnimalProfile> findByAnimal_IdAndEmotion_Id(int animalId, int emotionId);
+    Optional<AnimalProfile> findByAnimal_IdAndEmotion_IdAndIsActiveTrue(int animalId, int emotionId);
 }
 

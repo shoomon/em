@@ -1,6 +1,6 @@
-package com.ssafy.em.animal.domain.entity;
+package com.ssafy.em.user.domain.entity;
 
-import com.ssafy.em.emotion.domain.entity.Emotion;
+import com.ssafy.em.term.domain.entity.Term;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,46 +23,33 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "animal_profiles")
+@Table(name = "term_agreements")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class AnimalProfile {
-
-    private static final boolean DEFAULT_ACTIVE = true;
+public class UserTermAgreement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "emotion_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Emotion emotion;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_id", nullable = false)
+    @JoinColumn(name = "term_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Animal animal;
-
-    @Column(name = "profile_image_url", nullable = false, columnDefinition = "text")
-    private String profileImageUrl;
+    private Term term;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive;
-
-    @Column(name = "expired_at")
-    private LocalDateTime expiredAt;
-
     @Builder
-    public AnimalProfile(Emotion emotion, Animal animal, String profileImageUrl) {
-        this.emotion = emotion;
-        this.animal = animal;
-        this.profileImageUrl = profileImageUrl;
-        this.isActive = DEFAULT_ACTIVE;
+    public UserTermAgreement(User user, Term term) {
+        this.user = user;
+        this.term = term;
     }
 }

@@ -1,22 +1,20 @@
 package com.ssafy.em.posts.presentation;
 
 import com.ssafy.em.common.annotation.LoginRequired;
+import com.ssafy.em.music.dto.LastMusicCursor;
+import com.ssafy.em.music.dto.response.GetPlaylistResponse;
 import com.ssafy.em.posts.application.PostService;
-import com.ssafy.em.posts.domain.entity.Post;
-import com.ssafy.em.posts.dto.PostCursorDto;
 import com.ssafy.em.posts.dto.PostDetailDto;
 import com.ssafy.em.posts.dto.PostPointDto;
 import com.ssafy.em.posts.dto.request.CreatePostRequest;
 import com.ssafy.em.posts.dto.response.GetCalendarListResponse;
-import com.ssafy.em.posts.dto.response.GetMonthlyEmotionResponse;
 import com.ssafy.em.posts.dto.response.GetPointListResponse;
 import com.ssafy.em.posts.dto.response.GetPostListResponse;
+import com.ssafy.em.posts.dto.response.GetUserEmotionResponse;
 import com.ssafy.em.posts.util.PostConstant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -102,6 +99,25 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/playlist")
+    public ResponseEntity<GetPlaylistResponse> getPlaylist(
+            @LoginRequired int userId,
+            @RequestParam(name = "lng") double longitude,
+            @RequestParam(name = "lat") double latitude,
+            @RequestParam(name = "rad", defaultValue = PostConstant.RADIUS, required = false) Integer radius,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) Integer lastMusicId,
+            @RequestParam(required = false) Integer lastMusicCount
+    ) {
+        LastMusicCursor cursor = null;
+        if (lastMusicId != null && lastMusicCount != null) {
+            cursor = new LastMusicCursor(lastMusicId, lastMusicCount, false);
+        }
+        GetPlaylistResponse response = postService.getMusicPlaylist(longitude, latitude, radius, cursor, pageSize);
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping("/calendar")
     public ResponseEntity<GetCalendarListResponse> getCalendarEmotionList(
             @LoginRequired int userId,
@@ -122,12 +138,29 @@ public class PostController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<GetMonthlyEmotionResponse> getMonthlyEmotionCount(
+    public ResponseEntity<GetUserEmotionResponse> getMonthlyEmotionCount(
             @LoginRequired int userId,
             @RequestParam(name = "month") YearMonth yearMonth
     ){
-        GetMonthlyEmotionResponse response = postService
+        GetUserEmotionResponse response = postService
                 .getMonthlyEmotionCount(userId, yearMonth);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/recent-emotions")
+    public ResponseEntity<GetUserEmotionResponse> getUserEmotion(
+            @LoginRequired int userId
+    ){
+        return ResponseEntity.ok(postService.getUserEmotion(userId));
+    }
+
+    @GetMapping("/emotions")
+    public ResponseEntity<List<PostDetailDto>> getUserByEmotion(
+            @LoginRequired int userId,
+            @RequestParam(name = "month") YearMonth yearMonth,
+            @RequestParam(name = "emotion") String emotion
+    ) {
+        List<PostDetailDto> responses = postService.getUserByEmotion(userId, emotion, yearMonth);
+        return ResponseEntity.ok(responses);
     }
 }
