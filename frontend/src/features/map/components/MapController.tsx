@@ -1,6 +1,6 @@
 import PostRefetchButton from "@/features/post/components/PointRefetchButton"
 import usePoints from "@/features/post/hooks/usePoints"
-import React, { Dispatch, SetStateAction, useRef, useState } from "react"
+import React, { Dispatch, SetStateAction } from "react"
 import { LatLng } from "../types/map"
 import AddressDisplay from "./AddressDisplay"
 import LocationFixButton from "./LocatonFixButton"
@@ -19,8 +19,6 @@ const MapController = ({
   lastFetchedLocation,
   setIsStoppedWatching,
 }: MapControllerProps) => {
-  const [isRefetching, setIsRefetching] = useState(false)
-  const refetchingRef = useRef<NodeJS.Timeout | null>(null)
   const { data, refetch } = usePoints({
     isLocationPermissionGranted,
     pointListRequest: lastFetchedLocation,

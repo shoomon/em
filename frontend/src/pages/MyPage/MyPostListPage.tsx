@@ -23,14 +23,14 @@ const MyPostListPage = () => {
     )
   }
 
-  const { postList, isLoading } = useMyPostsByDate(formattedDate)
+  const { postList, isLoading, mutation } = useMyPostsByDate(formattedDate)
 
   return (
     <div className="w-full min-h-[calc(100dvh-var(--header-height)))] ">
       {isLoading ? (
         <div className="h-40 bg-em-gray-md animate-pulse" />
       ) : (
-        <MyPostList postList={postList} />
+        <MyPostList postList={postList} onDeletePost={mutation.mutate} />
       )}
     </div>
   )
