@@ -1,3 +1,4 @@
+import EmButton from "@/components/EmButton/EmButton"
 import OnboardingIndicators from "@/features/onboarding/components/OnboardingIndicators"
 import OnboardingSlide from "@/features/onboarding/components/OnboardingSlide"
 import { slides } from "@/features/onboarding/constants/slides"
@@ -14,7 +15,7 @@ const OnboardingPage = () => {
 
   useEffect(() => {
     if (hasSeenOnboarding()) {
-      window.location.href = "/login"
+      window.location.href = "/main"
     }
   }, [])
 
@@ -32,7 +33,7 @@ const OnboardingPage = () => {
   }
 
   const handleNext = () => {
-    if (index < slides.length - 2) {
+    if (index < slides.length - 1) {
       paginate(1)
     } else {
       completeOnboarding()
@@ -54,15 +55,7 @@ const OnboardingPage = () => {
     <div className="min-h-screen flex flex-col justify-center items-center bg-em-white px-6 py-4 gap-4">
       {/* 슬라이드 영역 */}
       <div className="w-full max-w-screen-md flex flex-col space-y-6 items-center">
-        <AnimatePresence
-          mode="wait"
-          custom={direction}
-          onExitComplete={() => {
-            if (index === slides.length - 1) {
-              completeOnboarding()
-              window.location.href = "/login"
-            }
-          }}>
+        <AnimatePresence mode="wait" custom={direction}>
           <OnboardingSlide
             key={slides[index].id}
             direction={direction}
@@ -74,31 +67,40 @@ const OnboardingPage = () => {
 
       {/* 인디케이터 */}
       <OnboardingIndicators
-        total={slides.length - 1}
-        current={Math.min(index, slides.length - 2)}
+        total={slides.length}
+        current={Math.min(index, slides.length - 1)}
       />
 
       {/* 버튼 */}
       <div className="w-full max-w-md px-4">
         <div className="flex justify-center gap-4 mb-4">
-          <button
+          <EmButton
             onClick={handlePrev}
-            disabled={index === 0}
-            className={`bg-em-gray text-white rounded-full px-6 py-2 transition-opacity duration-300 ${index === 0 ? "cursor-default" : "hover:bg-em-black"}`}>
+            variant={index === 0 ? "disabled" : "default"}
+            shape="default"
+            size="sm"
+            weight="semibold"
+            className={index === 0 ? "cursor-default" : ""}>
             이전
-          </button>
-          <button
+          </EmButton>
+          <EmButton
             onClick={handleNext}
-            className="bg-em-gray hover:bg-em-black text-white rounded-full px-6 py-2">
-            {index === slides.length - 2 ? "시작" : "다음"}
-          </button>
+            variant={index === slides.length - 1 ? "destructive" : "default"}
+            shape="default"
+            size="sm"
+            weight="semibold">
+            {index === slides.length - 1 ? "시작" : "다음"}
+          </EmButton>
         </div>
         <div className="flex justify-end">
-          <button
+          <EmButton
             onClick={handleSkip}
+            variant="ghost"
+            size="sm"
+            weight="normal"
             className="text-sm text-em-gray hover:underline flex items-center gap-1">
             건너뛰기 <span>&gt;&gt;</span>
-          </button>
+          </EmButton>
         </div>
       </div>
     </div>
