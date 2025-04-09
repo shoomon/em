@@ -73,7 +73,12 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: env.VITE_BASE_SERVER_URL,
           changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, ""),
+          rewrite: (path) => {
+            if (env.VITE_BASE_SERVER_URL.includes("localhost")) {
+              return path.replace(/^\/api/, "")
+            }
+            return path
+          },
         },
       },
     },
