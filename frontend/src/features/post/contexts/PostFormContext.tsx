@@ -129,7 +129,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
         await createPostAsync(formData)
         // 게시글 작성 성공 시 메인 페이지로 이동
         alert("게시글이 작성되었습니다.")
-        navigate("/", { replace: true })
+        navigate("/main", { replace: true })
       } catch (error) {
         console.error(error)
         alert("게시글 작성에 실패했습니다.")

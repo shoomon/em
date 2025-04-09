@@ -40,7 +40,7 @@ const AgreementForm = () => {
       })
 
       if (isTermsAgreed) {
-        navigate("/", { replace: true })
+        navigate("/main", { replace: true })
       }
     } catch (error) {
       console.error(error)
