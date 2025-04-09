@@ -51,6 +51,10 @@ const OnboardingPage = () => {
     }
   }
 
+  const handleStart = () => {
+    navigate("/login", { replace: true, viewTransition: true })
+  }
+
   const handleDragEnd = (_: any, info: any) => {
     if (info.offset.x < -100) paginate(1)
     else if (info.offset.x > 100) paginate(-1)
@@ -100,7 +104,7 @@ const OnboardingPage = () => {
       <div className="w-full max-w-md px-4">
         <div className="flex justify-center">
           <EmButton
-            onClick={handleNext}
+            onClick={handleStart}
             variant="default"
             className="flex items-center justify-center gap-1 transition-all duration-300 w-full">
             <span>시작하기</span>
