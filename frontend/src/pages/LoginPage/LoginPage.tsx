@@ -1,4 +1,5 @@
 import logo from "@/assets/em_logo_simple.svg"
+import EmLoading from "@/components/EmLoading/EmLoading"
 import LoginButton from "@/features/auth/components/LoginButton"
 import { LOGIN_PROVIDERS } from "@/features/auth/constants"
 import { useQuery } from "@tanstack/react-query"
@@ -6,7 +7,7 @@ import axios from "axios"
 import { Navigate } from "react-router-dom"
 
 const LoginPage = () => {
-  const { isSuccess } = useQuery({
+  const { isSuccess, isLoading } = useQuery({
     queryKey: ["isLoggedIn"],
     queryFn: () => {
       return axios.get("/api/users", {
@@ -17,6 +18,10 @@ const LoginPage = () => {
     },
     retry: false,
   })
+
+  if (isLoading) {
+    return <EmLoading className="w-full h-dvh" />
+  }
 
   if (isSuccess) {
     return <Navigate to="/" replace />
