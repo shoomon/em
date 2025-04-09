@@ -14,7 +14,7 @@ const TermsAgreementPage = () => {
   }
 
   return !isPending && isTermsAgreed ? (
-    <Navigate to="/" replace />
+    <Navigate to="/main" replace />
   ) : (
     <div className="h-dvh w-full flex flex-col">
       <EmSection className="h-full py-16">

@@ -24,7 +24,7 @@ const LoginPage = () => {
   }
 
   if (isSuccess) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/main" replace />
   }
 
   return (

@@ -139,6 +139,26 @@
   color: var(--color-em-white) !important;
 }
 
+.react-calendar__year-view__months__month.react-calendar__tile--active {
+  position: relative;
+  color: var(--color-em-white) !important;
+  z-index: 0;
+}
+
+/* 원형 배경 */
+.react-calendar__year-view__months__month.react-calendar__tile--active::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color-em-black);
+  border-radius: 9999px;
+  z-index: -1;
+}
+
 /* hover 효과 */
 .react-calendar__tile:enabled:hover {
   background-color: var(--color-em-gray-sm);

@@ -135,7 +135,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
           queryKey: ["emotionReport"],
           exact: false, // 정확히 일치하는 키가 없으면 모든 키를 참조
         })
-        navigate("/", { replace: true })
+        navigate("/main", { replace: true })
       } catch (error) {
         console.error(error)
         alert("게시글 작성에 실패했습니다.")
