@@ -23,7 +23,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen bg-em-white">
+    <div className="flex flex-col items-center justify-center w-full h-dvh bg-em-white">
       <section className="flex flex-col items-center justify-center flex-1 gap-3">
         <img src={logo} alt="로고" className="w-24 animate-pulse" />
         <div className="flex flex-col items-center justify-center gap-1 text-center text-em-black/40">
