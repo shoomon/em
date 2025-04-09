@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
 interface OnboardingSlideProps {
   id: number
@@ -19,6 +20,19 @@ const OnboardingSlide = ({
   onDragEnd,
 }: OnboardingSlideProps) => {
   const isFirstSlide = slide.id === 0
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+
+  useEffect(() => {
+    // 비디오 프리로딩
+    if (!isFirstSlide) {
+      const video = document.createElement("video")
+      video.src = slide.video_url
+      video.preload = "auto"
+      video.onloadeddata = () => {
+        setIsVideoLoaded(true)
+      }
+    }
+  }, [slide.video_url, isFirstSlide])
 
   return (
     <div className="w-full h-full flex flex-col gap-6 items-center">
@@ -45,7 +59,8 @@ const OnboardingSlide = ({
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex flex-col h-[55vh] items-center">
+        className="flex flex-col h-[55vh] items-center"
+        id={`video-${slide.id}`}>
         <div
           className={`flex rounded-lg overflow-hidden aspect-[9/18] h-full ${
             !isFirstSlide
@@ -53,13 +68,21 @@ const OnboardingSlide = ({
               : "items-center justify-center"
           }`}>
           {id === 0 ? (
-            <img src={slide.video_url} alt="" className="w-full h-full" />
+            <img
+              src={slide.video_url}
+              alt=""
+              className="w-full h-full"
+              loading="eager"
+            />
           ) : (
             <video
               src={slide.video_url}
               autoPlay
               playsInline
-              className="object-contain rounded-md items-center w-full h-full"
+              muted
+              className={`object-contain rounded-md items-center w-full h-full ${
+                isVideoLoaded ? "opacity-100" : "opacity-0"
+              } transition-opacity duration-300`}
             />
           )}
         </div>
