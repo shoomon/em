@@ -2,12 +2,13 @@ import EmButton from "@/components/EmButton/EmButton"
 import OnboardingIndicators from "@/features/onboarding/components/OnboardingIndicators"
 import OnboardingSlide from "@/features/onboarding/components/OnboardingSlide"
 import { slides } from "@/features/onboarding/constants/slides"
+import { cn } from "@/utils/cn"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useState } from "react"
-import { Navigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 
 const OnboardingPage = () => {
   const { isSuccess } = useQuery({
@@ -24,6 +25,7 @@ const OnboardingPage = () => {
 
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(0)
+  const navigate = useNavigate()
 
   if (isSuccess) {
     return <Navigate to="/main" replace />
@@ -46,12 +48,12 @@ const OnboardingPage = () => {
     if (index < slides.length - 1) {
       paginate(1)
     } else {
-      window.location.href = "/login"
+      navigate("/login", { replace: true, viewTransition: true })
     }
   }
 
   const handleSkip = () => {
-    window.location.href = "/login"
+    navigate("/login", { replace: true, viewTransition: true })
   }
 
   const handleDragEnd = (_: any, info: any) => {
@@ -59,17 +61,19 @@ const OnboardingPage = () => {
     else if (info.offset.x > 100) paginate(-1)
   }
 
+  const isLastSlide = index < slides.length - 1
+
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-em-white px-6 py-4 gap-4">
+    <div className="min-h-dvh flex flex-col justify-center items-center bg-em-white px-6 py-4 gap-8">
       {/* 슬라이드 영역 */}
-      <div className="w-full max-w-screen-md flex flex-col space-y-6 items-center">
+      <div className="w-full h-full flex flex-col items-center">
         {/* 왼쪽 화살표 */}
         {index > 0 && (
           <EmButton
             variant="ghost"
             onClick={handlePrev}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 text-2xl text-em-gray hover:text-black transition">
-            <ChevronLeft className="w-5 h-10" />
+            className="absolute -left-1 top-1/2 transform -translate-y-1/2 p-2 text-2xl text-em-gray hover:text-black transition">
+            <ChevronLeft className="size-10" />
           </EmButton>
         )}
 
@@ -86,8 +90,8 @@ const OnboardingPage = () => {
           <EmButton
             variant="ghost"
             onClick={handleNext}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 text-2xl text-em-gray hover:text-black transition">
-            <ChevronRight className="w-5 h-10" />
+            className="absolute -right-1 top-1/2 transform -translate-y-1/2 p-2 text-2xl text-em-gray hover:text-black transition">
+            <ChevronRight className="size-10" />
           </EmButton>
         )}
       </div>
@@ -100,45 +104,22 @@ const OnboardingPage = () => {
 
       {/* 버튼 */}
       <div className="w-full max-w-md px-4">
-        {/* <div className="flex justify-center gap-4 mb-4">
-          <EmButton
-            onClick={handlePrev}
-            variant={index === 0 ? "disabled" : "outline"}
-            shape="default"
-            size="sm"
-            weight="semibold"
-            className={index === 0 ? "cursor-default" : ""}>
-            이전
-          </EmButton>
-          <EmButton
-            onClick={handleNext}
-            variant={index === slides.length - 1 ? "destructive" : "default"}
-            shape="default"
-            size="sm"
-            weight="semibold">
-            {index === slides.length - 1 ? "시작" : "다음"}
-          </EmButton>
-        </div> */}
         <div className="flex justify-center">
-          {index < slides.length - 1 ? (
-            <EmButton
-              onClick={handleSkip}
-              variant="ghost"
-              size="sm"
-              weight="normal"
-              className="text-sm text-em-gray hover:underline flex items-center gap-1">
-              건너뛰기 <span>&gt;&gt;</span>
-            </EmButton>
-          ) : (
-            <EmButton
-              onClick={handleNext}
-              variant="default"
-              size="sm"
-              weight="normal"
-              className="text-sm text-em-white flex items-center gap-1">
-              시작하기
-            </EmButton>
-          )}
+          <EmButton
+            onClick={isLastSlide ? handleSkip : handleNext}
+            variant={isLastSlide ? "outline" : "default"}
+            className={cn(
+              "flex items-center justify-center gap-1 transition-all duration-300 w-full",
+              !isLastSlide && "bg-em-black text-em-white",
+            )}>
+            {isLastSlide ? (
+              <span>
+                건너뛰기 <span>&gt;&gt;</span>
+              </span>
+            ) : (
+              <span>시작하기</span>
+            )}
+          </EmButton>
         </div>
       </div>
     </div>

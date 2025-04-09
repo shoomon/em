@@ -19,7 +19,7 @@ const OnboardingSlide = ({
   const isFirstSlide = slide.id === 0
 
   return (
-    <>
+    <div className="w-full h-full flex flex-col gap-6 items-center">
       <motion.div
         key={slide.id + "-text"}
         initial={{ opacity: 0 }}
@@ -43,25 +43,22 @@ const OnboardingSlide = ({
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 0 }}
         transition={{ duration: 0.2 }}
-        className="w-full flex flex-col h-[55vh] items-center">
-        <div className="w-full max-w-xs flex items-center justify-center">
-          <div
-            className={`flex rounded-lg overflow-hidden ${
-              !isFirstSlide
-                ? "border-2 border-em-gray p-1 bg-em-white"
-                : "items-center justify-center"
-            }`}>
-            <video
-              src={slide.video_url}
-              autoPlay
-              muted
-              playsInline
-              className="object-contain w-full max-h-[55vh] h-auto rounded-md items-center"
-            />
-          </div>
+        className="flex flex-col h-[55vh] items-center">
+        <div
+          className={`flex rounded-lg overflow-hidden aspect-[9/18] h-full ${
+            !isFirstSlide
+              ? "border-2 border-em-gray p-1 bg-em-white"
+              : "items-center justify-center"
+          }`}>
+          <video
+            src={slide.video_url}
+            autoPlay
+            playsInline
+            className="object-contain rounded-md items-center w-full h-full"
+          />
         </div>
       </motion.div>
-    </>
+    </div>
   )
 }
 
