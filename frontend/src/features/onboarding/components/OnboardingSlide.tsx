@@ -39,10 +39,10 @@ const OnboardingSlide = ({
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={onDragEnd}
-        initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
+        initial={{ opacity: 0, x: direction > 0 ? 10 : -10 }}
         animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: direction < 0 ? 100 : -100 }}
-        transition={{ duration: 0.5 }}
+        exit={{ opacity: 0, x: 0 }}
+        transition={{ duration: 0.2 }}
         className="w-full flex flex-col h-[55vh] items-center">
         <div className="w-full max-w-xs flex items-center justify-center">
           <div
