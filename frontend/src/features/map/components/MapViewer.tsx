@@ -55,7 +55,7 @@ const MapViewer = ({
         position: new window.naver.maps.LatLng(location.lat, location.lng),
         map: mapRef.current,
         icon: {
-          content: `<div class="size-6 bg-rose-400 border-4 border-white rounded-full" />`,
+          content: `<div class="size-6 bg-blue-400 border-4 border-white rounded-full" />`,
           anchor: new window.naver.maps.Point(12, 12),
         },
         visible: isLocationPermissionGranted,
@@ -93,12 +93,6 @@ const MapViewer = ({
               .querySelector("div:first-child")
             if (firstChild) {
               firstChild.innerHTML = count
-              firstChild.classList.add(
-                "flex",
-                "items-center",
-                "justify-center",
-                "text-lg",
-              )
             }
           }
         },
@@ -201,8 +195,8 @@ const MapViewer = ({
         position: new window.naver.maps.LatLng(point.lat, point.lng),
         map: mapRef.current,
         icon: {
-          content: `<div class="flex justify-center items-center text-lg size-8 bg-em-black/40 rounded-full text-white hover:bg-em-black">1</div>`,
-          anchor: new window.naver.maps.Point(12, 12),
+          content: `<div class="flex items-center justify-center animate-bounce text-sm opacity-65 text-em-white size-8 font-bold"style="background:url(/src/assets/heart.svg);background-size:contain;">1</div>`,
+          anchor: new window.naver.maps.Point(16, 16),
         },
       })
 
