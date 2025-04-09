@@ -19,6 +19,10 @@ export const useMyPostsByDate = (date: string) => {
     onSuccess: () => {
       refetch()
       queryClient.refetchQueries({ queryKey: ["myPosts"], exact: false })
+      queryClient.refetchQueries({
+        queryKey: ["emotion-calendar"],
+        exact: false,
+      })
       alert("해당 게시글이 삭제 되었습니다.")
     },
   })

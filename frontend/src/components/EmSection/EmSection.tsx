@@ -18,7 +18,7 @@ const EmSection = ({
   return (
     <section
       className={cn(
-        "w-full h-full flex flex-col gap-5 p-5 transition-all duration-200",
+        "w-full flex flex-col gap-5 p-5 transition-all duration-200",
         "bg-em-white",
         hasRound && "rounded-xl",
         hasBorder && "border border-em-gray",

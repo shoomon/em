@@ -7,7 +7,7 @@ import MusicSelector from "@/features/music/components/MusicSelector"
 import { Music } from "@/features/music/types/music"
 import useDrawer from "@/hooks/useDrawer"
 import { ListMusicIcon } from "lucide-react"
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useRef, useState } from "react"
 import { usePostForm } from "../../contexts/PostFormContext"
 
 const PostContentsContainer = () => {
@@ -34,12 +34,6 @@ const PostContentsContainer = () => {
     e.stopPropagation()
     handleMusicChange(null)
   }
-
-  useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.focus()
-    }
-  }, [])
 
   const musicData = {
     musicId,
