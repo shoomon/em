@@ -1,11 +1,19 @@
+import EmLoading from "@/components/EmLoading/EmLoading"
 import PostCreateForm from "@/features/post/components/PostCreate/PostCreateForm"
 import PostCreateProgress from "@/features/post/components/PostCreate/PostCreateProgress"
-import PostFormProvider from "@/features/post/contexts/PostFormContext"
+import PostFormProvider, {
+  usePostForm,
+} from "@/features/post/contexts/PostFormContext"
 import useStackLayoutStore from "@/store/useStackLayoutStore"
 import { useEffect } from "react"
 
 const PostCreatePage = () => {
   const setTitle = useStackLayoutStore((state) => state.setTitle)
+  const { isSubmitCompleted } = usePostForm()
+
+  if (isSubmitCompleted) {
+    return <EmLoading className="w-full h-dvh" />
+  }
 
   useEffect(() => {
     setTitle("게시글 작성")
