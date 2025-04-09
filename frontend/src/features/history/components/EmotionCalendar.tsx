@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Calendar as ReactCalendar } from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 // import { useNavigate } from "react-router-dom"
-import { fetchEmotionCalendar } from "../api/emotionCalendarApi"
+import useCalendarEmotions from "../hooks/useCalendarEmotions"
 import { getWeekdayColorClass } from "../utils/getCalendarColor"
 import { getEmotionColorClass } from "../utils/getEmotionColor"
 import "./EmotionCalendar.css"
@@ -18,13 +18,9 @@ const EmotionCalendar = ({
 }: EmotionCalendarProps) => {
   // const navigate = useNavigate()
   const today = useMemo(() => new Date(), [])
-
   const [calendarView, setCalendarView] = useState<
     "month" | "year" | "decade" | "century"
   >("month")
-
-  const [emotionData, setEmotionData] = useState<Record<string, string>>({})
-
   const [activeMonth, setActiveMonth] = useState(() => {
     // const saved = sessionStorage.getItem("activeMonth")
     // if (saved) return saved
@@ -33,21 +29,7 @@ const EmotionCalendar = ({
     const month = String(today.getMonth() + 1).padStart(2, "0")
     return `${year}-${month}`
   })
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchEmotionCalendar(activeMonth)
-        setEmotionData(data.dateColor || {})
-      } catch (error) {
-        console.error("Failed to fetch calendar data:", error)
-      }
-    }
-
-    fetchData()
-
-    // sessionStorage.setItem("activeMonth", activeMonth)
-  }, [activeMonth])
+  const { data } = useCalendarEmotions(activeMonth)
 
   const handleDateClick = (date: Date) => {
     // setSelectedDate(date)
@@ -90,7 +72,7 @@ const EmotionCalendar = ({
           if (calendarView !== "month") return null
 
           const day = date.getDate().toString()
-          const emotion = emotionData[day]
+          const emotion = data ? data[day] : null
           const emotionBgClass = emotion ? getEmotionColorClass(emotion) : ""
           const textColorClass = getWeekdayColorClass(date)
 

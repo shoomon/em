@@ -31,6 +31,11 @@ const HomePage = () => {
     drawerKey: "home",
     isOpen: isDrawerOpen,
     setIsOpen: (isDrawerOpen: boolean) => {
+      // Drawer가 닫히면, 다음에 열 때 첫 번째 탭에서 시작하도록 설정
+      if (!isDrawerOpen) {
+        setCurrentTab("posts")
+      }
+
       setIsDrawerOpen(isDrawerOpen)
       setIsStoppedWatching(isDrawerOpen)
     },
@@ -69,6 +74,11 @@ const HomePage = () => {
       <EmDrawer
         open={isDrawerOpen}
         onOpenChange={() => {
+          // Drawer가 닫히면, 다음에 열 때 첫 번째 탭에서 시작하도록 설정
+          if (!isDrawerOpen) {
+            setCurrentTab("posts")
+          }
+
           setIsDrawerOpen(!isDrawerOpen)
           setIsStoppedWatching(!isDrawerOpen)
         }}>

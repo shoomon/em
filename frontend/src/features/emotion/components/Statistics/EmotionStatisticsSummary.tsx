@@ -12,9 +12,7 @@ const EmotionStatisticsSummary = ({
       <p className="text-center text-gray-700 flex flex-col gap-2">
         <span>
           <span className="font-medium">이번 달에는</span>
-          <span className="text-violet-600 font-bold mx-2 xs:text-sm">
-            {emotionName}
-          </span>
+          <span className="text-violet-600 font-bold mx-2">{emotionName}</span>
           <span>감정을</span>
         </span>
         <span>가장 많이 느끼셨어요!</span>
