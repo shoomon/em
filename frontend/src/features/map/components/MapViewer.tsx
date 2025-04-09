@@ -195,7 +195,7 @@ const MapViewer = ({
         position: new window.naver.maps.LatLng(point.lat, point.lng),
         map: mapRef.current,
         icon: {
-          content: `<div class="flex items-center justify-center animate-bounce text-sm opacity-65 text-em-white size-8 font-bold"style="background:url(/src/assets/heart.svg);background-size:contain;">1</div>`,
+          content: `<div class="flex items-center justify-center animate-bounce text-sm opacity-65 text-em-white size-8 font-bold"style="background:url(/assets/heart.svg);background-size:contain;">1</div>`,
           anchor: new window.naver.maps.Point(16, 16),
         },
       })
