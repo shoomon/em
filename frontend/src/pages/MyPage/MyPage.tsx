@@ -13,7 +13,7 @@ const MyPage = () => {
       <SettingsMenuSection />
       <TermsOfServiceSection />
       {/* {renderTabContent()} */}
-      <div className="flex flex-1 justify-end items-end h-full p-4">
+      <div className="flex flex-1 justify-end items-end h-full px-4 py-0">
         <LogoutText />
       </div>
     </div>
