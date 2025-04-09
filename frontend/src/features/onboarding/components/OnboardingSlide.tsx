@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 
 interface OnboardingSlideProps {
+  id: number
   direction: number
   slide: {
     id: number
@@ -12,6 +13,7 @@ interface OnboardingSlideProps {
 }
 
 const OnboardingSlide = ({
+  id,
   direction,
   slide,
   onDragEnd,
@@ -50,12 +52,16 @@ const OnboardingSlide = ({
               ? "border-2 border-em-gray p-1 bg-em-white"
               : "items-center justify-center"
           }`}>
-          <video
-            src={slide.video_url}
-            autoPlay
-            playsInline
-            className="object-contain rounded-md items-center w-full h-full"
-          />
+          {id === 0 ? (
+            <img src={slide.video_url} alt="" className="w-full h-full" />
+          ) : (
+            <video
+              src={slide.video_url}
+              autoPlay
+              playsInline
+              className="object-contain rounded-md items-center w-full h-full"
+            />
+          )}
         </div>
       </motion.div>
     </div>

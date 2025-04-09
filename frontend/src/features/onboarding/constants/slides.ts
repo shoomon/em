@@ -1,7 +1,7 @@
 export const slides = [
   {
     id: 0,
-    video_url: "video/onboarding/logo.mp4",
+    video_url: "video/onboarding/logo_start.gif",
     title: "이음",
     subtitle: "지금 여기, 감정의 순간을 기록하다",
   },

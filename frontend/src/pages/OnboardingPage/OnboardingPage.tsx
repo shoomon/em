@@ -2,7 +2,6 @@ import EmButton from "@/components/EmButton/EmButton"
 import OnboardingIndicators from "@/features/onboarding/components/OnboardingIndicators"
 import OnboardingSlide from "@/features/onboarding/components/OnboardingSlide"
 import { slides } from "@/features/onboarding/constants/slides"
-import { cn } from "@/utils/cn"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { AnimatePresence } from "framer-motion"
@@ -52,16 +51,10 @@ const OnboardingPage = () => {
     }
   }
 
-  const handleSkip = () => {
-    navigate("/login", { replace: true, viewTransition: true })
-  }
-
   const handleDragEnd = (_: any, info: any) => {
     if (info.offset.x < -100) paginate(1)
     else if (info.offset.x > 100) paginate(-1)
   }
-
-  const isLastSlide = index < slides.length - 1
 
   return (
     <div className="min-h-dvh flex flex-col justify-center items-center bg-em-white px-6 py-4 gap-8">
@@ -80,6 +73,7 @@ const OnboardingPage = () => {
         <AnimatePresence mode="wait" custom={direction}>
           <OnboardingSlide
             key={slides[index].id}
+            id={slides[index].id}
             direction={direction}
             slide={slides[index]}
             onDragEnd={handleDragEnd}
@@ -106,19 +100,10 @@ const OnboardingPage = () => {
       <div className="w-full max-w-md px-4">
         <div className="flex justify-center">
           <EmButton
-            onClick={isLastSlide ? handleSkip : handleNext}
-            variant={isLastSlide ? "outline" : "default"}
-            className={cn(
-              "flex items-center justify-center gap-1 transition-all duration-300 w-full",
-              !isLastSlide && "bg-em-black text-em-white",
-            )}>
-            {isLastSlide ? (
-              <span>
-                건너뛰기 <span>&gt;&gt;</span>
-              </span>
-            ) : (
-              <span>시작하기</span>
-            )}
+            onClick={handleNext}
+            variant="default"
+            className="flex items-center justify-center gap-1 transition-all duration-300 w-full">
+            <span>시작하기</span>
           </EmButton>
         </div>
       </div>
