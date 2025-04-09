@@ -1,8 +1,5 @@
 const bgImage = "/assets/heart.svg"
-
-const markerContents = `
-    <div class="flex items-center justify-center animate-bounce text-sm opacity-65 text-em-white size-8 font-semibold"
-    style="background:url(${bgImage});background-size:contain;"></div>`
+const markerContents = `<div class="flex items-center justify-center animate-bounce text-sm opacity-65 text-em-white size-8 font-semibold" style="background:url(${bgImage});background-size:contain;"></div>`
 
 const htmlClusterMarkers = [
   {
