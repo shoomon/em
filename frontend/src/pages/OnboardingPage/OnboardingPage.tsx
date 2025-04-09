@@ -2,22 +2,31 @@ import EmButton from "@/components/EmButton/EmButton"
 import OnboardingIndicators from "@/features/onboarding/components/OnboardingIndicators"
 import OnboardingSlide from "@/features/onboarding/components/OnboardingSlide"
 import { slides } from "@/features/onboarding/constants/slides"
-import {
-  completeOnboarding,
-  hasSeenOnboarding,
-} from "@/features/onboarding/utils/onboarding"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 import { AnimatePresence } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { Navigate } from "react-router-dom"
 
 const OnboardingPage = () => {
+  const { isSuccess } = useQuery({
+    queryKey: ["isLoggedIn"],
+    queryFn: () => {
+      return axios.get("/api/users", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+    },
+    retry: false,
+  })
+
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(0)
 
-  useEffect(() => {
-    if (hasSeenOnboarding()) {
-      window.location.href = "/main"
-    }
-  }, [])
+  if (isSuccess) {
+    return <Navigate to="/main" replace />
+  }
 
   const paginate = (newDirection: number) => {
     const newIndex = index + newDirection
@@ -36,13 +45,11 @@ const OnboardingPage = () => {
     if (index < slides.length - 1) {
       paginate(1)
     } else {
-      completeOnboarding()
       window.location.href = "/login"
     }
   }
 
   const handleSkip = () => {
-    completeOnboarding()
     window.location.href = "/login"
   }
 
