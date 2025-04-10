@@ -55,6 +55,7 @@ body [data-vaul-overlay] {
 :root {
   --header-height: 3.5rem;
   --navigation-bar-height: 4rem;
+  color-scheme: light; /* 브라우저 내부 UI를 light로 고정 */
 }
 
 @layer base {
