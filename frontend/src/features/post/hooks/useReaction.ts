@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { fetchPostReaction } from "../api/postApi"
 import { ReactionType } from "../types/post"
 
@@ -64,7 +65,7 @@ const useReaction = ({ postId, emotionInfo }: UseReactionProps) => {
       // 요청에 실패하면 이전 상태로 롤백
       setLikeCounts({ ...emotionInfo.emotionCounts })
       setLikedByMe(emotionInfo.selectedEmotion)
-      alert("좋아요 요청에 실패 했습니다.")
+      toast.error("좋아요 요청에 실패 했습니다.")
     },
   })
 

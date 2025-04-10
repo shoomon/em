@@ -23,7 +23,7 @@ const MainNavigationBar = () => {
         id: 1,
         name: "이음글",
         icon: <MessageSquareHeartIcon className="size-full" />,
-        path: "/",
+        path: "/main",
       },
       {
         id: 2,
@@ -33,7 +33,7 @@ const MainNavigationBar = () => {
       },
       {
         id: 3,
-        name: "캘린더",
+        name: "감정 캘린더",
         icon: <CalendarIcon className="size-full" />,
         path: "/calendar",
       },

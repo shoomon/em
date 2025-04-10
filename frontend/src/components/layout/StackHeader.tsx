@@ -14,14 +14,14 @@ const StackHeader = memo(() => {
     if (location.pathname === "/posts/create") {
       const shouldLeave = confirm("게시글 작성을 취소하시겠습니까?")
       if (shouldLeave) {
-        navigate("/", { replace: true, viewTransition: true })
+        navigate("/main", { replace: true, viewTransition: true })
       }
     } else if (location.pathname === "/mypage/list") {
       // MyPostListPage에서는 마이페이지로 이동
       navigate("/calendar", { viewTransition: true })
     } else {
       // 기본적으로는 홈으로 이동
-      navigate("/", { viewTransition: true })
+      navigate("/main", { viewTransition: true })
     }
   }
 

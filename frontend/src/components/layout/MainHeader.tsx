@@ -9,7 +9,7 @@ const MainHeader = memo(
     return (
       <header className="flex items-center justify-between h-full px-5 border-b border-em-gray-sm">
         <Link
-          to="/"
+          to="/main"
           className="flex items-center justify-center h-full cursor-pointer">
           <img src={logo} alt="logo" className="w-full" />
         </Link>

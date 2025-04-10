@@ -1,6 +1,7 @@
 import { EmotionAnalysisResponse } from "@/features/emotion/types/emotion"
 import { LatLng } from "@/features/map/types/map"
 import { Music } from "@/features/music/types/music"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   createContext,
   FormEvent,
@@ -10,6 +11,7 @@ import {
   useState,
 } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import { toast } from "sonner"
 import usePostCreate from "../hooks/usePostCreate"
 import {
   PostCreateRequest,
@@ -29,11 +31,16 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const [_, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const { createPostAsync, isPending } = usePostCreate()
+  const queryClient = useQueryClient()
 
   // 스탭 상태 관리
   const [currentStep, setCurrentStep] = useState<PostCreateStep>(
     PostCreateStep.Map,
   )
+
+  // 폼 제출 완료 여부 관리
+  const [isSubmitCompleted, setIsSubmitCompleted] = useState(false)
+
   // Form 상태 관리
   const [formData, setFormData] = useState<PostCreateRequest>({
     content: "",
@@ -82,7 +89,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const updateStep = useCallback(
     (step: PostCreateStep) => {
       setCurrentStep(step)
-      setSearchParams({ step: step.toString() })
+      setSearchParams({ step: step.toString() }, { replace: true })
     },
     [setCurrentStep, setSearchParams],
   )
@@ -128,11 +135,19 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
       try {
         await createPostAsync(formData)
         // 게시글 작성 성공 시 메인 페이지로 이동
-        alert("게시글이 작성되었습니다.")
-        navigate("/", { replace: true })
+        queryClient.refetchQueries({
+          queryKey: ["emotionReport"],
+          exact: false, // 정확히 일치하는 키가 없으면 모든 키를 참조
+        })
+        setIsSubmitCompleted(true)
+
+        setTimeout(() => {
+          toast.success("게시글이 작성되었습니다.")
+          navigate("/main", { replace: true })
+        }, 1000)
       } catch (error) {
         console.error(error)
-        alert("게시글 작성에 실패했습니다.")
+        toast.error("게시글 작성에 실패했습니다.")
       }
     },
     [formData, createPostAsync, navigate],
@@ -145,6 +160,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
     isSubmitPending: isPending,
     emotionAnalysisData,
     isCurse,
+    isSubmitCompleted,
   }
   const postFormActionValue = {
     updateStep,

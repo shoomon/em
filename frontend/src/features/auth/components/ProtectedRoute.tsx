@@ -1,3 +1,4 @@
+import EmLoading from "@/components/EmLoading/EmLoading"
 import useTermAgreement from "@/features/settings/hooks/useTermAgreement"
 import { jwtDecode } from "jwt-decode"
 import { Navigate, Outlet } from "react-router-dom"
@@ -5,18 +6,12 @@ import { Navigate, Outlet } from "react-router-dom"
 const ProtectedRoute = () => {
   // 토큰 조회
   const accessToken = localStorage.getItem("accessToken")
-
-  const { data: isTermsAgreed, isError } = useTermAgreement()
-
-  // const { isError } = useQuery({
-  //   queryKey: ["isLoggedIn"],
-  //   queryFn: () => {
-  //     return axios.get("/user")
-  //   },
-  //   enabled: !!accessToken,
-  //   staleTime: 0, // 데이터를 캐시에 저장하지 않음
-  //   gcTime: 0, // 데이터를 캐시에 저장하지 않음
-  // })
+  const {
+    data: isTermsAgreed,
+    isError,
+    isPending,
+    isFetched,
+  } = useTermAgreement()
 
   let isTokenValid = false
 
@@ -30,10 +25,18 @@ const ProtectedRoute = () => {
     }
   }
 
-  // 토큰이 없거나 유효하지 않으면 로그인 페이지로 리다이렉트
+  // 로딩 중일 때는 리다이렉트하지 않고 대기
+  if (isPending && isFetched) {
+    return <EmLoading className="w-full h-dvh" />
+  }
+
+  // 인증 실패 시 로그인 페이지로 리다이렉트
   if (!accessToken || !isTokenValid || isError) {
     return <Navigate to="/login" replace />
-  } else if (!isTermsAgreed) {
+  }
+
+  // 약관 동의가 필요한 경우
+  if (!isTermsAgreed && isFetched) {
     return <Navigate to="/terms-agreement" replace />
   }
 

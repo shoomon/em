@@ -22,7 +22,7 @@ const AddressDisplay = ({ location }: AddressDisplayProps) => {
 
   return (
     <div className="absolute top-0 left-0 z-10 flex items-center w-full gap-2 p-3 bg-gradient-to-b from-em-white via-em-white/80 to-em-white/10">
-      <MapPinIcon className="stroke-red-500" />
+      <MapPinIcon className="stroke-rose-400 fill-em-white stroke-3" />
       <p className="font-semibold">{address}</p>
     </div>
   )

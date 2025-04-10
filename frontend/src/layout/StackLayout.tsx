@@ -7,7 +7,7 @@ const StackLayout = () => {
   return (
     <BaseLayout>
       {/* header */}
-      <div className="sticky bg-em-white top-0 h-[var(--header-height)] max-w-[600px] z-40 w-full">
+      <div className="sticky bg-em-white top-0 h-[var(--header-height)] max-w-[600px] z-[200] w-full">
         <StackHeader />
       </div>
       {/* main */}

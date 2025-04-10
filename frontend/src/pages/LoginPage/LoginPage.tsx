@@ -1,4 +1,5 @@
 import logo from "@/assets/em_logo_simple.svg"
+import EmLoading from "@/components/EmLoading/EmLoading"
 import LoginButton from "@/features/auth/components/LoginButton"
 import { LOGIN_PROVIDERS } from "@/features/auth/constants"
 import { useQuery } from "@tanstack/react-query"
@@ -6,7 +7,7 @@ import axios from "axios"
 import { Navigate } from "react-router-dom"
 
 const LoginPage = () => {
-  const { isSuccess } = useQuery({
+  const { isSuccess, isLoading } = useQuery({
     queryKey: ["isLoggedIn"],
     queryFn: () => {
       return axios.get("/api/users", {
@@ -18,12 +19,16 @@ const LoginPage = () => {
     retry: false,
   })
 
+  if (isLoading) {
+    return <EmLoading className="w-full h-dvh" />
+  }
+
   if (isSuccess) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/main" replace />
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen bg-em-white">
+    <div className="flex flex-col items-center justify-center w-full h-dvh bg-em-white">
       <section className="flex flex-col items-center justify-center flex-1 gap-3">
         <img src={logo} alt="로고" className="w-24 animate-pulse" />
         <div className="flex flex-col items-center justify-center gap-1 text-center text-em-black/40">

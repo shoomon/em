@@ -1,6 +1,7 @@
 import { getDistance } from "@/utils/math"
 import { useEffect, useRef, useState } from "react"
 import { LatLng } from "./../features/map/types/map"
+import { toast } from "sonner"
 
 const useGps = () => {
   const [isLocationPermissionGranted, setIsLocationPermissionGranted] =
@@ -15,6 +16,7 @@ const useGps = () => {
     lng: 127.0396029,
   })
   const currentLocationRef = useRef(currentLocation) // setState와 watchPosition 모두 비동기로 동작하기 때문에 필요!
+  const lastFetchedLocationRef = useRef(lastFetchedLocation)
   const watchId = useRef<number | null>(null)
 
   const watchPosition = () => {
@@ -31,8 +33,8 @@ const useGps = () => {
           newLocation.lng,
         )
 
-        // 1m 단위로 현재 위치를 갱신 => 마커에 반영
-        if (distance < 1) {
+        // 2m 단위로 현재 위치를 갱신 => 마커에 반영
+        if (distance < 2) {
           return
         }
 
@@ -40,13 +42,14 @@ const useGps = () => {
         setCurrentLocation(newLocation)
 
         distance = getDistance(
-          lastFetchedLocation.lat,
-          lastFetchedLocation.lng,
+          lastFetchedLocationRef.current.lat,
+          lastFetchedLocationRef.current.lng,
           newLocation.lat,
           newLocation.lng,
         )
         // 50m 단위로 마지막 API 호출 위치를 갱신 => 주소 및 게시글 조회에 사용
         if (distance >= 50) {
+          lastFetchedLocationRef.current = newLocation
           setLastFetchedLocation(newLocation)
         }
       },
@@ -85,7 +88,7 @@ const useGps = () => {
         watchPosition()
       },
       () => {
-        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요")
+        toast.error("위치 서비스 이용을 위해 위치 권한을 허용해 주세요")
         setIsLocationPermissionGranted(false)
       },
       {

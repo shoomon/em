@@ -19,7 +19,7 @@ const TermPage = () => {
   }, [])
 
   return (
-    <div className="h-dvh w-full flex flex-col">
+    <div className="w-full flex flex-col">
       <EmSection>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}

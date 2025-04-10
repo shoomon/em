@@ -26,7 +26,7 @@ const NotFoundPage = () => {
 
       <Button
         className="w-full"
-        onClick={() => navigate("/", { replace: true, viewTransition: true })}>
+        onClick={() => navigate("/main", { replace: true, viewTransition: true })}>
         홈으로 돌아가기
       </Button>
     </div>
