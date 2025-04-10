@@ -1,5 +1,4 @@
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
 
 interface OnboardingSlideProps {
   id: number
@@ -20,19 +19,19 @@ const OnboardingSlide = ({
   onDragEnd,
 }: OnboardingSlideProps) => {
   const isFirstSlide = slide.id === 0
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  // const [isVideoLoaded, setIsVideoLoaded] = useState(false)
 
-  useEffect(() => {
-    // 비디오 프리로딩
-    if (!isFirstSlide) {
-      const video = document.createElement("video")
-      video.src = slide.video_url
-      video.preload = "auto"
-      video.onloadeddata = () => {
-        setIsVideoLoaded(true)
-      }
-    }
-  }, [slide.video_url, isFirstSlide])
+  // useEffect(() => {
+  //   // 비디오 프리로딩
+  //   if (!isFirstSlide) {
+  //     const video = document.createElement("video")
+  //     video.src = slide.video_url
+  //     video.preload = "auto"
+  //     video.onloadeddata = () => {
+  //       setIsVideoLoaded(true)
+  //     }
+  //   }
+  // }, [slide.video_url, isFirstSlide])
 
   return (
     <div className="w-full h-full flex flex-col gap-6 items-center">
@@ -80,9 +79,7 @@ const OnboardingSlide = ({
               autoPlay
               playsInline
               muted
-              className={`object-contain rounded-md items-center w-full h-full ${
-                isVideoLoaded ? "opacity-100" : "opacity-0"
-              } transition-opacity duration-300`}
+              className={`object-contain rounded-md items-center w-full h-full opacity-100 transition-opacity duration-300`}
             />
           )}
         </div>
