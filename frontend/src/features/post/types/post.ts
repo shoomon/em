@@ -104,7 +104,6 @@ export interface PostFormStateType {
   isSubmitPending: boolean
   emotionAnalysisData: EmotionAnalysisResponse | undefined
   isCurse: boolean | undefined
-  isSubmitCompleted: boolean
 }
 
 export interface PostFormActionType {
