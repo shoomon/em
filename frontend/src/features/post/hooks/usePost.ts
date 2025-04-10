@@ -2,6 +2,7 @@ import usePostStore from "@/store/usePostStore"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchPost, fetchPostDelete } from "../api/postApi"
 import { Post, PostListType } from "../types/post"
+import { toast } from "sonner"
 
 interface UsePostProps {
   type: PostListType
@@ -31,7 +32,7 @@ const usePost = ({ type }: UsePostProps) => {
     onSuccess: () => {
       setPostId(0)
       queryClient.refetchQueries({ queryKey: ["points"], exact: false })
-      alert("해당 게시글이 삭제 되었습니다.")
+      toast.success("해당 게시글이 삭제 되었습니다.")
     },
     retry: 0,
   })

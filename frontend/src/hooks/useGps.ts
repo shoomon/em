@@ -1,6 +1,7 @@
 import { getDistance } from "@/utils/math"
 import { useEffect, useRef, useState } from "react"
 import { LatLng } from "./../features/map/types/map"
+import { toast } from "sonner"
 
 const useGps = () => {
   const [isLocationPermissionGranted, setIsLocationPermissionGranted] =
@@ -87,7 +88,7 @@ const useGps = () => {
         watchPosition()
       },
       () => {
-        alert("위치 서비스 이용을 위해 위치 권한을 허용해 주세요")
+        toast.error("위치 서비스 이용을 위해 위치 권한을 허용해 주세요")
         setIsLocationPermissionGranted(false)
       },
       {

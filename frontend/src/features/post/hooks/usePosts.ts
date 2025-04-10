@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
 import { fetchPostDelete, fetchPostList } from "../api/postApi"
 import { PostListType } from "../types/post"
+import { toast } from "sonner"
 
 interface UsePostsProps {
   type: PostListType
@@ -77,7 +78,7 @@ const usePosts = ({ type, location }: UsePostsProps) => {
     onSuccess: () => {
       refetch()
       queryClient.refetchQueries({ queryKey: ["points"], exact: false })
-      alert("해당 게시글이 삭제 되었습니다.")
+      toast.success("해당 게시글이 삭제 되었습니다.")
     },
   })
 
