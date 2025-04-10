@@ -9,9 +9,9 @@ import { useEffect } from "react"
 
 const PostCreatePage = () => {
   const setTitle = useStackLayoutStore((state) => state.setTitle)
-  const { isSubmitCompleted } = usePostForm()
+  const { isSubmitPending } = usePostForm()
 
-  if (isSubmitCompleted) {
+  if (isSubmitPending) {
     return <EmLoading className="w-full h-dvh" />
   }
 
@@ -31,7 +31,7 @@ const PostCreatePage = () => {
       return e.returnValue
     }
 
-    window.addEventListener("beforeunload", handleBeforeUnload)
+    window.addEventListener("beforeunload", handleBeforeUnload) // 페이지 이탈 경고 로직
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload)
