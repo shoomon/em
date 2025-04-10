@@ -89,7 +89,7 @@ const PostFormProvider = ({ children }: { children: ReactNode }) => {
   const updateStep = useCallback(
     (step: PostCreateStep) => {
       setCurrentStep(step)
-      setSearchParams({ step: step.toString() })
+      setSearchParams({ step: step.toString() }, { replace: true })
     },
     [setCurrentStep, setSearchParams],
   )
