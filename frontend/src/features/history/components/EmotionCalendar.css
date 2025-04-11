@@ -1,0 +1,187 @@
+/* 캘린더 전체 */
+.react-calendar {
+  width: 100%;
+  height: 100%;
+  min-width: 200px;
+  /* max-width: 500px; */
+  background-color: var(--color-em-white);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0;
+  font-family: "Pretendard", sans-serif;
+}
+
+/* 네비게이션 (연/월 이동 부분) */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--color-em-gray);
+}
+
+.react-calendar__navigation button {
+  color: var(--color-em-black);
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.react-calendar__navigation button:focus {
+  background-color: transparent !important;
+  box-shadow: none;
+}
+
+.react-calendar__navigation__label {
+  background: transparent !important;
+  flex: 0 0 60%;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.react-calendar__navigation__arrow {
+  flex: 0 0 20%;
+}
+
+.react-calendar__navigation span {
+  color: var(--color-em-black);
+  font-size: 1rem;
+}
+
+/* 요일 헤더 */
+.react-calendar__month-view__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  color: var(--color-em-black);
+  font-size: 0.8rem;
+  /* margin-bottom: 0.5rem; */
+  padding-inline: 8px;
+}
+
+/* 요일 밑줄 제거 */
+.react-calendar__month-view__weekdays abbr {
+  text-decoration: none;
+  color: var(--color-em-black);
+}
+
+/* 일요일 (첫 번째 칼럼) */
+.react-calendar__month-view__weekdays__weekday:first-child abbr {
+  color: #ef4444; /* Tailwind text-red-500 */
+}
+
+/* 토요일 (마지막 칼럼) */
+.react-calendar__month-view__weekdays__weekday:last-child abbr {
+  color: #3b82f6; /* Tailwind text-blue-500 */
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem 0;
+}
+
+/* 날짜 타일 */
+.react-calendar__month-view__days {
+  grid-template-columns: repeat(7, 1fr);
+  /* 필요 시 padding이나 background 등도 설정 가능 */
+  padding-inline: 0.5rem;
+  margin: 0;
+}
+
+.react-calendar__tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+/* 오늘 날짜 강조 (바깥 원으로 표시) */
+.react-calendar__tile--now {
+  background-color: transparent !important;
+  position: relative;
+}
+
+/* .react-calendar__tile--now::before {
+  content: "";
+  position: absolute;
+  width: 72%;
+  max-width: 70px;
+  aspect-ratio: 1/1;
+  border: 2px solid var(--color-em-black);
+  border-radius: 50%;
+  z-index: 1;
+} */
+
+/* 선택한 날짜 강조 */
+.react-calendar__tile--active {
+  background-color: transparent !important;
+  position: relative;
+}
+
+.react-calendar__tile--active::before {
+  content: "";
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 23px;
+  /* height: 45px; */
+  aspect-ratio: 1/1;
+  background-color: var(--color-em-black);
+  /* border: 1.5px solid var(--color-em-black); */
+  border-radius: 50%;
+}
+
+.react-calendar__tile--active abbr {
+  color: var(--color-em-white) !important;
+}
+
+.react-calendar__year-view__months__month.react-calendar__tile--active {
+  position: relative;
+  color: var(--color-em-white) !important;
+  z-index: 0;
+}
+
+/* 원형 배경 */
+.react-calendar__year-view__months__month.react-calendar__tile--active::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color-em-black);
+  border-radius: 9999px;
+  z-index: -1;
+}
+
+/* hover 효과 */
+.react-calendar__tile:enabled:hover {
+  background-color: var(--color-em-gray-sm);
+  border-radius: 0.5rem;
+}
+
+/* 감정 점 스타일 */
+.react-calendar__emotion-dot {
+  /* position: absolute;
+  top: 60%;
+  left: 50%; /* 수평 중앙 */
+  /* transform: translate(-50%, -50%); /* 중앙 정렬 */
+  width: 7px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  /* opacity: 0.8;
+  z-index: 0; /* 글자 뒤로 배치 */
+}
+
+.react-calendar__tile.react-calendar__month-view__days__day {
+  width: 100%;
+  /* height: 4rem; */
+}
+.react-calendar__month-view__days {
+  /* row-gap: 0.2rem; */
+}
